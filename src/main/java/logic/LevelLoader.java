@@ -1,0 +1,161 @@
+package logic;
+
+import com.sun.glass.ui.Window;
+import component.card.Card;
+import component.card.MetalCard;
+import component.card.PlasticCard;
+import component.level.LevelData;
+import component.level.LevelTile;
+import component.modifier.Modifier;
+import component.modifier.changer.Adder;
+import component.modifier.changer.SuitSetter;
+import component.modifier.pathway.Entrance;
+import component.modifier.pathway.Exit;
+
+import javax.json.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+
+public class LevelLoader {
+
+    public static final int TOTAL_LEVELS = 1;
+
+    private static Card.Suit parseSuit(String suitString) {
+        return switch (suitString.toUpperCase()) {
+            case "HEART", "H" -> Card.Suit.HEART;
+            case "CLUB", "C" -> Card.Suit.CLUB;
+            case "DIAMOND", "D" -> Card.Suit.DIAMOND;
+            case "SPADE", "S" -> Card.Suit.SPADE;
+            default -> throw new IllegalArgumentException("Invalid suit");
+        };
+    }
+
+    private static Card parseCardInfo(JsonObject cardJson, boolean hasMaterial) {
+        Card.Suit suit = parseSuit(cardJson.getString("suit"));
+        int value = cardJson.getInt("value");
+        String material = hasMaterial ? cardJson.getString("material").toUpperCase(): "PLASTIC";
+
+       return switch(material) {
+                case "PLASTIC" -> new PlasticCard(suit, value);
+                case "METAL" -> new MetalCard(suit, value);
+                default -> new PlasticCard(suit, value);
+            };
+
+    }
+
+    private static Modifier parseModifierInfo(String modifier) {
+        String[] modArray = modifier.split(":");
+        String modName = modArray[0];
+        String value = "";
+
+        if (modArray.length == 2) {
+            value = modArray[1];
+        }
+        else if (modArray.length >= 3) {
+            throw new IllegalArgumentException("Invalid modifier " + modifier);
+        }
+
+        return switch (modName) {
+            case "." -> null;
+            case "ADD" -> new Adder(Integer.parseInt(value));
+            case "SETSUT" -> new SuitSetter(parseSuit(value));
+            case "ENTER" -> new Entrance();
+            case "EXIT" -> new Exit();
+            default -> throw new IllegalArgumentException("Invalid modifier " + modifier);
+        };
+    }
+
+    public static LevelData loadLevel(int levelNumber) throws IOException {
+        // feel free to change this because honestly it's a headache to look at
+
+        String basePath = "levels/" + levelNumber;
+
+        try ( // https://www.w3schools.com/java/java_try_catch_resources.asp
+            InputStream configStream =
+                    LevelLoader.class
+                            .getClassLoader()
+                            .getResourceAsStream(basePath + "/config.json");
+
+            InputStream layoutStream =
+                    LevelLoader.class
+                            .getClassLoader()
+                            .getResourceAsStream(basePath + "/level.csv");
+
+            BufferedReader csvReader =
+                    new BufferedReader(new InputStreamReader(layoutStream, StandardCharsets.UTF_8));
+
+            JsonReader jsonReader = Json.createReader(configStream);
+        )
+        {
+
+            // ---------- JSON parsing ---------- //
+
+            JsonObject jsonObject = jsonReader.readObject();
+
+            String levelName = jsonObject.getString("name");
+            int levelWidth = jsonObject.getInt("width");
+            int levelHeight = jsonObject.getInt("height");
+
+            List<Card> inputCards = new ArrayList<>();
+            List<Card> outputCards = new ArrayList<>();
+
+            for (JsonValue value: jsonObject.getJsonArray("inputCards"))
+                inputCards.add(parseCardInfo(value.asJsonObject(), true));
+
+            for (JsonValue value: jsonObject.getJsonArray("outputCards"))
+                outputCards.add(parseCardInfo(value.asJsonObject(), false));
+
+            // ---------- JSON parsing ---------- //
+
+            // ---------- CSV  parsing ---------- //
+
+            List<String> lines = csvReader.lines().toList();
+
+            if (lines.size() != levelHeight)
+                throw new IllegalStateException("CSV row count does not match grid height");
+
+
+            LevelTile[][] grid = new LevelTile[levelHeight][levelWidth];
+
+            for (int y = 0; y < levelHeight; y++) {
+                String[] cells = lines.get(y).split(",");
+
+                if (cells.length != levelWidth) {
+                    throw new IllegalStateException(
+                            "CSV column count mismatch at row " + y
+                    );
+                }
+
+                for (int x = 0; x < levelWidth; x++) {
+                    String token = cells[x].trim();
+                    grid[y][x] = new LevelTile(parseModifierInfo(token));
+                }
+            }
+
+            // ---------- CSV  parsing ---------- //
+
+
+            return new LevelData(
+                    levelName,
+                    levelWidth,
+                    levelHeight,
+                    inputCards,
+                    outputCards,
+                    grid
+            );
+
+        }
+
+    }
+
+}
