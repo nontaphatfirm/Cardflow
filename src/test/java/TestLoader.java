@@ -1,10 +1,8 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import component.level.LevelData;
-import logic.LevelLoader;
+import logic.level.GameLevel;
+import util.LevelLoader;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 public class TestLoader {
 
@@ -13,12 +11,12 @@ public class TestLoader {
         System.out.println("Loading level");
 
         assertDoesNotThrow(() -> {
-            LevelData levelData = LevelLoader.loadLevel(1);
-            System.out.println(levelData);
+            GameLevel gameLevel = LevelLoader.loadLevel(1);
+            System.out.println(gameLevel);
         });
 
         assertThrows(Exception.class, () -> {
-            LevelData levelData = LevelLoader.loadLevel(-1);
+            GameLevel gameLevel = LevelLoader.loadLevel(-1);
         });
     }
 

@@ -1,11 +1,8 @@
-package logic;
+package util;
 
-import com.sun.glass.ui.Window;
 import component.card.Card;
-import component.card.MetalCard;
-import component.card.PlasticCard;
-import component.level.LevelData;
-import component.level.LevelTile;
+import logic.level.GameLevel;
+import logic.level.LevelTile;
 import component.modifier.Modifier;
 import component.modifier.changer.Adder;
 import component.modifier.changer.SuitSetter;
@@ -18,17 +15,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class LevelLoader {
 
-    public static final int TOTAL_LEVELS = 1;
+    public static final int TOTAL_LEVELS = 20;
 
     private static Card.Suit parseSuit(String suitString) {
         return switch (suitString.toUpperCase()) {
@@ -45,12 +38,7 @@ public class LevelLoader {
         int value = cardJson.getInt("value");
         String material = hasMaterial ? cardJson.getString("material").toUpperCase(): "PLASTIC";
 
-       return switch(material) {
-                case "PLASTIC" -> new PlasticCard(suit, value);
-                case "METAL" -> new MetalCard(suit, value);
-                default -> new PlasticCard(suit, value);
-            };
-
+        return new Card(suit, value, Card.Material.valueOf(material));
     }
 
     private static Modifier parseModifierInfo(String modifier) {
@@ -75,8 +63,11 @@ public class LevelLoader {
         };
     }
 
-    public static LevelData loadLevel(int levelNumber) throws IOException {
+    public static GameLevel loadLevel(int levelNumber) throws IOException {
         // feel free to change this because honestly it's a headache to look at
+
+        if (levelNumber <= 0 || levelNumber > TOTAL_LEVELS)
+            throw new IllegalArgumentException("Invalid level number " + levelNumber);
 
         String basePath = "levels/" + levelNumber;
 
@@ -138,14 +129,14 @@ public class LevelLoader {
 
                 for (int x = 0; x < levelWidth; x++) {
                     String token = cells[x].trim();
-                    grid[y][x] = new LevelTile(parseModifierInfo(token));
+                    grid[y][x] = new LevelTile(parseModifierInfo(token), x, y);
                 }
             }
 
             // ---------- CSV  parsing ---------- //
 
 
-            return new LevelData(
+            return new GameLevel(
                     levelName,
                     levelWidth,
                     levelHeight,

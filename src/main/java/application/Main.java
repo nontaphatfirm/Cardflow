@@ -15,18 +15,6 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		StackPane root = new StackPane();
-		root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-		
-		Scene scene = new Scene(root, 854,512);
-		
-		VBox mainVBox = new VBox();
-		mainVBox.setAlignment(Pos.TOP_CENTER);
-
-		scene.setRoot(mainVBox);
-		primaryStage.setScene(scene);
-
-		primaryStage.show();
 
 		//This is so all the threads exits properly upon closing the program.
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -36,6 +24,10 @@ public class Main extends Application {
 		          System.exit(0);
 		       }
 		    });
+
+		SceneManager.init(primaryStage);
+		SceneManager.getInstance().showLevelSelector();
+		primaryStage.show();
 	}
 	
 	public static void main(String[] args) {

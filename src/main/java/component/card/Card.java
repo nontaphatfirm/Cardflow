@@ -1,6 +1,12 @@
 package component.card;
 
-abstract public class Card {
+import component.GridIndexable;
+import logic.level.GameLevel;
+import org.assertj.core.annotations.NonNull;
+
+import java.awt.*;
+
+public class Card implements GridIndexable {
 
     public enum Suit {
         HEART,
@@ -9,7 +15,7 @@ abstract public class Card {
         SPADE
     }
 
-    public enum Material { // This is just a list. Please use instanceof when checking.
+    public enum Material { // The reason why I didn't do inheritance is that the material is an attribute that changes often.
         PLASTIC,
         METAL,
         STONE,
@@ -20,15 +26,27 @@ abstract public class Card {
 
     protected Suit suit;
     protected int value; // Valid value range from [0,12] (Ace -> 0, 2 -> 1, ... K -> 12)
+    protected Material material;
 
-    protected Card() {
+    protected Point gridPos;
+
+    // WARNING DO NOT CALL THIS FUNCTION TO CREATE A CARD
+    // PLEASE LOOK INTO GameLevel.addCard() instead
+
+    public Card() {
         // Default constructor is ace of spades.
-        this(Suit.SPADE, 1);
+        this(Suit.SPADE, 1, Material.PLASTIC);
     }
 
-    protected Card(Suit suit, int value) {
+    public Card(Suit suit, int value, Material material) {
+        this(suit, value, material, new Point());
+    }
+
+    public Card(Suit suit, int value, Material material, Point gridPos) {
         setSuit(suit);
         setValue(value);
+        setMaterial(material);
+        setGridPos(gridPos == null ? new Point() : gridPos);
     }
 
     public Suit getSuit() {
@@ -49,11 +67,32 @@ abstract public class Card {
         this.value = value;
     }
 
+    // GETTERS & SETTERS //
+
+    public Material getMaterial() { return material; }
+    public void setMaterial(Material material) { this.material = material; }
+
+    @Override
+    public Point getGridPos() { return gridPos; }
+    @Override
+    public void setGridPos(@NonNull Point point) {
+        this.gridPos.x = Math.clamp(point.x, 0, GameLevel.MAX_WIDTH);
+        this.gridPos.y = Math.clamp(point.y, 0, GameLevel.MAX_HEIGHT);
+    }
+
+    // GETTERS & SETTERS //
+
+    @Override
+    public boolean isBlocking() {
+        return true; // Always true (No card stacking allowed)
+    }
+
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{" +
-                "suit=" + suit +
-                ", value=" + value +
+        return this.getClass().getSimpleName() +
+                "{" +
+                suit +
+                "," + value +
                 '}';
     }
 }

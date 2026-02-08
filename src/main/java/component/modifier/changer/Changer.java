@@ -21,4 +21,9 @@ abstract public class Changer<T> extends Modifier { // I'm not sorry haha
     }
 
     protected ChangeType changeType;
+
+    @Override
+    public boolean isBlocking() {
+        return false;
+    }
 }
