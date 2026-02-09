@@ -4,6 +4,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import logic.GameLevel;
 import ui.render.GameTilePane;
+import application.Game;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -88,7 +89,7 @@ public class GameScene {
         root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         root.getChildren().add(new Text("GameScene")); // TODO: DEBUG
 
-        Scene scene = new Scene(root, 1920, 1080);
+        Scene scene = new Scene(root);
 
         scene.getAccelerators().put(
                 new KeyCodeCombination(KeyCode.SPACE),
@@ -98,6 +99,16 @@ public class GameScene {
                         gameGridTilePanes[point.getY()][point.getX()].updateUI();
                     }
                 });
+        
+        scene.onMouseClickedProperty().set(event -> {
+            Game.onSceneClick(
+                    event.getButton(),
+                    event.isShiftDown(),
+                    event.isControlDown()
+            );
+        });
+
+        
 
         return scene;
     }

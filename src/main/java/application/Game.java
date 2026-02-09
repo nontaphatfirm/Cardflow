@@ -10,11 +10,12 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import placement.PlacementController;
 import util.GridPos;
 
 public final class Game {
 
-    private static final GameController controller = new GameController();
+    private static final PlacementController controller = new PlacementController();
 
     public static void init(Stage primaryStage) {
         primaryStage.setOnCloseRequest(e -> {
@@ -34,5 +35,13 @@ public final class Game {
             boolean ctrl
     ) {
         return controller.handleTileClick(tile, button, shift, ctrl);
+    }
+
+	public static void onSceneClick(
+            MouseButton button,
+            boolean shift,
+            boolean ctrl
+    ) {
+        controller.handleSceneClick(button, shift, ctrl);
     }
 }

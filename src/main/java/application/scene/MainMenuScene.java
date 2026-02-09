@@ -19,7 +19,7 @@ public class MainMenuScene {
         root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         root.getChildren().add(new Text("MainMenuScene"));
 
-        Scene scene = new Scene(root, 1920, 1080);
+        Scene scene = new Scene(root);
 
         
 

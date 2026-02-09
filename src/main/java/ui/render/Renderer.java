@@ -1,12 +1,53 @@
 package ui.render;
 
-import javafx.scene.control.Button;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
-import registry.render.RenderLayer;
-import util.GridPos;
-
 
 public abstract class Renderer<T> {
-    public abstract RenderLayer layer();
-    public abstract void render(T tile, Pane node, GridPos pos);
+
+    protected abstract double tileSize();
+
+    public abstract void render(T tile, Pane node, util.GridPos pos);
+
+    protected void draw(Pane node, RenderState state) {
+        double w = state.width();
+        double h = state.height();
+
+        double tile = tileSize();
+
+        Canvas canvas = new Canvas(w, h);
+
+        // 🔥 CENTER THE CANVAS IN THE TILE
+        canvas.setLayoutX((tile - w) / 2.0);
+        canvas.setLayoutY((tile - h) / 2.0);
+
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        gc.setImageSmoothing(false);
+        gc.clearRect(0, 0, w, h);
+
+        gc.save();
+        gc.setGlobalAlpha(state.alpha());
+
+        // rotate around renderable center
+        gc.translate(w / 2, h / 2);
+        gc.rotate(state.rotationDeg());
+
+        if (state.mirrorX()) {
+            gc.scale(1, 1);
+        }
+        gc.drawImage(
+                state.image(),
+                -w / 2,
+                -h / 2,
+                w,
+                h);
+
+        gc.restore();
+
+        node.getChildren().setAll(canvas);
+    }
+
+    public abstract registry.render.RenderLayer layer();
 }

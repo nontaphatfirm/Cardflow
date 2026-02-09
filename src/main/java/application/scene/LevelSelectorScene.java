@@ -52,7 +52,7 @@ public class LevelSelectorScene {
         root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         root.getChildren().add(new Text("LevelSelectorScene")); // TODO: DEBUG
 
-        Scene scene = new Scene(root, 1920, 1080);
+        Scene scene = new Scene(root);
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {

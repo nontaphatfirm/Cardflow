@@ -21,5 +21,10 @@ public class EmptyTileRenderer extends Renderer<GameTile> {
     public RenderLayer layer() {
         return RenderLayer.BASE;
     }
-    
+
+    @Override
+    protected double tileSize() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'tileSize'");
+    }
 }
