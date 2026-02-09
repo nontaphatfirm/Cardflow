@@ -45,11 +45,11 @@ public class CardRenderer extends Renderer<Card> {
         gc.setFont(CARD_FONT);
         gc.setFill(Color.BLACK);
 
-        String text = card.toString();
-        double padding = 6;
-        double textY = CARD_HEIGHT - padding;
+        String text = card.getSuit() + "\n" + card.getValue() + "\n" + card.getMaterial();
+        double y_padding = 32;
+        double textY = CARD_HEIGHT - y_padding;
 
-        gc.fillText(text, padding, textY);
+        gc.fillText(text, 6, textY);
 
         // 🔑 Center inside 85×85 tile
         double tileSize = 85;

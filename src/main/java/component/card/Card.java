@@ -30,6 +30,8 @@ public class Card implements GridIndexable {
 
     protected GridPos gridPos;
 
+    private boolean isInfinite = false;
+
     // WARNING DO NOT CALL THIS FUNCTION TO CREATE A CARD
     // PLEASE LOOK INTO GameLevel.addCard() instead
 
@@ -42,12 +44,22 @@ public class Card implements GridIndexable {
         this(suit, value, material, new GridPos(0, 0));
     }
 
+    public Card(Suit suit, int value, Material material, int count) {
+        this(suit, value, material);
+        // hehe boii
+        isInfinite = (count <= 0);
+    }
+
     public Card(Suit suit, int value, Material material, GridPos gridPos) {
         this.gridPos = new GridPos();
         setSuit(suit);
         setValue(value);
         setMaterial(material);
         setGridPos(gridPos);
+    }
+
+    public boolean isInfiniteCard() {
+        return isInfinite;
     }
 
     public Suit getSuit() {

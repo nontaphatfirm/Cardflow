@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-
 public class LevelLoader {
 
     public static final int TOTAL_LEVELS = 20;
@@ -39,9 +38,10 @@ public class LevelLoader {
     private static Card parseCardInfo(JsonObject cardJson, boolean hasMaterial) {
         Card.Suit suit = parseSuit(cardJson.getString("suit"));
         int value = cardJson.getInt("value");
-        String material = hasMaterial ? cardJson.getString("material").toUpperCase(): "PLASTIC";
+        String material = hasMaterial ? cardJson.getString("material").toUpperCase() : "PLASTIC";
+        int count = cardJson.containsKey("count") ? cardJson.getInt("count") : 1;
 
-        return new Card(suit, value, Card.Material.valueOf(material));
+        return new Card(suit, value, Card.Material.valueOf(material), count);
     }
 
     private static Modifier parseModifierInfo(String modifier) {
@@ -51,8 +51,7 @@ public class LevelLoader {
 
         if (modArray.length == 2) {
             value = modArray[1];
-        }
-        else if (modArray.length >= 3) {
+        } else if (modArray.length >= 3) {
             throw new IllegalArgumentException("Invalid modifier " + modifier);
         }
 
@@ -70,14 +69,16 @@ public class LevelLoader {
         String moverClassName = moverJson.getString("name").toUpperCase();
         int moverCount = moverJson.getInt("count");
 
-        String[] validClassNames = {"CONVEYOR"};
-        if (moverCount < 0) throw new IllegalArgumentException("Invalid mover count " + moverCount); // 0 for infinity
+        String[] validClassNames = { "CONVEYOR" };
+        if (moverCount < 0)
+            throw new IllegalArgumentException("Invalid mover count " + moverCount); // 0 for infinity
 
         boolean isValid = false;
         for (String validClassName : validClassNames)
             isValid = isValid || validClassName.equals(moverClassName);
 
-        if (!isValid) throw new IllegalArgumentException("Invalid mover name " + moverClassName);
+        if (!isValid)
+            throw new IllegalArgumentException("Invalid mover name " + moverClassName);
 
         outMap.put(moverClassName, moverCount);
     }
@@ -91,22 +92,18 @@ public class LevelLoader {
         String basePath = "levels/" + levelNumber;
 
         try ( // https://www.w3schools.com/java/java_try_catch_resources.asp
-            InputStream configStream =
-                    LevelLoader.class
-                            .getClassLoader()
-                            .getResourceAsStream(basePath + "/config.json");
+                InputStream configStream = LevelLoader.class
+                        .getClassLoader()
+                        .getResourceAsStream(basePath + "/config.json");
 
-            InputStream layoutStream =
-                    LevelLoader.class
-                            .getClassLoader()
-                            .getResourceAsStream(basePath + "/level.tsv");
+                InputStream layoutStream = LevelLoader.class
+                        .getClassLoader()
+                        .getResourceAsStream(basePath + "/level.tsv");
 
-            BufferedReader csvReader =
-                    new BufferedReader(new InputStreamReader(layoutStream, StandardCharsets.UTF_8));
+                BufferedReader csvReader = new BufferedReader(
+                        new InputStreamReader(layoutStream, StandardCharsets.UTF_8));
 
-            JsonReader jsonReader = Json.createReader(configStream);
-        )
-        {
+                JsonReader jsonReader = Json.createReader(configStream);) {
 
             // ---------- JSON parsing ---------- //
 
@@ -119,26 +116,25 @@ public class LevelLoader {
             List<Card> inputCards = new ArrayList<>();
             List<Card> outputCards = new ArrayList<>();
 
-            for (JsonValue value: jsonObject.getJsonArray("inputCards"))
+            for (JsonValue value : jsonObject.getJsonArray("inputCards"))
                 inputCards.add(parseCardInfo(value.asJsonObject(), true));
 
-            for (JsonValue value: jsonObject.getJsonArray("outputCards"))
+            for (JsonValue value : jsonObject.getJsonArray("outputCards"))
                 outputCards.add(parseCardInfo(value.asJsonObject(), false));
 
             HashMap<String, Integer> availableMovers = new HashMap<>(); // Using the classname to store this
 
-            for (JsonValue value: jsonObject.getJsonArray("availableMovers"))
+            for (JsonValue value : jsonObject.getJsonArray("availableMovers"))
                 parseMoverInfo(value.asJsonObject(), availableMovers);
 
             // ---------- JSON parsing ---------- //
 
-            // ---------- CSV  parsing ---------- //
+            // ---------- CSV parsing ---------- //
 
             List<String> lines = csvReader.lines().toList();
 
             if (lines.size() != levelHeight)
                 throw new IllegalStateException("CSV row count does not match grid height");
-
 
             GameTile[][] grid = new GameTile[levelHeight][levelWidth];
             HashSet<Modifier> modifiers = new HashSet<>();
@@ -148,8 +144,7 @@ public class LevelLoader {
 
                 if (cells.length != levelWidth) {
                     throw new IllegalStateException(
-                            "CSV column count mismatch at row " + y
-                    );
+                            "CSV column count mismatch at row " + y);
                 }
 
                 for (int x = 0; x < levelWidth; x++) {
@@ -163,8 +158,7 @@ public class LevelLoader {
                 }
             }
 
-            // ---------- CSV  parsing ---------- //
-
+            // ---------- CSV parsing ---------- //
 
             return new GameLevel(
                     levelName,
@@ -174,11 +168,74 @@ public class LevelLoader {
                     outputCards,
                     availableMovers,
                     grid,
-                    modifiers
-            );
+                    modifiers);
 
         }
 
+    }
+
+    public static GameLevel loadSandboxLevel() throws IOException {
+        String basePath = "levels/sandbox";
+
+        try (
+                InputStream configStream = LevelLoader.class
+                        .getClassLoader()
+                        .getResourceAsStream(basePath + "/config.json");
+
+                InputStream layoutStream = LevelLoader.class
+                        .getClassLoader()
+                        .getResourceAsStream(basePath + "/level.tsv");
+
+                BufferedReader csvReader = new BufferedReader(
+                        new InputStreamReader(layoutStream, StandardCharsets.UTF_8));
+
+                JsonReader jsonReader = Json.createReader(configStream);) {
+            // 🔁 reuse exact same logic
+            JsonObject jsonObject = jsonReader.readObject();
+
+            String levelName = jsonObject.getString("name");
+            int levelWidth = jsonObject.getInt("width");
+            int levelHeight = jsonObject.getInt("height");
+
+            List<Card> inputCards = new ArrayList<>();
+            List<Card> outputCards = new ArrayList<>();
+
+            for (JsonValue value : jsonObject.getJsonArray("inputCards"))
+                inputCards.add(parseCardInfo(value.asJsonObject(), true));
+
+            for (JsonValue value : jsonObject.getJsonArray("outputCards"))
+                outputCards.add(parseCardInfo(value.asJsonObject(), false));
+
+            HashMap<String, Integer> availableMovers = new HashMap<>();
+            for (JsonValue value : jsonObject.getJsonArray("availableMovers"))
+                parseMoverInfo(value.asJsonObject(), availableMovers);
+
+            List<String> lines = csvReader.lines().toList();
+            GameTile[][] grid = new GameTile[levelHeight][levelWidth];
+            HashSet<Modifier> modifiers = new HashSet<>();
+
+            for (int y = 0; y < levelHeight; y++) {
+                String[] cells = lines.get(y).split("\t");
+                for (int x = 0; x < levelWidth; x++) {
+                    Modifier mod = parseModifierInfo(cells[x].trim());
+                    grid[y][x] = new GameTile(mod, x, y);
+                    if (mod != null) {
+                        mod.setGridPos(new GridPos(x, y));
+                        modifiers.add(mod);
+                    }
+                }
+            }
+
+            return new GameLevel(
+                    "[SANDBOX] " + levelName,
+                    levelWidth,
+                    levelHeight,
+                    inputCards,
+                    outputCards,
+                    availableMovers,
+                    grid,
+                    modifiers);
+        }
     }
 
 }

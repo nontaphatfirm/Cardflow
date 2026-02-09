@@ -1,0 +1,18 @@
+{
+  "name": "Add 1 up",
+  "width": 10,
+  "height": 10,
+
+  "inputCards": [
+    { "suit": "HEART", "value": 1, "material": "PLASTIC", "count":  -1}
+  ],
+
+  "outputCards": [
+    { "suit": "HEART", "value": 1}
+  ],
+
+  "availableMovers": [
+    { "name": "CONVEYOR", "count":  0}
+  ]
+}
+

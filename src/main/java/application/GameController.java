@@ -8,6 +8,9 @@ import util.Direction;
 import util.GridPos;
 
 public class GameController {
+
+    private Direction currentSelectedDirection = Direction.UP;
+
     public Set<GridPos> handleTileClick(
             GameTile tile,
             javafx.scene.input.MouseButton button,
@@ -19,7 +22,7 @@ public class GameController {
                 ", Shift: " + shift + ", Ctrl: " + ctrl);
         if (button == javafx.scene.input.MouseButton.PRIMARY){
             if(tile.getMover() == null){
-                tile.setMover(new Conveyor(Direction.UP));
+                tile.setMover(new Conveyor(currentSelectedDirection));
             } else {
                 tile.setMover(null);
             }
@@ -27,10 +30,12 @@ public class GameController {
             
             
         
-        if (button == javafx.scene.input.MouseButton.SECONDARY)
-            if(tile.getMover() != null)
-                tile.setMover(new Conveyor(tile.getMover().getDirection().next()));
-
+        if (button == javafx.scene.input.MouseButton.SECONDARY){
+            if(tile.getMover() != null){
+                currentSelectedDirection = tile.getMover().getDirection().next();
+                tile.setMover(new Conveyor(currentSelectedDirection));
+            }
+        }
 
         return Set.of(tile.getGridPos());
     }
