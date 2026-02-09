@@ -1,0 +1,20 @@
+{
+  "name": "Can we get much Higher?",
+  "width": 5,
+  "height": 9,
+
+  "inputCards": [
+    { "suit": "HEART", "value": 13, "material": "PLASTIC" },
+    { "suit": "CLUB", "value": 1, "material": "PLASTIC" }
+  ],
+
+  "outputCards": [
+    { "suit": "HEART", "value": 1},
+    { "suit": "CLUB", "value": 2}
+  ],
+
+  "availableMovers": [
+    { "name": "CONVEYOR", "count":  -1}
+  ]
+}
+
