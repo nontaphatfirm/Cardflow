@@ -364,7 +364,10 @@ public class GameLevel {
 
     // GETTERS & SETTERS //
 
-    public static GameLevel getInstance() { return instance; }
+    public static GameLevel getInstance() {
+        if (instance == null) throw new IllegalStateException("GameLevel has not been initialized");
+        return instance;
+    }
     public static void setInstance(GameLevel instance) { GameLevel.instance = instance; }
     public GameTile[][] getGrid() { return grid; }
     public void setGrid(GameTile[][] grid) { this.grid = grid; }

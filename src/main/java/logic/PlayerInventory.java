@@ -69,7 +69,10 @@ public class PlayerInventory {
     }
 
     public String getCurrentSelection() { return currentSelection; }
-    public static PlayerInventory getInstance() { return instance; }
+    public static PlayerInventory getInstance() {
+        if (instance == null) throw new IllegalStateException("PlayerInventory has not been initialized");
+        return instance;
+    }
     public static void setInstance(PlayerInventory instance) { PlayerInventory.instance = instance; }
 
     public PlayerInventory() {

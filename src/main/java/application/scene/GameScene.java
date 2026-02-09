@@ -11,12 +11,19 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+<<<<<<< HEAD
 import util.Direction;
+=======
+import logic.PlayerInventory;
+import ui.GameTilePane;
+import ui.inventory.InventoryUIPane;
+>>>>>>> afa6112 (intermediate commit')
 import util.GridPos;
 
 public class GameScene {
 
-    static GameTilePane[][] gameGridTilePanes;
+    public static GameTilePane[][] gameGridTilePanes;
+    public static InventoryUIPane inventoryUIPane;
 
     public static void updateTileAndAdjacent(GridPos pos) {
         updateIfValid(pos);
@@ -39,6 +46,7 @@ public class GameScene {
     public static Scene create(GameLevel level) {
 
         GameLevel.setInstance(level); // Most components will rely on this
+        PlayerInventory.setInstance(new PlayerInventory());
 
         // TODO: MODIFY THIS TO BE A REGULAR PANE AND ADD A TILING MANAGER TO ALLOW GOOD
         // LOOKING ANIMS AND STUFF :D
@@ -77,8 +85,9 @@ public class GameScene {
         VBox infoPane = new VBox();
         infoPane.setPadding(new Insets(10));
 
+
         HBox mainLayout = new HBox();
-        mainLayout.getChildren().addAll(gameGrid, infoPane);
+        mainLayout.getChildren().addAll(gameGrid);
 
         // mainLayout.setPadding(new Insets(30));
         // mainLayout.setSpacing(30);
@@ -95,7 +104,7 @@ public class GameScene {
                 new KeyCodeCombination(KeyCode.SPACE),
                 () -> {
                     level.doTick();
-                    for (GridPos point : level.changedPoints) {
+                    for (GridPos point : level.changedPoints) { // TODO: THIS SHOULD BE MOVED TO GAMESTATE
                         gameGridTilePanes[point.getY()][point.getX()].updateUI();
                     }
                 });
