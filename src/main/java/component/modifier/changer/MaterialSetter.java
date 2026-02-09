@@ -10,7 +10,9 @@ public class MaterialSetter extends Changer<Card.Material> {
         if (toModify != null) toModify.setMaterial(changeValue);
     }
 
-    public MaterialSetter() {
+    public MaterialSetter(Card.Material material) {
+        super();
         this.changeType = ChangeType.MATERIAL;
+        this.changeValue = material;
     }
 }

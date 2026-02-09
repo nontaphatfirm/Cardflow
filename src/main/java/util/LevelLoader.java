@@ -1,6 +1,7 @@
 package util;
 
 import component.card.Card;
+import component.modifier.changer.MaterialSetter;
 import logic.GameLevel;
 import component.GameTile;
 import component.modifier.Modifier;
@@ -36,12 +37,25 @@ public class LevelLoader {
         };
     }
 
+    private static Card.Material parseMaterial(String materialString) {
+        return switch (materialString.toUpperCase()) {
+            case "PLASTIC", "P" -> Card.Material.PLASTIC;
+            case "STONE", "S" ->  Card.Material.STONE;
+            case "GLASS", "G" ->  Card.Material.GLASS;
+            case "METAL", "M" ->  Card.Material.METAL;
+            case "CORRUPTED", "C" -> Card.Material.CORRUPTED;
+            case "RUBBER", "R" -> Card.Material.RUBBER;
+            default -> throw new IllegalArgumentException("Invalid material");
+        };
+
+    }
+
     private static Card parseCardInfo(JsonObject cardJson, boolean hasMaterial) {
         Card.Suit suit = parseSuit(cardJson.getString("suit"));
         int value = cardJson.getInt("value");
-        String material = hasMaterial ? cardJson.getString("material").toUpperCase(): "PLASTIC";
+        Card.Material material = hasMaterial ? parseMaterial(cardJson.getString("material")):  Card.Material.PLASTIC;
 
-        return new Card(suit, value, Card.Material.valueOf(material));
+        return new Card(suit, value, material);
     }
 
     private static Modifier parseModifierInfo(String modifier) {
@@ -60,6 +74,7 @@ public class LevelLoader {
             case "." -> null;
             case "ADD" -> new Adder(Integer.parseInt(value));
             case "SETSUT" -> new SuitSetter(parseSuit(value));
+            case "SETMAT" -> new MaterialSetter(parseMaterial(value));
             case "ENTER" -> new Entrance();
             case "EXIT" -> new Exit();
             default -> throw new IllegalArgumentException("Invalid modifier " + modifier);
@@ -71,7 +86,7 @@ public class LevelLoader {
         int moverCount = moverJson.getInt("count");
 
         String[] validClassNames = {"CONVEYOR"};
-        if (moverCount < 0) throw new IllegalArgumentException("Invalid mover count " + moverCount); // 0 for infinity
+        if (moverCount < -1) throw new IllegalArgumentException("Invalid mover count " + moverCount); // -1 for infinity
 
         boolean isValid = false;
         for (String validClassName : validClassNames)
