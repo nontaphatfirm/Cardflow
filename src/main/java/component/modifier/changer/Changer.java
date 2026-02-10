@@ -3,8 +3,6 @@ package component.modifier.changer;
 import component.card.Card;
 import component.modifier.Modifier;
 
-import java.awt.*;
-
 abstract public class Changer<T> extends Modifier { // I'm not sorry haha
 
     protected T changeValue;

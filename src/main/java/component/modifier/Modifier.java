@@ -4,8 +4,6 @@ import util.GridIndexable;
 import logic.GameLevel;
 import util.GridPos;
 
-import java.awt.*;
-
 abstract public class Modifier implements GridIndexable {
     private boolean isDisabled;
     protected GridPos gridPos;
