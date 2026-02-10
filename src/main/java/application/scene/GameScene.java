@@ -3,6 +3,8 @@ package application.scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import logic.GameLevel;
+import logic.PlayerInventory;
+import ui.inventory.InventoryPane;
 import ui.render.GameTilePane;
 import application.Game;
 import javafx.geometry.Insets;
@@ -11,19 +13,13 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-<<<<<<< HEAD
 import util.Direction;
-=======
-import logic.PlayerInventory;
-import ui.GameTilePane;
-import ui.inventory.InventoryUIPane;
->>>>>>> afa6112 (intermediate commit')
 import util.GridPos;
 
 public class GameScene {
 
     public static GameTilePane[][] gameGridTilePanes;
-    public static InventoryUIPane inventoryUIPane;
+    public static InventoryPane inventoryPane;
 
     public static void updateTileAndAdjacent(GridPos pos) {
         updateIfValid(pos);
@@ -46,7 +42,7 @@ public class GameScene {
     public static Scene create(GameLevel level) {
 
         GameLevel.setInstance(level); // Most components will rely on this
-        PlayerInventory.setInstance(new PlayerInventory());
+        PlayerInventory.setInstance(new PlayerInventory(level));
 
         // TODO: MODIFY THIS TO BE A REGULAR PANE AND ADD A TILING MANAGER TO ALLOW GOOD
         // LOOKING ANIMS AND STUFF :D
@@ -85,12 +81,11 @@ public class GameScene {
         VBox infoPane = new VBox();
         infoPane.setPadding(new Insets(10));
 
+        inventoryPane = new InventoryPane(PlayerInventory.getInstance());
 
         HBox mainLayout = new HBox();
-        mainLayout.getChildren().addAll(gameGrid);
+        mainLayout.getChildren().addAll(gameGrid, inventoryPane);
 
-        // mainLayout.setPadding(new Insets(30));
-        // mainLayout.setSpacing(30);
         mainLayout.setAlignment(Pos.BASELINE_CENTER);
 
         StackPane root = new StackPane();

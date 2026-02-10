@@ -2,7 +2,6 @@ package logic;
 
 import component.mover.Conveyor;
 import component.mover.Mover;
-import placement.mover.ConveyorConstructor;
 import util.*;
 
 import java.util.HashMap;
@@ -11,15 +10,16 @@ import java.util.Objects;
 public class PlayerInventory {
     // Player inventory needs to use GameLevel's methods and other stuff to place down the movers.
     // It doesn't handle the grid. Only the amount, the position, the rotation, and the removal.
+    // Any and all user actions that involve modifying the grid must flow through the playerInventory class.
 
     private static PlayerInventory instance;
-    private HashMap<String, Integer> currentAvailableMovers; // This should be capital letters for everything.
+    private final GameLevel gameLevel;
+    private final HashMap<String, Integer> currentAvailableMovers; // This should be capital letters for everything.
 
     private Direction currentRotation;
     private String currentSelection;
 
     public HashMap<String, Integer> getCurrentAvailableMovers() { return currentAvailableMovers; }
-    public void setCurrentAvailableMovers(HashMap<String, Integer> currentAvailableMovers) { this.currentAvailableMovers = currentAvailableMovers; }
     public Direction getCurrentRotation() { return currentRotation; }
     public void setCurrentRotation(Direction currentRotation) { this.currentRotation = currentRotation; }
     public void cycleRotation() { this.currentRotation = this.currentRotation.next(); }
@@ -42,15 +42,16 @@ public class PlayerInventory {
 
     public void setCurrentSelection(String name) {
         name = name.toUpperCase();
-        if (!currentAvailableMovers.containsKey(name)) name = "";
-        if (currentAvailableMovers.get(name) == 0) name = "";
+        if (!currentAvailableMovers.containsKey(name)) name = null;
+        if (currentAvailableMovers.get(name) == 0) name = null;
         this.currentSelection = name;
     }
 
     public void placeToGrid(GridPos position) {
         // TODO: Maybe also do a check with the current game state?
         if (position == null) return;
-        if (Objects.equals(currentSelection, "")) return;
+        if (Objects.isNull(currentSelection)) return;
+        if (currentAvailableMovers.get(currentSelection) == 0) return;
         GameLevel game = GameLevel.getInstance();
         if (game.addMover(getMoverObjectByName(currentSelection, currentRotation), position)) {
             // Successfully added so we decrement the selection
@@ -75,12 +76,13 @@ public class PlayerInventory {
     }
     public static void setInstance(PlayerInventory instance) { PlayerInventory.instance = instance; }
 
-    public PlayerInventory() {
+    public PlayerInventory(GameLevel gameLevel) {
+        this.gameLevel = gameLevel;
         // Ensure that GameLevel is initialized before this
         currentAvailableMovers = new HashMap<>(GameLevel.getInstance().AVAILABLE_MOVERS); // Copy total over
         if (currentAvailableMovers.isEmpty()) throw new IllegalStateException("No available movers");
         currentRotation = Direction.UP;
-        currentSelection = "";
+        currentSelection = currentAvailableMovers.keySet().iterator().next(); // Just get the "first one" and put it as selection
     }
 
 }

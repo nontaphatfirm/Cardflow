@@ -112,7 +112,7 @@ public class GameLevel {
     public boolean removeMover(Mover mover) {
         // Do nothing if it can't find the old mover
         if (!moverSet.contains(mover)) return false;
-        if (getTile(mover.getGridPos()).getCard() == null) return false;
+        if (getTile(mover.getGridPos()).getMover() == null) return false;
 
         getTile(mover.getGridPos()).removeSameClassOnTile(mover);
         moverSet.remove(mover);

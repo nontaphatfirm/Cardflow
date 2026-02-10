@@ -1,6 +1,9 @@
 package ui.inventory;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import logic.PlayerInventory;
@@ -8,34 +11,31 @@ import logic.PlayerInventory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InventoryPane extends VBox {
+public class InventoryPane extends VBox { // thx chatgpt
 
     private final PlayerInventory inventory;
 
-    // UI elements we need to update
     private final Text titleText;
     private final Text rotationText;
     private final VBox moversList;
 
-    // Keep references so we can update counts efficiently
+    // Per-mover UI references
+    private final Map<String, Button> moverButtons = new HashMap<>();
     private final Map<String, Text> moverCountTexts = new HashMap<>();
 
     public InventoryPane(PlayerInventory inventory) {
         this.inventory = inventory;
 
         setPadding(new Insets(12));
-        setSpacing(8);
+        setSpacing(10);
 
-        // ---- title ----
         titleText = new Text("Inventory");
         titleText.getStyleClass().add("text-heading");
 
-        // ---- rotation ----
         rotationText = new Text();
         rotationText.getStyleClass().add("text-body");
 
-        // ---- movers list ----
-        moversList = new VBox(4);
+        moversList = new VBox(6);
 
         getChildren().addAll(
                 titleText,
@@ -43,25 +43,44 @@ public class InventoryPane extends VBox {
                 moversList
         );
 
-        buildMoverList();
+        buildMoverRows();
         updateUI();
     }
 
-    // Build static rows (called once)
-    private void buildMoverList() {
+    // Build static UI once
+    private void buildMoverRows() {
         moversList.getChildren().clear();
+        moverButtons.clear();
         moverCountTexts.clear();
 
         for (String name : inventory.getCurrentAvailableMovers().keySet()) {
-            Text moverText = new Text();
-            moverText.getStyleClass().add("text-body");
 
-            moverCountTexts.put(name, moverText);
-            moversList.getChildren().add(moverText);
+            // --- button ---
+            Button button = new Button(name);
+            button.setFocusTraversable(false);
+            button.getStyleClass().add("text-body");
+
+            button.setOnAction(e -> {
+                inventory.setCurrentSelection(name);
+                updateUI();
+            });
+
+            // --- count text ---
+            Text countText = new Text();
+            countText.getStyleClass().add("text-body");
+
+            // --- row ---
+            HBox row = new HBox(8, button, countText);
+            row.setAlignment(Pos.CENTER_LEFT);
+
+            moverButtons.put(name, button);
+            moverCountTexts.put(name, countText);
+
+            moversList.getChildren().add(row);
         }
     }
 
-    // Call this whenever inventory changes
+    // Refresh all dynamic state
     public void updateUI() {
         updateRotation();
         updateMovers();
@@ -76,27 +95,34 @@ public class InventoryPane extends VBox {
     private void updateMovers() {
         String selected = inventory.getCurrentSelection();
 
-        for (Map.Entry<String, Integer> entry :
-                inventory.getCurrentAvailableMovers().entrySet()) {
-
+        for (var entry : inventory.getCurrentAvailableMovers().entrySet()) {
             String name = entry.getKey();
             int count = entry.getValue();
 
-            Text text = moverCountTexts.get(name);
+            Button button = moverButtons.get(name);
+            Text countText = moverCountTexts.get(name);
 
-            String countText = (count == -1) ? "∞" : String.valueOf(count);
-            text.setText(name + ": " + countText);
+            // ---- count display ----
+            String countStr = (count == -1) ? "∞" : String.valueOf(count);
+            countText.setText("x " + countStr);
 
-            // ---- selection highlight (CSS-based) ----
-            text.getStyleClass().removeAll(
+            // ---- enable / disable ----
+            boolean available = (count != 0);
+            button.setDisable(!available);
+
+            // ---- style cleanup ----
+            button.getStyleClass().removeAll(
                     "text-strong",
                     "text-muted"
             );
+            countText.getStyleClass().remove("text-muted");
 
+            // ---- state styling ----
             if (name.equals(selected)) {
-                text.getStyleClass().add("text-strong");
-            } else if (count == 0) {
-                text.getStyleClass().add("text-muted");
+                button.getStyleClass().add("text-strong");
+            } else if (!available) {
+                button.getStyleClass().add("text-muted");
+                countText.getStyleClass().add("text-muted");
             }
         }
     }
