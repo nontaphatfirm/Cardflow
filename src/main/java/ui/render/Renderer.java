@@ -35,7 +35,7 @@ public abstract class Renderer<T> {
         gc.rotate(state.rotationDeg());
 
         if (state.mirrorX()) {
-            gc.scale(1, 1);
+            gc.scale(-1, 1);
         }
         gc.drawImage(
                 state.image(),
