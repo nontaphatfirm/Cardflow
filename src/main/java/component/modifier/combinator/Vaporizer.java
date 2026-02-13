@@ -4,7 +4,7 @@ import component.card.Card;
 import component.modifier.Modifier;
 import logic.GameLevel;
 
-public class Vaporizer extends Modifier {
+public class Vaporizer extends Combinator {
     public Vaporizer() {}
 
     @Override

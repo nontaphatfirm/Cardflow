@@ -4,7 +4,7 @@ import component.card.Card;
 import component.modifier.Modifier;
 import logic.GameLevel;
 
-public class Splitter extends Modifier {
+public class Splitter extends Combinator {
 
     private Card cardToSpawn;
 

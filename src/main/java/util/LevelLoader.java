@@ -2,6 +2,9 @@ package util;
 
 import component.card.Card;
 import component.modifier.changer.*;
+import component.modifier.combinator.Merger;
+import component.modifier.combinator.Splitter;
+import component.modifier.combinator.Vaporizer;
 import logic.GameLevel;
 import component.GameTile;
 import component.modifier.Modifier;
@@ -74,6 +77,9 @@ public class LevelLoader {
             case "SETSUT" -> new SuitSetter(parseSuit(value));
             case "SETMAT" -> new MaterialSetter(parseMaterial(value));
             case "SETNUM" -> new NumberSetter(Integer.parseInt(value));
+            case "VAP" -> new Vaporizer();
+            case "MERGE" -> new Merger();
+            case "SPLIT" -> new Splitter();
             case "ENTER" -> new Entrance();
             case "EXIT" -> new Exit();
             default -> throw new IllegalArgumentException("Invalid modifier " + modifier);

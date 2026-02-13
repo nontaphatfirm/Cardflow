@@ -4,7 +4,7 @@ import component.card.Card;
 import component.modifier.Modifier;
 import logic.GameLevel;
 
-public class Merger extends Modifier {
+public class Merger extends Combinator {
 
     private Card previousCard;
 
