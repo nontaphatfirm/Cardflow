@@ -1,13 +1,10 @@
 package util;
 
 import component.card.Card;
-import component.modifier.changer.MaterialSetter;
-import component.modifier.changer.Subtractor;
+import component.modifier.changer.*;
 import logic.GameLevel;
 import component.GameTile;
 import component.modifier.Modifier;
-import component.modifier.changer.Adder;
-import component.modifier.changer.SuitSetter;
 import component.modifier.pathway.Entrance;
 import component.modifier.pathway.Exit;
 
@@ -76,6 +73,7 @@ public class LevelLoader {
             case "SUB" -> new Subtractor(Integer.parseInt(value));
             case "SETSUT" -> new SuitSetter(parseSuit(value));
             case "SETMAT" -> new MaterialSetter(parseMaterial(value));
+            case "SETNUM" -> new NumberSetter(Integer.parseInt(value));
             case "ENTER" -> new Entrance();
             case "EXIT" -> new Exit();
             default -> throw new IllegalArgumentException("Invalid modifier " + modifier);
