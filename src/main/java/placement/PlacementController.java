@@ -2,7 +2,8 @@ package placement;
 
 import java.util.Set;
 
-import application.view.GameScene;
+import application.ViewManager;
+import application.view.GameView;
 import component.GameTile;
 import javafx.scene.input.MouseButton;
 import logic.PlayerInventory;
@@ -30,7 +31,7 @@ public class PlacementController { // Is this supposed to be a user interaction 
                 PlayerInventory.getInstance().cycleRotation();
         }
 
-        GameScene.inventoryPane.updateUI(); // Not sure if this is the best place to put it
+        GameView.getInstance().getInventoryPane().updateUI(); // Not sure if this is the best place to put it
         return Set.of(tile.getGridPos());
     }
 
@@ -41,7 +42,7 @@ public class PlacementController { // Is this supposed to be a user interaction 
     ) {
         if (button == MouseButton.SECONDARY) {
             PlayerInventory.getInstance().cycleRotation();
-            GameScene.inventoryPane.updateUI();
+            GameView.getInstance().getInventoryPane().updateUI();
         }
     }
 }

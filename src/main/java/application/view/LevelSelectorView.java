@@ -1,5 +1,6 @@
 package application.view;
 
+import application.Game;
 import application.ViewManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,8 +15,13 @@ import util.LevelLoader;
 
 import java.io.IOException;
 
-public class LevelSelectorView {
-    public static StackPane create() {
+public class LevelSelectorView extends View {
+
+    private static LevelSelectorView instance;
+
+    public LevelSelectorView() {
+        super();
+        setInstance(this);
 
         Label title = new Label("Select a level");
 
@@ -31,7 +37,7 @@ public class LevelSelectorView {
             levelSelectButton.getStyleClass().setAll("level-select-button");
             levelSelectButton.setOnAction(actionEvent -> {
                 try {
-                    ViewManager.getInstance().showGame(LevelLoader.loadLevel(veryEffectivelyFinal));
+                    ViewManager.getInstance().switchView(new GameView(LevelLoader.loadLevel(veryEffectivelyFinal)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -47,26 +53,15 @@ public class LevelSelectorView {
 
         layout.setPadding(new Insets(20));
 
-        StackPane root = new StackPane();
         root.getChildren().add(layout);
         root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        root.getChildren().add(new Text("LevelSelectorScene")); // TODO: DEBUG
+    }
 
-        Scene scene = new Scene(root);
+    public static LevelSelectorView getInstance() {
+        return instance;
+    }
 
-        scene.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case BACK_SPACE -> {
-                    try {
-                        GameLevel sandbox = LevelLoader.loadSandboxLevel();
-                        ViewManager.getInstance().showGame(sandbox); // or whatever your level swap method is
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        return scene;
+    public static void setInstance(LevelSelectorView view) {
+        instance = view;
     }
 }

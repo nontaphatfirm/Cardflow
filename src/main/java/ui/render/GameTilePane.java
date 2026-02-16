@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Set;
 
 import application.Game;
-import application.view.GameScene;
+import application.view.GameView;
 import component.GameTile;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
@@ -38,7 +38,7 @@ public class GameTilePane extends Button {
                     e.isShiftDown(),
                     e.isControlDown());
             e.consume();
-            dirty.forEach(GameScene::updateTileAndAdjacent);
+            dirty.forEach(GameView.getInstance()::updateTileAndAdjacent);
         });
 
         updateUI();
@@ -58,7 +58,7 @@ public class GameTilePane extends Button {
     }
 
     public void updateUIAdjacent() {
-        GameScene.updateTileAndAdjacent(gameTileInfo.getGridPos());
+        GameView.getInstance().updateTileAndAdjacent(gameTileInfo.getGridPos());
     }
 
     public void updateUI() {

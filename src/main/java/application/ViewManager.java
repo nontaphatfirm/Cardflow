@@ -3,6 +3,7 @@ package application;
 import application.view.GameView;
 import application.view.LevelSelectorView;
 import application.view.MainMenuView;
+import application.view.View;
 import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
 import logic.GameLevel;
@@ -12,15 +13,11 @@ import javafx.stage.Stage;
 public class ViewManager { // Switching views instead of switching scenes to allow for custom transitions.
     private static final String[] CSS_FILES= {"base.css", "cards.css", "tiles.css", "ui.css"};
     private static ViewManager instance;
-    private final Stage stage;
-    private final Scene scene;
-    private StackPane currentPane;
+    public final Stage stage;
+    public final Scene scene;
+    public final StackPane sceneRoot;
+    private View currentView;
 
-    public enum View {
-        Game,
-        LevelSelector,
-        MainMenu
-    }
 
     public static ViewManager getInstance() {
         return instance;
@@ -37,7 +34,8 @@ public class ViewManager { // Switching views instead of switching scenes to all
     private ViewManager(Stage stage) {
         this.stage = stage;
         stage.setTitle("Cardflow");
-        this.scene = new Scene(new StackPane());
+        this.sceneRoot = new StackPane();
+        this.scene = new Scene(sceneRoot);
 
         for (String cssFile : CSS_FILES) {
             scene.getStylesheets().add(getClass().getResource("/css/"+cssFile).toExternalForm());
@@ -47,34 +45,24 @@ public class ViewManager { // Switching views instead of switching scenes to all
         Platform.runLater(() -> scene.getRoot().requestFocus());
     }
 
-    public void switchView(StackPane newViewPane) {
+    public void switchView(View newViewPane) {
         // Switches view without transitions or anything
-        StackPane sceneRoot = ((StackPane) scene.getRoot());
-        if (currentPane == null)
-            sceneRoot.getChildren().add(newViewPane);
+        if (getCurrentView() != null)
+            sceneRoot.getChildren().remove(currentView.getRoot());
 
-        sceneRoot.getChildren().remove(currentPane);
-        sceneRoot.getChildren().add(newViewPane);
-        setCurrentPane(newViewPane);
+        setCurrentView(newViewPane);
+        sceneRoot.getChildren().add(newViewPane.getRoot());
     }
 
-//    public void showMainMenu() {
-//        this.setScene(MainMenuView.create());
-//    }
-//
-//    public void showLevelSelector() {
-//        this.setScene(LevelSelectorScene.create());
-//    }
-//
-//    public void showGame(GameLevel level) {
-//        this.setScene(GameScene.create(level));
-//    }
-
-    public StackPane getCurrentPane() {
-        return currentPane;
+    public View getCurrentView() {
+        return currentView;
     }
 
-    public void setCurrentPane(StackPane currentPane) {
-        this.currentPane = currentPane;
+    public boolean currentViewIs(Class<? extends View> viewClass) {
+        return viewClass.isInstance(getCurrentView());
+    }
+
+    public void setCurrentView(View currentView) {
+        this.currentView = currentView;
     }
 }
