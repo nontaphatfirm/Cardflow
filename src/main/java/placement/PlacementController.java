@@ -2,7 +2,7 @@ package placement;
 
 import java.util.Set;
 
-import application.scene.GameScene;
+import application.view.GameScene;
 import component.GameTile;
 import javafx.scene.input.MouseButton;
 import logic.PlayerInventory;

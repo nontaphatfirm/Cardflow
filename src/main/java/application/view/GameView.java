@@ -1,4 +1,4 @@
-package application.scene;
+package application.view;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -16,7 +16,7 @@ import javafx.scene.text.Text;
 import util.Direction;
 import util.GridPos;
 
-public class GameScene {
+public class GameView {
 
     public static GameTilePane[][] gameGridTilePanes;
     public static InventoryPane inventoryPane;

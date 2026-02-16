@@ -4,16 +4,11 @@ import java.util.EnumMap;
 import java.util.Set;
 
 import application.Game;
-import application.scene.GameScene;
+import application.view.GameScene;
 import component.GameTile;
-import component.mover.Conveyor;
-import component.mover.Mover;
-import javafx.application.Platform;
 import javafx.scene.control.Button;
-import javafx.scene.control.OverrunStyle;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import registry.render.RenderLayer;
 import registry.render.RendererRegistry;
 import util.GridPos;

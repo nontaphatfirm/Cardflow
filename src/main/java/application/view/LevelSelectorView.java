@@ -1,6 +1,6 @@
-package application.scene;
+package application.view;
 
-import application.SceneManager;
+import application.ViewManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,8 +14,8 @@ import util.LevelLoader;
 
 import java.io.IOException;
 
-public class LevelSelectorScene {
-    public static Scene create() {
+public class LevelSelectorView {
+    public static StackPane create() {
 
         Label title = new Label("Select a level");
 
@@ -31,7 +31,7 @@ public class LevelSelectorScene {
             levelSelectButton.getStyleClass().setAll("level-select-button");
             levelSelectButton.setOnAction(actionEvent -> {
                 try {
-                    SceneManager.getInstance().showGame(LevelLoader.loadLevel(veryEffectivelyFinal));
+                    ViewManager.getInstance().showGame(LevelLoader.loadLevel(veryEffectivelyFinal));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -59,7 +59,7 @@ public class LevelSelectorScene {
                 case BACK_SPACE -> {
                     try {
                         GameLevel sandbox = LevelLoader.loadSandboxLevel();
-                        SceneManager.getInstance().showGame(sandbox); // or whatever your level swap method is
+                        ViewManager.getInstance().showGame(sandbox); // or whatever your level swap method is
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

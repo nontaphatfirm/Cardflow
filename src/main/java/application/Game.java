@@ -2,14 +2,11 @@ package application;
 
 import java.util.Set;
 
+import application.view.MainMenuView;
 import component.GameTile;
-import component.mover.Conveyor;
-import component.mover.Mover;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import placement.PlacementController;
 import util.GridPos;
 
@@ -23,8 +20,8 @@ public final class Game {
             System.exit(0);
         });
 
-        SceneManager.init(primaryStage);
-        SceneManager.getInstance().showLevelSelector();
+        ViewManager.init(primaryStage);
+        ViewManager.getInstance().switchView(MainMenuView.create());
         primaryStage.show();
     }
 
