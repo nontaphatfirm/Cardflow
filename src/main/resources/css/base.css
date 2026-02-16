@@ -2,9 +2,20 @@
    GLOBAL TEXT DEFAULTS
    ========================= */
 
+@font-face {
+    font-family: "Pixelated Elegance"; /* Regular */
+    src: url("../asset/fonts/PixelFontRegular.ttf");
+}
+
+@font-face {
+    font-family: "Mozart NBP"; /* Monospace */
+    src: url("../asset/fonts/PixelFontMono.ttf");
+}
+
 .root {
-    -fx-font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-    -fx-font-size: 14px;
+    -fx-font-family: "Pixelated Elegance", "Inter", "Segoe UI", system-ui, sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-smoothing-type: gray;
     -fx-text-fill: #222;
 }
 
@@ -92,5 +103,5 @@
    ========================= */
 
 .text-mono {
-    -fx-font-family: "JetBrains Mono", "Consolas", monospace;
+    -fx-font-family: "Mozart NBP", "JetBrains Mono", "Consolas", monospace;
 }
