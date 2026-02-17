@@ -1,3 +1,5 @@
+package testUtil;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import logic.GameLevel;
