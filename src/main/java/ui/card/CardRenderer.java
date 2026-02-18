@@ -19,7 +19,7 @@ public class CardRenderer extends Renderer<Card> {
     private static final double TILE_SIZE = 85;
 
     private static final Font CARD_FONT =
-            Font.font("Monospaced", 12);
+            Font.font("Mozart NBP", 16);
 
     private CardRenderer() {}
 

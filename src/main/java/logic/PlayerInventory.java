@@ -38,7 +38,7 @@ public class PlayerInventory {
         int resultValue = currentAvailableMovers.get(name);
         if (resultValue == -1) return; // Infinity
         resultValue += change;
-        resultValue = Math.clamp(resultValue, 0, GameLevel.getInstance().AVAILABLE_MOVERS.get(name));
+        resultValue = Math.clamp(resultValue, 0, gameLevel.AVAILABLE_MOVERS.get(name));
         currentAvailableMovers.put(name, resultValue);
     }
 
@@ -54,8 +54,7 @@ public class PlayerInventory {
         if (position == null) return;
         if (Objects.isNull(currentSelection)) return;
         if (currentAvailableMovers.get(currentSelection) == 0) return;
-        GameLevel game = GameLevel.getInstance();
-        if (game.addMover(getMoverObjectByName(currentSelection, currentRotation), position)) {
+        if (gameLevel.addMover(getMoverObjectByName(currentSelection, currentRotation), position)) {
             // Successfully added so we decrement the selection
             modifyAvailableMovers(currentSelection, -1);
         }
@@ -66,7 +65,7 @@ public class PlayerInventory {
         if (position == null) return;
         GameLevel game = GameLevel.getInstance();
         Mover toRemove = game.getTile(position).getMover();
-        if (game.removeMover(toRemove)) {
+        if (gameLevel.removeMover(gameLevel.getTile(position).getMover())) {
             // Successfully removed so we increment the selection
             modifyAvailableMovers(toRemove.getClass().getSimpleName().toUpperCase(), 1); // this is peak java idk what you are talking about
         }
@@ -81,8 +80,7 @@ public class PlayerInventory {
 
     public PlayerInventory(GameLevel gameLevel) {
         this.gameLevel = gameLevel;
-        // Ensure that GameLevel is initialized before this
-        currentAvailableMovers = new HashMap<>(GameLevel.getInstance().AVAILABLE_MOVERS); // Copy total over
+        currentAvailableMovers = new HashMap<>(gameLevel.AVAILABLE_MOVERS); // Copy total over
         if (currentAvailableMovers.isEmpty()) throw new IllegalStateException("No available movers");
         currentRotation = Direction.UP;
         currentSelection = currentAvailableMovers.keySet().iterator().next(); // Just get the "first one" and put it as selection

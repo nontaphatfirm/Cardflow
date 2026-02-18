@@ -1,17 +1,19 @@
 package application;
 
+import java.io.IOException;
 import java.util.Set;
 
+import application.view.GameView;
+import application.view.LevelSelectorView;
+import application.view.MainMenuView;
 import component.GameTile;
-import component.mover.Conveyor;
-import component.mover.Mover;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import logic.GameLevel;
 import placement.PlacementController;
 import util.GridPos;
+import util.LevelLoader;
 
 public final class Game {
 
@@ -23,8 +25,39 @@ public final class Game {
             System.exit(0);
         });
 
-        SceneManager.init(primaryStage);
-        SceneManager.getInstance().showLevelSelector();
+        ViewManager.init(primaryStage, new MainMenuView());
+        ViewManager managerInstance = ViewManager.getInstance();
+
+        managerInstance.scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case BACK_SPACE: {
+                    if (!managerInstance.currentViewIs(LevelSelectorView.class)) return;
+                    try {
+                        GameLevel sandbox = LevelLoader.loadSandboxLevel();
+                        managerInstance.switchView(new GameView(sandbox), TransitionType.FADE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                case SPACE: {
+                    if (!managerInstance.currentViewIs(GameView.class)) return;
+                    GameLevel.getInstance().doTick();
+                    for (GridPos point : GameLevel.getInstance().changedPoints) {
+                        GameView.getInstance().getGameGridTilePanes()[point.getY()][point.getX()].updateUI();
+                    }
+                }
+            }
+        });
+
+
+        managerInstance.scene.onMouseClickedProperty().set(event -> {
+            Game.onSceneClick(
+                event.getButton(),
+                event.isShiftDown(),
+                event.isControlDown()
+            );
+        });
+
         primaryStage.show();
     }
 

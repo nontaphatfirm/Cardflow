@@ -1,21 +1,25 @@
-package application.scene;
+package application.view;
 
-import application.SceneManager;
+import application.TransitionType;
+import application.ViewManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import logic.GameLevel;
+import ui.button.BackButton;
 import util.LevelLoader;
 
 import java.io.IOException;
 
-public class LevelSelectorScene {
-    public static Scene create() {
+public class LevelSelectorView extends View {
+
+    private static LevelSelectorView instance;
+
+    public LevelSelectorView() {
+        super();
+        setInstance(this);
 
         Label title = new Label("Select a level");
 
@@ -31,7 +35,7 @@ public class LevelSelectorScene {
             levelSelectButton.getStyleClass().setAll("level-select-button");
             levelSelectButton.setOnAction(actionEvent -> {
                 try {
-                    SceneManager.getInstance().showGame(LevelLoader.loadLevel(String.valueOf(veryEffectivelyFinal)));
+                    ViewManager.getInstance().switchView(new GameView(LevelLoader.loadLevel(veryEffectivelyFinal)), TransitionType.FADE);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -47,26 +51,15 @@ public class LevelSelectorScene {
 
         layout.setPadding(new Insets(20));
 
-        StackPane root = new StackPane();
-        root.getChildren().add(layout);
+        root.getChildren().addAll(layout, new BackButton());
         root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        root.getChildren().add(new Text("LevelSelectorScene")); // TODO: DEBUG
+    }
 
-        Scene scene = new Scene(root);
+    public static LevelSelectorView getInstance() {
+        return instance;
+    }
 
-        scene.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case BACK_SPACE -> {
-                    try {
-                        GameLevel sandbox = LevelLoader.loadLevel("sandbox");
-                        SceneManager.getInstance().showGame(sandbox); // or whatever your level swap method is
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        return scene;
+    public static void setInstance(LevelSelectorView view) {
+        instance = view;
     }
 }

@@ -1,9 +1,12 @@
-package application.scene;
+package application.view;
 
+import application.ViewManager;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import logic.GameLevel;
 import logic.PlayerInventory;
+import ui.button.BackButton;
 import ui.inventory.InventoryPane;
 import ui.render.GameTilePane;
 import application.Game;
@@ -16,12 +19,13 @@ import javafx.scene.text.Text;
 import util.Direction;
 import util.GridPos;
 
-public class GameScene {
+public class GameView extends View {
 
-    public static GameTilePane[][] gameGridTilePanes;
-    public static InventoryPane inventoryPane;
+    private static GameView instance; // This value can be null and can be invalid (just because instance exists doesn't mean that it is the current view. You must check it on the viewManager.)
+    private GameTilePane[][] gameGridTilePanes;
+    private InventoryPane inventoryPane;
 
-    public static void updateTileAndAdjacent(GridPos pos) {
+    public void updateTileAndAdjacent(GridPos pos) {
         updateIfValid(pos);
 
         updateIfValid(pos.addDirection(Direction.RIGHT)); // right
@@ -30,7 +34,7 @@ public class GameScene {
         updateIfValid(pos.addDirection(Direction.UP)); // up
     }
 
-    private static void updateIfValid(GridPos pos) {
+    private void updateIfValid(GridPos pos) {
         if (pos.getY() < 0 || pos.getY() >= gameGridTilePanes.length)
             return;
         if (pos.getX() < 0 || pos.getX() >= gameGridTilePanes[0].length)
@@ -39,7 +43,9 @@ public class GameScene {
         gameGridTilePanes[pos.getY()][pos.getX()].updateUI();
     }
 
-    public static Scene create(GameLevel level) {
+    public GameView(GameLevel level) {
+        super();
+        setInstance(this);
 
         GameLevel.setInstance(level); // Most components will rely on this
         PlayerInventory.setInstance(new PlayerInventory(level));
@@ -88,32 +94,32 @@ public class GameScene {
 
         mainLayout.setAlignment(Pos.BASELINE_CENTER);
 
-        StackPane root = new StackPane();
-        root.getChildren().add(mainLayout);
+
+        root.getChildren().addAll(mainLayout, new BackButton());
         root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        root.getChildren().add(new Text("GameScene")); // TODO: DEBUG
+    }
 
-        Scene scene = new Scene(root);
+    public GameTilePane[][] getGameGridTilePanes() {
+        return gameGridTilePanes;
+    }
 
-        scene.getAccelerators().put(
-                new KeyCodeCombination(KeyCode.SPACE),
-                () -> {
-                    level.doTick();
-                    for (GridPos point : level.changedPoints) { // TODO: THIS SHOULD BE MOVED TO GAMESTATE
-                        gameGridTilePanes[point.getY()][point.getX()].updateUI();
-                    }
-                });
-        
-        scene.onMouseClickedProperty().set(event -> {
-            Game.onSceneClick(
-                    event.getButton(),
-                    event.isShiftDown(),
-                    event.isControlDown()
-            );
-        });
+    public void setGameGridTilePanes(GameTilePane[][] gameGridTilePanes) {
+        this.gameGridTilePanes = gameGridTilePanes;
+    }
 
-        
+    public InventoryPane getInventoryPane() {
+        return inventoryPane;
+    }
 
-        return scene;
+    public void setInventoryPane(InventoryPane inventoryPane) {
+        this.inventoryPane = inventoryPane;
+    }
+
+    public static GameView getInstance() {
+        return instance;
+    }
+
+    public static void setInstance(GameView view) {
+        instance = view;
     }
 }

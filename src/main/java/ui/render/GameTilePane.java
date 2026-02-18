@@ -4,16 +4,11 @@ import java.util.EnumMap;
 import java.util.Set;
 
 import application.Game;
-import application.scene.GameScene;
+import application.view.GameView;
 import component.GameTile;
-import component.mover.Conveyor;
-import component.mover.Mover;
-import javafx.application.Platform;
 import javafx.scene.control.Button;
-import javafx.scene.control.OverrunStyle;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import registry.render.RenderLayer;
 import registry.render.RendererRegistry;
 import util.GridPos;
@@ -43,7 +38,7 @@ public class GameTilePane extends Button {
                     e.isShiftDown(),
                     e.isControlDown());
             e.consume();
-            dirty.forEach(GameScene::updateTileAndAdjacent);
+            dirty.forEach(GameView.getInstance()::updateTileAndAdjacent);
         });
 
         updateUI();
@@ -63,7 +58,7 @@ public class GameTilePane extends Button {
     }
 
     public void updateUIAdjacent() {
-        GameScene.updateTileAndAdjacent(gameTileInfo.getGridPos());
+        GameView.getInstance().updateTileAndAdjacent(gameTileInfo.getGridPos());
     }
 
     public void updateUI() {
