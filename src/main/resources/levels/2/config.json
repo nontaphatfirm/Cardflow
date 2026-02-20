@@ -1,7 +1,7 @@
 {
   "name": "Can we get much Higher?",
-  "width": 5,
-  "height": 9,
+  "width": 4,
+  "height": 4,
 
   "inputCards": [
     { "suit": "HEART", "value": 13, "material": "PLASTIC" },

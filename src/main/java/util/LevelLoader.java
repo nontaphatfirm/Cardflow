@@ -73,6 +73,8 @@ public class LevelLoader {
             case "." -> null;
             case "ADD" -> new Adder(Integer.parseInt(value));
             case "SUB" -> new Subtractor(Integer.parseInt(value));
+            case "MUL" -> new Multiplier(Integer.parseInt(value));
+            case "DIV" -> new Divider(Integer.parseInt(value));
             case "SETSUT" -> new SuitSetter(parseSuit(value));
             case "SETMAT" -> new MaterialSetter(parseMaterial(value));
             case "SETNUM" -> new NumberSetter(Integer.parseInt(value));
