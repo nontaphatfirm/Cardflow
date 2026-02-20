@@ -1,13 +1,19 @@
 package ui.card;
 
+import java.util.HashSet;
+
 import component.card.Card;
+import event.EventListener;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import logic.event.AfterMovementEvent;
+import logic.movement.CardMovement;
 import registry.render.RenderLayer;
 import ui.render.Renderer;
+import ui.render.GameTilePane;
 import ui.render.RenderState;
 import util.GridPos;
 
@@ -20,6 +26,10 @@ public class CardRenderer extends Renderer<Card> {
 
     private static final Font CARD_FONT =
             Font.font("Mozart NBP", 16);
+
+    private static HashSet<CardMovement> lastMovements = new HashSet<>();
+
+    public EventListener onMovementTick;
 
     private CardRenderer() {}
 
@@ -48,6 +58,11 @@ public class CardRenderer extends Renderer<Card> {
                 card.getMaterial();
 
         gc.fillText(text,0,10);
+    }
+
+    public void onMovementTick(AfterMovementEvent event) {
+        // For now we just update all cards every movement tick, but ideally we should only update the ones that moved
+        lastMovements = event.getMovements();
     }
 
     @Override

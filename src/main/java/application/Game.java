@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import logic.GameLevel;
+import engine.TickEngine;
 import placement.PlacementController;
 import util.GridPos;
 import util.LevelLoader;
@@ -20,6 +21,8 @@ public final class Game {
     private static final PlacementController controller = new PlacementController();
 
     public static void init(Stage primaryStage) {
+        GameBootstrap.init(); // initialize the registries and events
+
         primaryStage.setOnCloseRequest(e -> {
             Platform.exit();
             System.exit(0);
@@ -41,10 +44,7 @@ public final class Game {
                 }
                 case SPACE: {
                     if (!managerInstance.currentViewIs(GameView.class)) return;
-                    GameLevel.getInstance().doTick();
-                    for (GridPos point : GameLevel.getInstance().changedPoints) {
-                        GameView.getInstance().getGameGridTilePanes()[point.getY()][point.getX()].updateUI();
-                    }
+                    TickEngine.tick();
                 }
             }
         });

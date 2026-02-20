@@ -18,14 +18,6 @@ public final class RendererRegistry {
 
     public static final RendererRegistry INSTANCE = new RendererRegistry();
 
-    private RendererRegistry() {
-        register(Card.class, CardRenderer.INSTANCE);
-
-        register(GameTile.class, EmptyTileRenderer.INSTANCE);
-        register(Conveyor.class, ConveyorRenderer.INSTANCE);
-        register(FlipFlop.class, FlipFlopRenderer.INSTANCE);
-    }
-
     public <T> void register(Class<T> type, Renderer<? super T> renderer) {
         renderers.put(type, renderer);
     }

@@ -38,6 +38,7 @@ public final class FlipFlopRenderResolver extends RenderResolver {
                 sprite.image(),
                 85,
                 85,
+                0, 0,
                 rotation,
                 sprite.mirrorX(),
                 alpha

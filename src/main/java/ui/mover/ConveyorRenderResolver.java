@@ -39,6 +39,7 @@ public final class ConveyorRenderResolver extends RenderResolver {
                 sprite.image(),
                 85,
                 85,
+                0,0,
                 rotation,
                 sprite.mirrorX(),
                 alpha

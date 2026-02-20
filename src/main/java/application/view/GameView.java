@@ -18,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import util.Direction;
 import util.GridPos;
+import event.EventBus;
+import event.RenderEvent;
 
 public class GameView extends View {
 
@@ -97,6 +99,13 @@ public class GameView extends View {
 
         root.getChildren().addAll(mainLayout, new BackButton());
         root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        // Register to receive render events and update affected tiles
+        EventBus.register(RenderEvent.class, ev -> {
+            for (GridPos point : ev.getChangedPoints()) {
+                updateIfValid(point);
+            }
+        });
     }
 
     public GameTilePane[][] getGameGridTilePanes() {

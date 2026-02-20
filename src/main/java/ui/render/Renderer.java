@@ -16,11 +16,14 @@ public abstract class Renderer<T> {
 
         double tile = tileSize();
 
+        double offsetX = state.offsetX() * tile;
+        double offsetY = state.offsetY() * tile;
+
         Canvas canvas = new Canvas(w, h);
 
         // 🔥 CENTER THE CANVAS IN THE TILE
-        canvas.setLayoutX((tile - w) / 2.0);
-        canvas.setLayoutY((tile - h) / 2.0);
+        canvas.setLayoutX((tile - w + offsetX) / 2.0);
+        canvas.setLayoutY((tile - h + offsetY) / 2.0);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 

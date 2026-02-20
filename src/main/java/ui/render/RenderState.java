@@ -6,6 +6,8 @@ public record RenderState(
         Image image,
         double width,
         double height,
+        double offsetX,
+        double offsetY,
         double rotationDeg,
         boolean mirrorX,
         double alpha
