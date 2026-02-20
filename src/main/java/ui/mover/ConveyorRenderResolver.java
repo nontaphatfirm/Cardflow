@@ -19,7 +19,7 @@ public final class ConveyorRenderResolver extends RenderResolver {
 
     private static final Image TURN_RIGHT_IMAGE = new Image(
             ConveyorRenderResolver.class.getResourceAsStream(
-                    "/asset/tiles/mover/conveyor/conveyor-turn-right.png"),
+                    "/asset/tiles/mover/conveyor/conveyor-turn.png"),
             0, 0, true, false);
 
     private ConveyorRenderResolver() {}

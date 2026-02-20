@@ -4,42 +4,121 @@ import component.card.Card;
 import javafx.scene.image.Image;
 import ui.render.RenderState;
 
+import javax.imageio.ImageIO;
+import java.util.HashMap;
+import java.util.Map;
+
 public final class CardRenderResolver {
+    // Longer than GTA V load times
 
-    private static final Image PLASTIC_CARD_IMAGE = new Image(
-            CardRenderResolver.class.getResourceAsStream( "/asset/card/plastic-card.png"),
-            0, 0,
-            true,
-            false
-    );
+    private class MaterialImage {
 
-    private static final Image STONE_CARD_IMAGE = new Image(
-            CardRenderResolver.class.getResourceAsStream( "/asset/card/stone-card.png"),
-            0, 0,
-            true,
-            false
-    );
+        private static final String RESOURCE_DIR = "/asset/card/material/";
+        private static final String[] FILENAMES = {"glass", "metal", "plastic", "rubber", "stone"};
+        private static final Map<String, Image> images = new HashMap<>();
 
-    private static final Image METAL_CARD_IMAGE = new Image(
-            CardRenderResolver.class.getResourceAsStream( "/asset/card/metal-card.png"),
-            0, 0,
-            true,
-            false
-    );
+        static {
+            for (String filename : FILENAMES) {
+                images.put(
+                    filename,
+                    new Image(
+                        CardRenderResolver.class.getResourceAsStream( RESOURCE_DIR + filename + ".png"),
+            0, 0, true, false
+                    )
+                );
+            }
+        }
 
+    }
+
+    private class SuitImage {
+
+        private static final String RESOURCE_DIR = "/asset/card/suit/";
+        private static final String[] FILENAMES = { "club", "heart", "diamond", "spade"};
+        private static final Map<String, Image> images = new HashMap<>();
+
+        static {
+            for (String filename : FILENAMES) {
+                images.put(
+                    filename,
+                    new Image(
+                            CardRenderResolver.class.getResourceAsStream( RESOURCE_DIR + filename + ".png"),
+                            0, 0, true, false
+                    )
+                );
+            }
+        }
+
+    }
+
+    private class ValueImage {
+        private static final String RESOURCE_DIR = "/asset/card/value/";
+        private static final String[] FILENAMES = {"a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k"};
+        private static final Map<String, Image> blackImages = new HashMap<>(); // _Black
+        private static final Map<String, Image> whiteImages = new HashMap<>(); // _White
+
+        static { // Is it better to load case by case and cache it like that? maybe. Do I care? no.
+            for (String filename : FILENAMES) {
+                blackImages.put(
+                    filename,
+                    new Image(
+                            CardRenderResolver.class.getResourceAsStream( RESOURCE_DIR + filename + "_black.png"),
+                            0, 0, true, false
+                    )
+                );
+                whiteImages.put(
+                    filename,
+                    new Image(
+                            CardRenderResolver.class.getResourceAsStream( RESOURCE_DIR + filename + "_white.png"),
+                            0, 0, true, false
+                    )
+                );
+            }
+        }
+
+    }
 
     private static final double CARD_WIDTH  = 50;
     private static final double CARD_HEIGHT = 70;
 
     private CardRenderResolver() {}
 
-    public static RenderState resolve(Card card) {
-        Image toRender = switch (card.getMaterial()) {
-            case PLASTIC -> PLASTIC_CARD_IMAGE;
-            case STONE -> STONE_CARD_IMAGE;
-            case METAL -> METAL_CARD_IMAGE;
-            default -> PLASTIC_CARD_IMAGE;
-        };
+    public static RenderState resolveMaterial(Card card) {
+
+        Image toRender = MaterialImage.images.getOrDefault(
+            card.getMaterial().toString().toLowerCase(),
+            MaterialImage.images.get("plastic")
+        );
+
+        return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, false, card.getMaterial() == Card.Material.GLASS ? 0.5: 1.0);
+    }
+
+    public static RenderState resolveSuit(Card card) {
+
+        Image toRender = SuitImage.images.getOrDefault(
+                card.getSuit().toString().toLowerCase(),
+                MaterialImage.images.get("spade")
+        );
+
         return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, false, 1.0);
     }
+
+    public static RenderState resolveValue(Card card) {
+
+        boolean useWhite = true; // TODO idk man it kinda just looks better with white all the time
+
+        String valueString = String.valueOf(card.getValue());
+        if (valueString.equals("1")) valueString = "a";
+        else if (valueString.equals("11")) valueString = "j";
+        else if (valueString.equals("12")) valueString = "q";
+        else if (valueString.equals("13")) valueString = "k";
+
+        Image toRender = (useWhite ? ValueImage.whiteImages: ValueImage.blackImages).getOrDefault(
+            valueString,
+            ValueImage.whiteImages.get("1")
+        );
+
+        return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, false, 1.0);
+    }
+
 }

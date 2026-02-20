@@ -11,12 +11,16 @@ public abstract class Renderer<T> {
     public abstract void render(T tile, Pane node, util.GridPos pos);
 
     protected void draw(Pane node, RenderState state) {
+        Canvas canvas = new Canvas(state.width(), state.height());
+        drawWithCanvas(node, state, canvas);
+        node.getChildren().setAll(canvas);
+    }
+
+    protected void drawWithCanvas(Pane node, RenderState state, Canvas canvas) {
         double w = state.width();
         double h = state.height();
 
         double tile = tileSize();
-
-        Canvas canvas = new Canvas(w, h);
 
         // 🔥 CENTER THE CANVAS IN THE TILE
         canvas.setLayoutX((tile - w) / 2.0);
@@ -25,7 +29,7 @@ public abstract class Renderer<T> {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         gc.setImageSmoothing(false);
-        gc.clearRect(0, 0, w, h);
+        // gc.clearRect(0, 0, w, h);
 
         gc.save();
         gc.setGlobalAlpha(state.alpha());
@@ -45,8 +49,6 @@ public abstract class Renderer<T> {
                 h);
 
         gc.restore();
-
-        node.getChildren().setAll(canvas);
     }
 
     public abstract registry.render.RenderLayer layer();

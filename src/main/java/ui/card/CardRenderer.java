@@ -30,24 +30,19 @@ public class CardRenderer extends Renderer<Card> {
 
     @Override
     public void render(Card card, Pane node, GridPos pos) {
-        RenderState state = CardRenderResolver.resolve(card);
+        // draw the material
+        RenderState matState = CardRenderResolver.resolveMaterial(card);
+        RenderState suitState = CardRenderResolver.resolveSuit(card);
+        RenderState valueState =  CardRenderResolver.resolveValue(card);
 
-        // draw base card via shared renderer
-        draw(node, state);
+        Canvas canvas = new Canvas(matState.width(), matState.height());
 
-        // 🔹 overlay text manually (for now)
-        Canvas canvas = (Canvas) node.getChildren().get(0);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        // Calling draw with canvas manually to allow multiple draws on top of each other
+        drawWithCanvas(node, matState, canvas);
+        drawWithCanvas(node, suitState, canvas);
+        drawWithCanvas(node, valueState, canvas);
 
-        gc.setFont(CARD_FONT);
-        gc.setFill(Color.BLACK);
-
-        String text =
-                card.getSuit() + "\n" +
-                card.getValue() + "\n" +
-                card.getMaterial();
-
-        gc.fillText(text,0,10);
+        node.getChildren().setAll(canvas);
     }
 
     @Override
