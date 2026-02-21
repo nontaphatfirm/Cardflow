@@ -44,7 +44,7 @@ public final class Game {
                 }
                 case SPACE: {
                     if (!managerInstance.currentViewIs(GameView.class)) return;
-                    TickEngine.tick();
+                    TickEngine.start();
                 }
             }
         });
