@@ -17,12 +17,10 @@ public class TickEngine {
         switch (currentPhase) {
             case MOVEMENT:
                 GameLevel.getInstance().doMovementTick();
-                currentPhase = TickPhase.MODIFY;
                 EventBus.emit(new MovementEndedEvent());
                 break;
             case MODIFY:
                 GameLevel.getInstance().doModifyTick();
-                currentPhase = TickPhase.MOVEMENT;
                 EventBus.emit(new ModifyEndedEvent());
                 break;
         
