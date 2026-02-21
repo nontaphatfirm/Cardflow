@@ -49,3 +49,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+## error logs
+
+*.log
