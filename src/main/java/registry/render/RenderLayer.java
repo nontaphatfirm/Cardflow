@@ -6,5 +6,6 @@ public enum RenderLayer {
     MODIFIER,
     CARD,
     CARDANIM,
-    OVERLAY
+    OVERLAY,
+    EFFECTS,
 }

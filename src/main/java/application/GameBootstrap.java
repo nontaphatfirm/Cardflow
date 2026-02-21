@@ -2,6 +2,9 @@ package application;
 
 import component.GameTile;
 import component.card.Card;
+import component.modifier.pathway.Exit;
+import component.modifier.pathway.event.CardEnterEvent;
+import component.modifier.pathway.event.CardExitEvent;
 import component.mover.Conveyor;
 import component.mover.FlipFlop;
 import event.EventBus;
@@ -13,6 +16,8 @@ import registry.render.RendererRegistry;
 import ui.base.EmptyTileRenderer;
 import ui.card.CardMovementAnimation;
 import ui.card.CardRenderer;
+import ui.modifier.pathway.EntranceEffect;
+import ui.modifier.pathway.ExitEffect;
 import ui.mover.ConveyorRenderer;
 import ui.mover.FlipFlopRenderer;
 
@@ -35,10 +40,14 @@ public class GameBootstrap {
 
     public static void registerEvents() {
         EventBus.register(AfterMovementEvent.class, CardRenderer.INSTANCE.movementListener);
+        EventBus.register(CardEnterEvent.class, EntranceEffect.INSTANCE::applyEffect);
+        EventBus.register(CardExitEvent.class, ExitEffect.INSTANCE::applyEffect);
     }
 
     public static void registerLayers() {
         // register floating layers
         FloatingLayerRegistry.INSTANCE.markFloating(RenderLayer.CARDANIM);
+        FloatingLayerRegistry.INSTANCE.markFloating(RenderLayer.EFFECTS);
+        FloatingLayerRegistry.INSTANCE.markFloating(RenderLayer.OVERLAY);
     }
 }

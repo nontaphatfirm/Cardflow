@@ -1,6 +1,8 @@
 package component.modifier.pathway;
 
 import component.card.Card;
+import component.modifier.pathway.event.CardExitEvent;
+import event.EventBus;
 import logic.GameLevel;
 
 public class Exit extends Pathway {
@@ -14,6 +16,7 @@ public class Exit extends Pathway {
         if (GameLevel.getInstance().removeCard(toRemove)) {
             System.out.println("Got card " + toRemove + " expected " + getCurrentCard(GameLevel.getInstance().OUTPUT_CARDS));
             GameLevel.getInstance().exitedCardsList.add(toRemove);
+            EventBus.emit(new CardExitEvent(getGridPos(), toRemove));
             currentIndex++;
         }
     }
