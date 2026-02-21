@@ -42,10 +42,6 @@ public final class Game {
                         e.printStackTrace();
                     }
                 }
-                case SPACE: {
-                    if (!managerInstance.currentViewIs(GameView.class)) return;
-                    TickEngine.start();
-                }
             }
         });
 

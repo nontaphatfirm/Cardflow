@@ -11,6 +11,8 @@ import logic.PlayerInventory;
 import java.util.HashMap;
 import java.util.Map;
 
+import engine.TickEngine;
+
 public class InventoryPane extends VBox { // thx chatgpt
 
     private final PlayerInventory inventory;
@@ -18,6 +20,7 @@ public class InventoryPane extends VBox { // thx chatgpt
     private final Text titleText;
     private final Text rotationText;
     private final VBox moversList;
+    private final HBox controlPanel;
 
     // Per-mover UI references
     private final Map<String, Button> moverButtons = new HashMap<>();
@@ -35,16 +38,34 @@ public class InventoryPane extends VBox { // thx chatgpt
         rotationText = new Text();
         rotationText.getStyleClass().add("text-body");
 
+        controlPanel = new HBox(10);
+
         moversList = new VBox(6);
 
         getChildren().addAll(
                 titleText,
                 rotationText,
+                controlPanel,
                 moversList
         );
 
         buildMoverRows();
+        buildControlPanel();
         updateUI();
+    }
+
+    private void buildControlPanel() {
+        Button pauseButton = new Button("Pause");
+        Button playButton = new Button("Play");
+        Button stepButton = new Button("Step");
+        Button resetButton = new Button("Reset");
+
+        playButton.setOnAction(e -> TickEngine.play());
+        pauseButton.setOnAction(e -> TickEngine.pause());
+        stepButton.setOnAction(e -> TickEngine.step());
+        resetButton.setOnAction(e -> TickEngine.reset());
+
+        controlPanel.getChildren().addAll(playButton, pauseButton, stepButton, resetButton);
     }
 
     // Build static UI once
