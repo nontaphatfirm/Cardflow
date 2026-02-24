@@ -40,12 +40,10 @@ public final class CardRenderResolver extends RenderResolver {
     private static class ValueImage {
         private static final String RESOURCE_DIR = "/asset/card/value/";
         private static final String[] FILENAMES = {"a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k"};
-        private static final Map<String, Image> blackImages = new HashMap<>(); // _Black
-        private static final Map<String, Image> whiteImages = new HashMap<>(); // _White
+        private static final Map<String, Image> images = new HashMap<>(); // _Black
 
         static { // Is it better to load case by case and cache it like that? maybe. Do I care? no.
-            loadImageFiles(RESOURCE_DIR, FILENAMES, blackImages, "_black.png");
-            loadImageFiles(RESOURCE_DIR, FILENAMES, whiteImages, "_white.png");
+            loadImageFiles(RESOURCE_DIR, FILENAMES, images, ".png");
         }
 
     }
@@ -77,11 +75,9 @@ public final class CardRenderResolver extends RenderResolver {
 
     public static RenderState resolveValue(Card card) {
 
-        boolean useWhite = true; // TODO idk man it kinda just looks better with white all the time
-
-        Image toRender = (useWhite ? ValueImage.whiteImages: ValueImage.blackImages).getOrDefault(
+        Image toRender = ValueImage.images.getOrDefault(
             Helper.getValueAsString(card.getValue()),
-            ValueImage.whiteImages.get("1")
+            ValueImage.images.get("1")
         );
 
         return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, false, 1.0);

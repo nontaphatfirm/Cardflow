@@ -9,6 +9,7 @@ import ui.render.RenderResolver;
 import util.Direction;
 import util.GridPos;
 
+import java.util.EnumSet;
 import java.util.Map;
 
 public abstract class MoverRenderResolver extends RenderResolver {
@@ -29,35 +30,65 @@ public abstract class MoverRenderResolver extends RenderResolver {
             boolean mirrorX
     ) {}
 
-    public static SpriteData selectSprite(MoverTopology.MoverShape topology, Map<String, Image> images, String className) {
-        // Sprite name should be in the form of className + - + action so we can reuse this function :D
-        return switch (topology) {
-            case TURN_RIGHT -> new SpriteData(images.get(className + "-turn"), -90, false);
-            case TURN_LEFT -> new SpriteData(images.get(className + "-turn"), +90, true);
-            default -> new SpriteData(images.get(className + "-base"), 0, false);
-        };
-    }
+    public static final class SpriteSelector {
+        // I know this looks bad but I promise you its not really that bad
+        // DOWN = BEHIND, UP = AHEAD
+        public static SpriteData regular(EnumSet<Direction> topology, Map<String, Image> images, String prefix) {
+            // Conveyor + Delay
+            // UP doesn't do anything
+            if (topology.containsAll(EnumSet.of(Direction.DOWN,  Direction.LEFT, Direction.RIGHT)))
+                return new SpriteData(images.get("-merge-c"), 0, false);
+            else if (topology.containsAll(EnumSet.of(Direction.LEFT,  Direction.RIGHT)))
+                return new SpriteData(images.get("-merge-a"), 0, false);
+            else if (topology.containsAll(EnumSet.of(Direction.RIGHT,  Direction.DOWN)))
+                return new SpriteData(images.get("-merge-b"), 0, false);
+            else if (topology.containsAll(EnumSet.of(Direction.LEFT,  Direction.DOWN)))
+                return new SpriteData(images.get("-merge-b"), 0, true);
+            else if (topology.contains(Direction.LEFT))
+                return new SpriteData(images.get("-turn"), +90, false);
+            else if (topology.contains(Direction.RIGHT))
+                return new SpriteData(images.get("-turn"), -90, false);
+            else
+                return new SpriteData(images.get("-base"), 0, false);
+        }
 
+        public static SpriteData flipFlop(EnumSet<Direction> topology, Map<String, Image> images, String prefix) {
+            // FlipFlop
+            // DOWN and UP doesn't do anything
+            if (topology.containsAll(EnumSet.of(Direction.LEFT, Direction.RIGHT)))
+                return new SpriteData(images.get("-merge-c"), +90, false);
+            else if (topology.contains(Direction.RIGHT))
+                return new SpriteData(images.get("-merge-a"), +90, true);
+            else if (topology.contains(Direction.LEFT))
+                return new SpriteData(images.get("-merge-a"), +90, false);
+            else
+                return new SpriteData(images.get("-base"), +90, false);
+        }
+
+        public static SpriteData filter(EnumSet<Direction> topology, Map<String, Image> images, String prefix) {
+            // ParityFilter + RedBlackFilter
+            // UP AND LEFT doesn't do anything
+            if (topology.containsAll(EnumSet.of(Direction.DOWN, Direction.RIGHT)))
+                return new SpriteData(images.get("-merge-c"), 0, false);
+            else if (topology.contains(Direction.DOWN))
+                return new SpriteData(images.get("-merge-a"), 0, false);
+            else if (topology.contains(Direction.RIGHT))
+                return new SpriteData(images.get("-merge-b"), 0, false);
+            else
+                return new SpriteData(images.get("-base"), 0, false);
+        }
+
+    }
 
     public static final class MoverTopology {
 
-        public enum MoverShape {
-            STRAIGHT,
-            TURN_LEFT,
-            TURN_RIGHT,
-            MERGE_LEFT_RIGHT,
-            MERGE_STRAIGHT_LEFT,
-            MERGE_STRAIGHT_RIGHT,
-            MERGE_ALL
-        }
+        // We will use enum set instead (EnumSet<Direction>)
 
-        public static MoverShape resolve(Mover conveyor, GridPos pos) {
+        public static EnumSet<Direction> resolve(Mover conveyor, GridPos pos) {
             GameTile[] tiles = GameLevel.getInstance().getAdjacentTiles(pos);
             Direction forward = conveyor.getRotation();
 
-            boolean STRAIGHT_FOUND = false;
-            boolean LEFT_FOUND = false;
-            boolean RIGHT_FOUND = false;
+            EnumSet<Direction> moverInputs = EnumSet.noneOf(Direction.class);
 
             System.out.println("Resolving topology for conveyor at " + pos +
                     " facing " + forward);
@@ -76,36 +107,18 @@ public abstract class MoverRenderResolver extends RenderResolver {
                             " facing " + forward);
 
                     if (forward.equals(adjacentDirection)) {
-                        STRAIGHT_FOUND = true;
+                        moverInputs.add(Direction.DOWN); // BEHIND
                     } else if (forward.isLeftOf(adjacentDirection)) {
-                        LEFT_FOUND = true;
+                        moverInputs.add(Direction.LEFT);
                     } else if (forward.isRightOf(adjacentDirection)) {
-                        RIGHT_FOUND = true;
+                        moverInputs.add(Direction.RIGHT);
+                    } else if (forward.isOpposite(adjacentDirection)) {
+                        moverInputs.add(Direction.UP); // AHEAD
                     }
                 }
             }
 
-            System.out.println("Conveyor at " + pos +
-                    " has connections - Straight: " + STRAIGHT_FOUND +
-                    ", Left: " + LEFT_FOUND +
-                    ", Right: " + RIGHT_FOUND);
-
-            if (STRAIGHT_FOUND && LEFT_FOUND && RIGHT_FOUND) {
-                return MoverShape.MERGE_ALL;
-            } else if (STRAIGHT_FOUND && LEFT_FOUND) {
-                return MoverShape.MERGE_STRAIGHT_LEFT;
-            } else if (STRAIGHT_FOUND && RIGHT_FOUND) {
-                return MoverShape.MERGE_STRAIGHT_RIGHT;
-            } else if (LEFT_FOUND && RIGHT_FOUND) {
-                return MoverShape.MERGE_LEFT_RIGHT;
-            } else if (STRAIGHT_FOUND) {
-                return MoverShape.STRAIGHT;
-            } else if (LEFT_FOUND) {
-                return MoverShape.TURN_LEFT;
-            } else if (RIGHT_FOUND) {
-                return MoverShape.TURN_RIGHT;
-            }
-            return MoverShape.STRAIGHT;
+            return moverInputs;
         }
     }
 

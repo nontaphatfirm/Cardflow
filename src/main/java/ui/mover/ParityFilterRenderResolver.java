@@ -3,21 +3,22 @@ package ui.mover;
 import component.mover.ParityFilter;
 import javafx.scene.image.Image;
 import ui.render.RenderState;
+import util.Direction;
 import util.GridPos;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class ParityFilterRenderResolver extends MoverRenderResolver {
 
-    // TODO ADD ACTUAL IMAGES TO THIS
     private static class ParityFilterImage {
-        private static final String RESOURCE_DIR = "/asset/tiles/mover/flipflop/";
-        private static final String[] FILENAMES = {"flipflop-base", "flipflop-turn"};
+        private static final String RESOURCE_DIR = "/asset/tiles/mover/parityfilter/";
+        private static final String[] FILENAMES = {"-base", "-merge-a", "-merge-b", "-merge-c"};
         public static final Map<String, Image> images = new HashMap<>();
 
         static {
-            loadImageFiles(RESOURCE_DIR, FILENAMES, images, ".png");
+            loadImageFiles(RESOURCE_DIR + "parityfilter", FILENAMES, images, ".png");
         }
     }
 
@@ -28,9 +29,9 @@ public final class ParityFilterRenderResolver extends MoverRenderResolver {
             GridPos pos,
             double alpha
     ) {
-        MoverTopology.MoverShape topology = MoverTopology.resolve(parityFilter, pos);
 
-        SpriteData sprite = selectSprite(topology, ParityFilterImage.images, "flipflop");
+        EnumSet<Direction> topology = MoverTopology.resolve(parityFilter, pos);
+        SpriteData sprite = SpriteSelector.filter(topology, ParityFilterImage.images, "parityfilter");
 
         double rotation = rotationFor(parityFilter) + sprite.rotationOffset();
 
