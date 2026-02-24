@@ -3,15 +3,20 @@ package ui.inventory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import logic.PlayerInventory;
+import logic.event.AfterMovementEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import engine.TickEngine;
+import engine.event.ModifyEndedEvent;
+import engine.event.MovementEndedEvent;
+import event.EventBus;
 
 public class InventoryPane extends VBox { // thx chatgpt
 
@@ -21,6 +26,7 @@ public class InventoryPane extends VBox { // thx chatgpt
     private final Text rotationText;
     private final VBox moversList;
     private final HBox controlPanel;
+    private final Label phaseLabel;
 
     // Per-mover UI references
     private final Map<String, Button> moverButtons = new HashMap<>();
@@ -40,11 +46,14 @@ public class InventoryPane extends VBox { // thx chatgpt
 
         controlPanel = new HBox(10);
 
+        phaseLabel = new Label("Idle");
+
         moversList = new VBox(6);
 
         getChildren().addAll(
                 titleText,
                 rotationText,
+                phaseLabel,
                 controlPanel,
                 moversList
         );
@@ -52,6 +61,21 @@ public class InventoryPane extends VBox { // thx chatgpt
         buildMoverRows();
         buildControlPanel();
         updateUI();
+
+        registerPhaseLabel();
+    }
+
+    private void registerPhaseLabel(){
+        EventBus.register(MovementEndedEvent.class, (e)->afterMovement(e));
+        EventBus.register(ModifyEndedEvent.class, (e)->afterModifying(e));
+    }
+
+    private void afterMovement(MovementEndedEvent event){
+        phaseLabel.setText("Moving >>>>>>");
+    }
+
+    private void afterModifying(ModifyEndedEvent event){
+        phaseLabel.setText("Modify $$$$$$"); // do whatever changes here
     }
 
     private void buildControlPanel() {
