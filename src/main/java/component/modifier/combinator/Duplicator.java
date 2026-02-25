@@ -11,6 +11,7 @@ public class Duplicator extends Combinator {
     @Override
     public void modify(Card toModify) {
         if (checkSetDisable(toModify)) return;
+        if (checkDestroyGlass(toModify)) return;
 
         if (cardToSpawn == null) {
             if (toModify == null) return;

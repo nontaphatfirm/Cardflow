@@ -41,6 +41,7 @@ abstract public class Changer<T> extends Modifier { // I'm not sorry haha
     @Override
     public void modify(Card toModify) {
         if (checkSetDisable(toModify)) return;
+        if (checkDestroyGlass(toModify)) return;
         if (toModify == null) return;
         if (toModify.getMaterial() == Card.Material.RUBBER) change(toModify);
         change(toModify);

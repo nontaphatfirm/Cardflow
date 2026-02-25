@@ -32,6 +32,16 @@ abstract public class Modifier implements GridIndexable {
         return isDisabled();
     }
 
+    public boolean checkDestroyGlass(Card card) { // returns whether we destroyed the card
+        if (card == null) return false;
+        card.setHealth(card.getHealth() - 1);
+        if (card.getHealth() == 0) { // Exactly equal not <= because -1 is inf
+            GameLevel.getInstance().removeCard(card);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public GridPos getGridPos() { return gridPos; }
     @Override

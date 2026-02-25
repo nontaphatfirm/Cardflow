@@ -10,7 +10,8 @@ public class Absorber extends Combinator {
 
     @Override
     public void modify(Card toModify) {
-        if (checkSetDisable(toModify));
+        if (checkSetDisable(toModify)) return;
+        if (checkDestroyGlass(toModify)) return;
 
         if (toModify == null) return;
         if (previousCard != null) {

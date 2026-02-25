@@ -20,7 +20,7 @@ public class Exit extends Pathway {
             System.out.println("Got card " + toRemove + " expected " + expectedCard);
             
             
-            if(toRemove.equals(expectedCard, true)) { // TODO: What?
+            if(toRemove.equals(expectedCard)) {
                 System.out.println("Correct card exited!");
                 countCorrectExits++;
             } else {

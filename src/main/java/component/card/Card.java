@@ -25,6 +25,7 @@ public class Card implements GridIndexable {
     protected Suit suit;
     protected int value; // Valid value range from [1,13] (Ace -> 1, 2 -> 2, ... K -> 13)
     protected Material material;
+    protected int health; // Only really valid on Glass material (Gets set during material change or modified)
 
     protected GridPos gridPos;
 
@@ -52,6 +53,9 @@ public class Card implements GridIndexable {
         setGridPos(gridPos);
     }
 
+
+    // GETTERS & SETTERS //
+
     public Suit getSuit() {
         return suit;
     }
@@ -75,12 +79,16 @@ public class Card implements GridIndexable {
         this.value = zeroBased + 1;
     }
 
-
-
-    // GETTERS & SETTERS //
-
     public Material getMaterial() { return material; }
-    public void setMaterial(Material material) { this.material = material; }
+    public void setMaterial(Material material) {
+        this.material = material;
+        this.setHealth(material == Material.GLASS ? 3: -1); // glass can go through 2 modifiers without breaking
+    }
+
+    public int getHealth() { return health; }
+    public void setHealth(int health) {
+        this.health = Math.clamp(health, -1, Integer.MAX_VALUE);
+    }
 
     @Override
     public GridPos getGridPos() { return gridPos; }

@@ -11,6 +11,7 @@ public class Merger extends Combinator {
     @Override
     public void modify(Card toModify) {
         if (checkSetDisable(toModify));
+        if (checkDestroyGlass(toModify)) return;
 
         if (toModify == null) return;
         if (previousCard != null) {
