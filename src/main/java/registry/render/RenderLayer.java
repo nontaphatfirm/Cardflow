@@ -1,9 +1,11 @@
 package registry.render;
 
 public enum RenderLayer {
-    MOVER,
     BASE,
+    MOVER,
     MODIFIER,
     CARD,
-    OVERLAY
+    CARDANIM,
+    OVERLAY,
+    EFFECTS,
 }
