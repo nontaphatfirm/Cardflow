@@ -8,6 +8,7 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -121,6 +122,8 @@ public class ViewManager { // Switching views instead of switching scenes to all
 
     private ViewManager(Stage stage, View initialView) {
         this.stage = stage;
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setMaximized(true);
         stage.setTitle("Cardflow");
 
         this.sceneRoot = new StackPane();
@@ -141,21 +144,21 @@ public class ViewManager { // Switching views instead of switching scenes to all
     }
 
     public void switchView(View newView, TransitionType transitionType) {
-        if (currentViewIs(GameView.class)) TickEngine.reset(); // Making sure danm well that that thing doesn't run in the background
+        getCurrentView().cleanup();
         viewTransition.transitionView(getCurrentView(), newView, transitionType);
         viewStack.push(newView);
     }
 
     public void switchViewReplace(View newView, TransitionType transitionType) {
         // Replace the top most view with this view. (Example: Next level button)
-        if (currentViewIs(GameView.class)) TickEngine.reset();
+        getCurrentView().cleanup();
         viewTransition.transitionView(getCurrentView(), newView, transitionType);
         if (!viewStack.isEmpty()) viewStack.pop();
         viewStack.push(newView);
     }
 
     public boolean switchToPreviousView(TransitionType transitionType) {
-        if (currentViewIs(GameView.class)) TickEngine.reset();
+        getCurrentView().cleanup();
         if (viewStack.size() <= 1) return false; // Can't really go back if theres nothing to go back to
         viewTransition.transitionView(viewStack.pop(), viewStack.peek(), transitionType);
         return true;

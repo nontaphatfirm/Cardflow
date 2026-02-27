@@ -37,6 +37,10 @@ public class LevelInfoPane extends VBox { // thx chatgpt
     private final Map<String, Button> moverButtons = new HashMap<>();
     private final Map<String, Text> moverCountTexts = new HashMap<>();
 
+    private Runnable unregisterAfterMovement;
+    private Runnable unregisterAfterModify;
+    private Runnable unregisterAfterPause;
+
     public LevelInfoPane() {
         inventory = PlayerInventory.getInstance();
 
@@ -49,7 +53,7 @@ public class LevelInfoPane extends VBox { // thx chatgpt
 
         controlPanel = new HBox(10);
 
-        phaseLabel = new Label("Current Phase: Paused");
+        phaseLabel = new Label("Current Phase: Paused   ");
 
         rotationLabel = new Label();
         rotationLabel.getStyleClass().add("text-body");
@@ -81,21 +85,27 @@ public class LevelInfoPane extends VBox { // thx chatgpt
     }
 
     private void registerPhaseLabel(){
-        EventBus.register(MovementEndedEvent.class, this::afterMovement);
-        EventBus.register(ModifyEndedEvent.class, this::afterModifying);
-        EventBus.register(PausedEvent.class, this::afterPaused);
+        unregisterAfterMovement = EventBus.register(MovementEndedEvent.class, this::afterMovement);
+        unregisterAfterModify = EventBus.register(ModifyEndedEvent.class, this::afterModifying);
+        unregisterAfterPause = EventBus.register(PausedEvent.class, this::afterPaused);
+    }
+
+    public void cleanup() {
+        unregisterAfterMovement.run();
+        unregisterAfterModify.run();
+        unregisterAfterPause.run();
     }
 
     private void afterMovement(MovementEndedEvent event){
-        phaseLabel.setText("Current Phase: Moving >>>");
+        phaseLabel.setText("Current Phase: Moving   ");
     }
 
     private void afterModifying(ModifyEndedEvent event){
-        phaseLabel.setText("Current Phase: Modifying $$$"); // do whatever changes here
+        phaseLabel.setText("Current Phase: Modifying"); // do whatever changes here
     }
 
     private void afterPaused(PausedEvent event){
-        phaseLabel.setText("Current Phase: Paused"); // do whatever changes here
+        phaseLabel.setText("Current Phase: Paused   "); // do whatever changes here
     }
 
     private void buildControlPanel() {

@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import logic.GameLevel;
 import registry.render.FloatingLayerRegistry;
 import registry.render.RenderLayer;
+import util.Config;
 import util.Direction;
 import util.GridPos;
 
@@ -61,6 +62,7 @@ public class GameRenderStack extends StackPane {
 
             } else if (FloatingLayerRegistry.INSTANCE.isFloating(layer)) {
                 pane = new Pane();
+                pane.setPrefSize(Config.TILE_SIZE * level.WIDTH, Config.TILE_SIZE * level.HEIGHT);
                 pane.setMouseTransparent(true);
                 FloatingLayerRegistry.INSTANCE.registerEntry(layer, pane);
             } else{

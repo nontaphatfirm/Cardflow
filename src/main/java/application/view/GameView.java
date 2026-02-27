@@ -8,6 +8,7 @@ import javafx.util.Duration;
 import logic.GameLevel;
 import logic.PlayerInventory;
 import logic.event.end.GameWinEvent;
+import registry.render.RendererRegistry;
 import ui.button.BackButton;
 import ui.game.GameRenderStack;
 import ui.game.GameWinOverlay;
@@ -27,6 +28,8 @@ public class GameView extends View {
     private final LevelInfoPane levelInfoPane;
     private final GameWinOverlay gameWinOverlay;
     private final GameRenderStack gameGrid;
+    private Runnable unregisterUpdatePoints;
+    private Runnable unregisterShowWinOverlay;
 
     public void updateTileAndAdjacent(GridPos pos) {
         updateIfValid(pos);
@@ -67,15 +70,25 @@ public class GameView extends View {
         root.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
 
-        // Register to receive render events and update affected tiles // Isn't this gonna cause a really really slow memory leak?
-        EventBus.register(RenderEvent.class, ev -> {
-            for (GridPos point : ev.getChangedPoints()) {
-                updateIfValid(point);
-            }
-            ev.getChangedPoints().clear(); // Clearing here instead of inside gameLevel
-        });
+        // Register to receive render events and update affected tiles
+        unregisterUpdatePoints = EventBus.register(RenderEvent.class, this::updatePoints);
+        unregisterShowWinOverlay = EventBus.register(GameWinEvent.class, this::showGameWinOverlay);
+        TickEngine.reset();
+    }
 
-        EventBus.register(GameWinEvent.class, this::showGameWinOverlay);
+    @Override
+    public void cleanup() {
+        TickEngine.reset();
+        unregisterShowWinOverlay.run();
+        unregisterUpdatePoints.run();
+        getLevelInfoPane().cleanup();
+    }
+
+    public void updatePoints(RenderEvent ev) {
+        for (GridPos point : ev.getChangedPoints()) {
+            GameView.getInstance().updateIfValid(point); // I still don't know whats going on actually
+        }
+        ev.getChangedPoints().clear(); // Clearing here instead of inside gameLevel
     }
 
     public void showGameWinOverlay(GameWinEvent event) {
@@ -104,7 +117,8 @@ public class GameView extends View {
 
         drop.setInterpolator(BOUNCE);
         drop.play();
-        root.getChildren().add(gameWinOverlay);
+        root.getChildren().remove(gameWinOverlay);
+        root.getChildren().add(gameWinOverlay); // honestly idk
     }
 
     public LevelInfoPane getLevelInfoPane() {

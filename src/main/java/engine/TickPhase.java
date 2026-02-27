@@ -2,8 +2,7 @@ package engine;
 
 public enum TickPhase {
     MOVEMENT,
-    MODIFY,
-    PAUSE;
+    MODIFY;
 
     private static final TickPhase[] VALUES = values();
 
@@ -11,7 +10,6 @@ public enum TickPhase {
         return switch (this) {
             case MOVEMENT -> MODIFY;
             case MODIFY -> MOVEMENT;
-            default -> PAUSE;
         };
     }
 }
