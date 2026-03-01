@@ -66,7 +66,13 @@ abstract public class Mover implements GridIndexable, Tippable {
 
     @Override
     public Tooltip getTooltip() {
-        // TODO Temporary tooltip
-        return new Tooltip(this.getClass().getSimpleName(), Color.BLACK, "A description");
+        return getMoverTooltip();
+    }
+
+    public static Tooltip getMoverTooltip() {
+        return new Tooltip("Mover",
+                Color.OLIVEDRAB, // Genuinely tho what is this color???
+                "Facilitates the transportation of cards"
+        );
     }
 }

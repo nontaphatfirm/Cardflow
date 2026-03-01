@@ -13,7 +13,7 @@ import util.GridPos;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-public class GameTile {
+public class GameTile implements Tippable {
 
     private Card card;
     private Modifier modifier;
@@ -66,5 +66,16 @@ public class GameTile {
     @Override
     public String toString() {
         return "{" + card + ", " + modifier + ", " + mover + '}';
+    }
+
+    @Override
+    public Tooltip getTooltip() {
+        return new Tooltip(
+            null,
+            Color.BLACK,
+            Tooltip.ref(getCard()),
+            Tooltip.ref(getModifier()),
+            Tooltip.ref(getMover())
+        );
     }
 }

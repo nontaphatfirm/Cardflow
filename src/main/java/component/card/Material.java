@@ -27,8 +27,8 @@ public enum Material implements Tippable {
         return switch (this) {
             case PLASTIC -> new Tooltip(
             "Plastic",
-                Color.BROWN,
-                "The default material"
+                Color.BROWN
+//                "The default material" // I don't think we should show this
             );
             case GLASS -> new Tooltip(
             "Glass",

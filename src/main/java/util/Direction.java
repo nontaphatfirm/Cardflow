@@ -64,7 +64,7 @@ public enum Direction implements Tippable {
     public Tooltip getTooltip() {
         return new Tooltip(
             toString(),
-            Color.BEIGE
+            Color.CADETBLUE
         );
     }
 
