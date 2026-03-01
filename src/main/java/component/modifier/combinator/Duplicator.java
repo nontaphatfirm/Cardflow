@@ -14,6 +14,7 @@ public class Duplicator extends Combinator {
     public void modify(Card toModify) {
         if (checkSetDisable(toModify)) return;
         if (checkDestroyGlass(toModify)) return;
+        if (checkStone(toModify)) return;
 
         if (cardToSpawn == null) {
             if (toModify == null) return;
