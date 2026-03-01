@@ -115,7 +115,7 @@ public class TestCard {
 
     @Test
     void testToString() {
-        assertEquals("Card{SPADE,1}", card1.toString());
-        assertEquals("Card{DIAMOND,6}", card4.toString());
+        assertEquals("Card{Spade,1}", card1.toString());
+        assertEquals("Card{Diamond,6}", card4.toString());
     }
 }

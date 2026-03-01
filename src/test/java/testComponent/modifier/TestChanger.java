@@ -1,6 +1,8 @@
 package testComponent.modifier;
 
 import component.card.Card;
+import component.card.Material;
+import component.card.Suit;
 import component.modifier.changer.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,29 +21,29 @@ public class TestChanger {
 
     @BeforeEach
     void setUp() {
-        plasticCard = new Card(Card.Suit.SPADE, 5, Card.Material.PLASTIC);
-        metalCard = new Card(Card.Suit.HEART, 5, Card.Material.METAL);
-        rubberCard = new Card(Card.Suit.CLUB, 5, Card.Material.RUBBER);
+        plasticCard = new Card(Suit.SPADE, 5, Material.PLASTIC);
+        metalCard = new Card(Suit.HEART, 5, Material.METAL);
+        rubberCard = new Card(Suit.CLUB, 5, Material.RUBBER);
     }
 
     @Test
     void testMaterialSetter() {
-        MaterialSetter materialSetter1 = new MaterialSetter(Card.Material.GLASS);
+        MaterialSetter materialSetter1 = new MaterialSetter(Material.GLASS);
         assertEquals(Changer.ChangeType.MATERIAL, materialSetter1.getChangeType());
-        assertEquals(Card.Material.GLASS, materialSetter1.getChange());
+        assertEquals(Material.GLASS, materialSetter1.getChange());
 
         materialSetter1.modify(plasticCard);
-        assertEquals(Card.Material.GLASS, plasticCard.getMaterial());
+        assertEquals(Material.GLASS, plasticCard.getMaterial());
     }
 
     @Test
     void testSuitSetter() {
-        SuitSetter suitSetter1 = new SuitSetter(Card.Suit.DIAMOND);
+        SuitSetter suitSetter1 = new SuitSetter(Suit.DIAMOND);
         assertEquals(Changer.ChangeType.SUIT, suitSetter1.getChangeType());
-        assertEquals(Card.Suit.DIAMOND, suitSetter1.getChange());
+        assertEquals(Suit.DIAMOND, suitSetter1.getChange());
 
         suitSetter1.modify(plasticCard);
-        assertEquals(Card.Suit.DIAMOND, plasticCard.getSuit());
+        assertEquals(Suit.DIAMOND, plasticCard.getSuit());
     }
 
     @Test
@@ -184,16 +186,16 @@ public class TestChanger {
 
     @Test
     void testMetalNotImmuneToSetters() {
-        SuitSetter suitSetter1 = new SuitSetter(Card.Suit.DIAMOND);
+        SuitSetter suitSetter1 = new SuitSetter(Suit.DIAMOND);
         ValueSetter valueSetter1 = new ValueSetter(10);
-        MaterialSetter materialSetter1 = new MaterialSetter(Card.Material.PLASTIC);
+        MaterialSetter materialSetter1 = new MaterialSetter(Material.PLASTIC);
 
         suitSetter1.modify(metalCard);
-        assertEquals(Card.Suit.DIAMOND, metalCard.getSuit());
+        assertEquals(Suit.DIAMOND, metalCard.getSuit());
         valueSetter1.modify(metalCard);
         assertEquals(10, metalCard.getValue());
         materialSetter1.modify(metalCard);
-        assertEquals(Card.Material.PLASTIC, metalCard.getMaterial());
+        assertEquals(Material.PLASTIC, metalCard.getMaterial());
     }
 
     @Test
@@ -203,8 +205,8 @@ public class TestChanger {
         Multiplier multiplier1 = new Multiplier(2);
         Divider divider1 = new Divider(2);
         ValueSetter valueSetter1 = new ValueSetter(10);
-        SuitSetter suitSetter1 = new SuitSetter(Card.Suit.SPADE);
-        MaterialSetter materialSetter1 = new MaterialSetter(Card.Material.GLASS);
+        SuitSetter suitSetter1 = new SuitSetter(Suit.SPADE);
+        MaterialSetter materialSetter1 = new MaterialSetter(Material.GLASS);
 
         rubberCard.setValue(5);
         adder1.modify(rubberCard);
@@ -226,9 +228,9 @@ public class TestChanger {
         assertEquals(10, rubberCard.getValue());
 
         suitSetter1.modify(rubberCard);
-        assertEquals(Card.Suit.SPADE, rubberCard.getSuit());
+        assertEquals(Suit.SPADE, rubberCard.getSuit());
 
         materialSetter1.modify(rubberCard);
-        assertEquals(Card.Material.GLASS, rubberCard.getMaterial());
+        assertEquals(Material.GLASS, rubberCard.getMaterial());
     }
 }
