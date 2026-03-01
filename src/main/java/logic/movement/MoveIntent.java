@@ -131,9 +131,19 @@ class MoveIntent {
         // Check position has a card or doesn't
         if (GameLevel.getInstance().getTile(resultPos).getCard() != null) {
             // Resolve the next position
+            MoveIntent blockingCardIntent = byCurrent.get(resultPos); // get MUST NOT ERROR OR BE NULL HERE
+
             if (seen.contains(resultPos)) { // We have evaluated this position before (implies cycle)
                 // Checking whether cards are facing each other [C1 -> <- C2]
-                if (byCurrent.get(resultPos).getResultPos().equals(priorityIntent.getCurrentPos()))
+                // Check whether getResultPos() equals to any card in the intentList
+                GridPos blockingCardResultPos = blockingCardIntent.getResultPos();
+
+                boolean isEqual = false;
+                for (MoveIntent intent : intentList)
+                    if (intent.getCurrentPos().equals(blockingCardResultPos))
+                        isEqual = true;
+
+                if (isEqual)
                     priorityIntent.status = IntentStatus.BLOCKED;
                 else
                     priorityIntent.status = IntentStatus.MOVED;
@@ -142,8 +152,6 @@ class MoveIntent {
 
             for (MoveIntent intent : intentList) // Add all intents to seen
                 seen.add(intent.getCurrentPos());
-
-            MoveIntent blockingCardIntent = byCurrent.get(resultPos); // get MUST NOT ERROR OR BE NULL HERE
 
             if (blockingCardIntent.status == IntentStatus.BLOCKED) { // If the position we are going to has a card that
                                                                      // is blocked

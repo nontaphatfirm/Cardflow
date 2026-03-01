@@ -1,0 +1,24 @@
+{
+  "name": "Constant Signal",
+  "width": 5,
+  "height": 3,
+
+  "inputCards": [
+    { "suit": "DIAMOND", "value": 1, "material": "STONE" }
+  ],
+
+  "outputCards": [
+    { "suit": "DIAMOND", "value": 4},
+    { "suit": "DIAMOND", "value": 4},
+    { "suit": "DIAMOND", "value": 4},
+    { "suit": "DIAMOND", "value": 4},
+    { "suit": "DIAMOND", "value": 4}
+  ],
+
+  "availableMovers": [
+    { "name": "CONVEYOR", "count": -1 },
+    { "name": "PARITYFILTER", "count": 1 },
+    { "name": "FLIPFLOP", "count": 1 }
+  ]
+}
+

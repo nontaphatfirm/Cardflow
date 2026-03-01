@@ -1,6 +1,7 @@
 package component.modifier.combinator;
 
 import component.card.Card;
+import component.card.Material;
 import component.modifier.Modifier;
 import javafx.scene.paint.Color;
 import logic.GameLevel;
@@ -14,12 +15,14 @@ public class Splitter extends Combinator {
     public void modify(Card toModify) {
         if (checkSetDisable(toModify)) return;
         if (checkDestroyGlass(toModify)) return;
+        if (checkStone(toModify)) return;
 
         if (cardToSpawn == null) {
             if (toModify == null) return;
-            toModify.setValue(toModify.getValue() / 2);
+            int initialValue = toModify.getValue();
+            toModify.setValue(initialValue / 2);
             cardToSpawn = new Card(toModify.getSuit(),
-                    (int)Math.ceil((double)toModify.getValue() / 2),
+                    (int)Math.ceil((double)initialValue / 2),
                     toModify.getMaterial());
         }
         else {

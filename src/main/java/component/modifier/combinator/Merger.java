@@ -1,6 +1,7 @@
 package component.modifier.combinator;
 
 import component.card.Card;
+import component.card.Material;
 import component.modifier.Modifier;
 import javafx.scene.paint.Color;
 import logic.GameLevel;
@@ -14,6 +15,7 @@ public class Merger extends Combinator {
     public void modify(Card toModify) {
         if (checkSetDisable(toModify));
         if (checkDestroyGlass(toModify)) return;
+        if (checkStone(toModify)) return;
 
         if (toModify == null) return;
         if (previousCard != null) {

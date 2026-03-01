@@ -1,6 +1,7 @@
 package component.modifier.combinator;
 
 import component.card.Card;
+import component.card.Material;
 import component.modifier.Modifier;
 import javafx.scene.paint.Color;
 import logic.GameLevel;
@@ -12,7 +13,7 @@ public class Vaporizer extends Combinator {
     @Override
     public void modify(Card toModify) {
         if (checkSetDisable(toModify)) return;
-
+        if (checkStone(toModify)) return;
         if (toModify != null) GameLevel.getInstance().removeCard(toModify);
     }
 
