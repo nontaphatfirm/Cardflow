@@ -19,9 +19,7 @@ import javafx.util.Duration;
 import logic.GameLevel;
 import util.GridPos;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class TooltipLayer extends Pane {
@@ -76,8 +74,6 @@ public class TooltipLayer extends Pane {
     }
 
     private void setTooltipPosition(MouseEvent e) {
-        // TODO Make this flip up and down so it doesn't go off the screen?
-
         double screenY = getHeight();
         double mouseY = e.getSceneY();
 
@@ -100,6 +96,7 @@ public class TooltipLayer extends Pane {
         List<List<Tooltip>> tooltipHInfo = new ArrayList<>();
         // We ignore the tooltip title of the first tip and take the list from desc
         if (tooltipTarget == null) return;
+        Set<Tooltip> seenTips = new HashSet<>(); // prevents circular referencing loop
         List<Tooltip> tooltipVInfo = tooltipTarget.getTooltip().getRefs();
 
         do {
@@ -107,7 +104,14 @@ public class TooltipLayer extends Pane {
             List<Tooltip> nextTooltipContainerInfo = new ArrayList<>();
 
             for (Tooltip tooltip : tooltipVInfo) {
-                nextTooltipContainerInfo.addAll(tooltip.getRefs());
+
+                // Functional programming in OOP
+                nextTooltipContainerInfo.addAll(tooltip.getRefs().stream().filter(t -> {
+                    if (seenTips.contains(t)) return false;
+                    seenTips.add(t);
+                    return true;
+                }).toList());
+
             }
 
             tooltipVInfo = nextTooltipContainerInfo;

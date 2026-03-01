@@ -1,5 +1,9 @@
 package component.card;
 
+import component.modifier.Modifier;
+import component.modifier.changer.Adder;
+import component.modifier.changer.Changer;
+import component.modifier.combinator.Combinator;
 import javafx.scene.paint.Color;
 import ui.tooltip.Tippable;
 import ui.tooltip.Tooltip;
@@ -20,15 +24,51 @@ public enum Material implements Tippable {
 
     @Override
     public Tooltip getTooltip() {
-        String description = switch (this) {
-            case PLASTIC -> "The default material.";
-            case GLASS -> "Will break if it passes through more than two modifiers.";
-            case METAL -> "Can't be affected by any and all changers.";
-            case STONE ->  "Can't be affected by any and all combinators.";
-            case RUBBER -> "Modifiers apply twice.";
-            case CORRUPTED -> "Will permanently disable a modifier once it passes through. Reverts to plastic afterwords.";
+        return switch (this) {
+            case PLASTIC -> new Tooltip(
+            "Plastic",
+                Color.BROWN,
+                "The default material"
+            );
+            case GLASS -> new Tooltip(
+            "Glass",
+                Color.BROWN,
+                "This material is very fragile. It will break after passing through ",
+                Tooltip.ref(3),
+                " ",
+                Tooltip.ref(Modifier.getModifierTooltip()),
+                "s"
+            );
+            case METAL -> new Tooltip(
+                    "Metal",
+                    Color.BROWN,
+                    "This material will be unaffected by ",
+                    Tooltip.ref(Changer.getModifierTooltip()),
+                    "s"
+            );
+            case STONE -> new Tooltip(
+                    "Stone",
+                    Color.BROWN,
+                    "This material will be unaffected by ",
+                    Tooltip.ref(Combinator.getCombinatorTooltip()),
+                    "s"
+            );
+            case RUBBER -> new Tooltip(
+                    "Rubber",
+                    Color.BROWN,
+                    "Extra bouncy! This material will apply effects from ",
+                    Tooltip.ref(Modifier.getModifierTooltip()),
+                    " twice"
+            );
+            case CORRUPTED -> new Tooltip(
+                    "Corrupted",
+                    Color.BROWN,
+                    "This material will disable the first ",
+                    Tooltip.ref(Modifier.getModifierTooltip()),
+                    " it enters. It then reverts to a ",
+                    Tooltip.ref(PLASTIC),
+                    " card"
+            );
         };
-
-        return new Tooltip(this.toString(), Color.BROWN, description);
     }
 }

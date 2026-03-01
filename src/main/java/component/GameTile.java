@@ -13,7 +13,7 @@ import util.GridPos;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-public class GameTile implements Tippable {
+public class GameTile {
 
     private Card card;
     private Modifier modifier;
@@ -61,17 +61,6 @@ public class GameTile implements Tippable {
         else if (g instanceof Modifier) modifier = null;
         else if (g instanceof Mover) mover = null;
         else if (g != null) throw new IllegalArgumentException("Unknown GridIndexable");
-    }
-
-    @Override
-    public Tooltip getTooltip() {
-        return new Tooltip(
-            null,
-            Color.DARKGREEN,
-            Tooltip.ref(getCard()),
-            Tooltip.ref(getModifier()),
-            Tooltip.ref(getMover())
-        );
     }
 
     @Override

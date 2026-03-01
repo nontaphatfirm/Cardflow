@@ -21,6 +21,7 @@ import engine.event.MovementEndedEvent;
 import event.EventBus;
 import ui.card.CardInputListPane;
 import ui.card.CardOutputListPane;
+import ui.tooltip.Tooltip;
 import ui.tooltip.TooltipLayer;
 import util.Direction;
 
@@ -67,9 +68,9 @@ public class LevelInfoPane extends VBox { // thx chatgpt
 
         moversList = new VBox(6);
 
-        cardInputListPane = new CardInputListPane("Input Cards", GameLevel.getInstance().INPUT_CARDS);
+        cardInputListPane = new CardInputListPane("Input Cards", GameLevel.getInstance().INPUT_CARDS, tooltipLayer);
 
-        cardOutputListPane = new CardOutputListPane("Output Cards", GameLevel.getInstance().OUTPUT_CARDS);
+        cardOutputListPane = new CardOutputListPane("Output Cards", GameLevel.getInstance().OUTPUT_CARDS, tooltipLayer);
 
         getChildren().addAll(
                 titleText,
@@ -147,7 +148,9 @@ public class LevelInfoPane extends VBox { // thx chatgpt
                 updateInventoryUI();
             });
 
-            tooltipLayer.bind(button, PlayerInventory.getMoverObjectByName(name, PlayerInventory.getInstance().getCurrentRotation()));
+            tooltipLayer.bind(button,
+                Tooltip.getContainerFor(PlayerInventory.getMoverObjectByName(name, PlayerInventory.getInstance().getCurrentRotation()))
+            );
 
             // --- count text ---
             Text countText = new Text();

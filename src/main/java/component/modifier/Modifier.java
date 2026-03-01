@@ -23,6 +23,7 @@ abstract public class Modifier implements GridIndexable, Tippable {
         setGridPos(gridPos);
     }
 
+
     // GETTERS & SETTERS //
     public boolean isDisabled() { return isDisabled; }
     public void setDisabled(boolean disabled) { isDisabled = disabled; }
@@ -67,7 +68,10 @@ abstract public class Modifier implements GridIndexable, Tippable {
 
     @Override
     public Tooltip getTooltip() {
-        // TODO Temporary tooltip
-        return new Tooltip(this.getClass().getSimpleName(), Color.BLACK, "A description");
+        return getModifierTooltip();
+    }
+
+    public static Tooltip getModifierTooltip() { // abstract class so we can't really call getTooltip
+        return new Tooltip("Modifier", Color.BLACK, "A special machine that can modify a card that occupies the same tile as it");
     }
 }

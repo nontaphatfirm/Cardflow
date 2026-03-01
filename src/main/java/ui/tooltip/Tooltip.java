@@ -68,8 +68,22 @@ public class Tooltip {
 
     public static Tooltip ref(Object o) {
         if (o == null) return null;
-        else if (o instanceof Tippable tt) return tt.getTooltip();
+        else if (o instanceof Tooltip tt) return tt;
+        else if (o instanceof Tippable tpp) return tpp.getTooltip();
         else return new Tooltip(o.toString(), Color.BLUE);
+    }
+
+    public static Tippable getContainerFor(Tippable ...tipTargets) {
+        // Since when displaying tooltips it affectively only cares about the refs of the first tip without caring about the title
+        // So this can be used to create "Containers" for tooltips to display
+
+        return () -> {
+            Object[] tooltips = new Object[tipTargets.length];
+            for (int i = 0; i < tipTargets.length; i++) {
+                tooltips[i] = tipTargets[i] == null ? null: tipTargets[i].getTooltip();
+            }
+            return new Tooltip(null, Color.BLACK, tooltips);
+        };
     }
 
 }

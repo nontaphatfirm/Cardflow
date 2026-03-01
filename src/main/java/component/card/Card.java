@@ -105,8 +105,7 @@ public class Card implements GridIndexable, Tippable {
     // !! NOT Overriding equals DUE TO HASH ISSUES USE isEquivalent INSTEAD !! //
 
     public boolean isEquivalent(Card card, boolean checkMaterial) {
-        return this.getMaterial() == card.getMaterial() &&
-                this.getSuit() == card.getSuit() &&
+        return this.getSuit() == card.getSuit() &&
                 this.getValue() == card.getValue() &&
                 (checkMaterial ? this.getMaterial() == card.getMaterial(): true);
     }

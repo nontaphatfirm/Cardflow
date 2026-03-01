@@ -65,7 +65,13 @@ public class GameGrid extends GridPane {
                         dirty.forEach(GameView.getInstance()::updateTileAndAdjacent);
                     });
 
-                    tooltipLayer.bind(tilePane, GameLevel.getInstance().getTile(position));
+                    tooltipLayer.bind(tilePane,
+                        Tooltip.getContainerFor(
+                            tile.getCard(),
+                            tile.getModifier(),
+                            tile.getMover()
+                        )
+                    );
                 }
             }
 

@@ -13,7 +13,7 @@ public class Util {
     }
 
     public static String getValueAsDetailedString(int value) {
-        String[] detailedStrings = {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
+        String[] detailedStrings = {"Zero", "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
         return detailedStrings[value]; // not my finest work but it'll do :/
     }
 
