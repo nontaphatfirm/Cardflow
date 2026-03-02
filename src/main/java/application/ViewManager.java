@@ -1,8 +1,7 @@
 package application;
 
-import application.view.GameView;
 import application.view.View;
-import engine.TickEngine;
+import audio.AudioManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
@@ -136,7 +135,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
 
         this.viewStack = new Stack<>();
         this.viewTransition = new ViewTransition();
-        sceneRoot.getChildren().add(initialView.getRoot());
+        sceneRoot.getChildren().addAll(AudioManager.INSTANCE.mediaView, initialView.getRoot());
         viewStack.push(initialView);
 
         stage.setScene(scene);
@@ -175,9 +174,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
     }
 
     private void resizeToCurrentView() {
-    Platform.runLater(() -> {
-        stage.sizeToScene();
-    });
-}
+        Platform.runLater(stage::sizeToScene);
+    }
 
 }

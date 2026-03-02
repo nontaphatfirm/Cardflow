@@ -2,6 +2,7 @@ package application.view;
 
 import application.TransitionType;
 import application.ViewManager;
+import audio.AudioManager;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,6 +29,7 @@ public class MainMenuView extends View {
         Button playButton = new Button("Play ▶");
         playButton.getStyleClass().add("button-primary");
         playButton.setOnAction(event -> {
+            AudioManager.INSTANCE.playSoundEffect("button-click");
             ViewManager.getInstance().switchView(new LevelSelectorView(), TransitionType.ZOOM);
         });
 
