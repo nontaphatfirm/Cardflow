@@ -234,7 +234,7 @@ public class CombinatorTest {
         assertEquals(Suit.CLUB,level.getTile(pos).getCard().getSuit());
         assertEquals(Material.STONE,level.getTile(pos).getCard().getMaterial());
     }
-    /*
+
     @Test
     void testDuplicator() {
         Duplicator duplicator = new Duplicator();
@@ -244,7 +244,121 @@ public class CombinatorTest {
         level.addCard(card, pos);
         level.getTile(pos).setCard(card);
         duplicator.modify(card);
-        assertEquals(card, level.getTile(new GridPos(0,0)).getCard());
+        assertNull(level.getTile(new GridPos(0,0)).getCard());
+        duplicator.modify(card);
+
+        assertEquals(card.getMaterial() ,level.getTile(new GridPos(0,0)).getCard().getMaterial());
+        assertEquals(card.getValue() ,level.getTile(new GridPos(0,0)).getCard().getValue());
+        assertEquals(card.getSuit() ,level.getTile(new GridPos(0,0)).getCard().getSuit());
     }
-    */
+
+    @Test
+    void testDuplicatorWithCorruptedCard() {
+        Duplicator duplicator = new Duplicator();
+        GridPos pos = new GridPos(1,1);
+        Card card = new Card(Suit.CLUB, 5, Material.CORRUPTED);
+        //add first card
+        level.addCard(card, pos);
+        level.getTile(pos).setCard(card);
+        duplicator.modify(card);
+        assertNull(level.getTile(new GridPos(0,0)).getCard());
+        duplicator.modify(card);
+        assertNull(level.getTile(new GridPos(0,0)).getCard()); //card should not be created
+        assertEquals(Material.PLASTIC ,level.getTile(new GridPos(1,1)).getCard().getMaterial()); //change to plastic card
+    }
+
+    @Test
+    void testDuplicatorWithStoneCard() {
+        Duplicator duplicator = new Duplicator();
+        GridPos pos = new GridPos(1,1);
+        Card card = new Card(Suit.CLUB, 5, Material.STONE);
+        //add first card
+        level.addCard(card, pos);
+        level.getTile(pos).setCard(card);
+        duplicator.modify(card);
+        assertNull(level.getTile(new GridPos(0,0)).getCard());
+        duplicator.modify(card);
+        assertNull(level.getTile(new GridPos(0,0)).getCard()); //card should not be created
+        assertEquals(Material.STONE ,level.getTile(new GridPos(1,1)).getCard().getMaterial());
+    }
+
+    @Test
+    void testAbsorber() {
+        Absorber absorber = new Absorber();
+        GridPos pos = new GridPos(1,1);
+        Card card = new Card(Suit.CLUB, 5, Material.PLASTIC);
+        Card card2 = new Card(Suit.HEART, 5, Material.RUBBER);
+        //add first card
+        level.addCard(card, pos);
+        level.getTile(pos).setCard(card);
+        absorber.modify(card);
+        //Card should be consumed
+        assertNull(level.getTile(pos).getCard());
+        //add second card
+        level.addCard(card2,pos);
+        level.getTile(pos).setCard(card2);
+        absorber.modify(card2);
+        //Suit and Material Should be the same as the second card
+        assertEquals(5,level.getTile(pos).getCard().getValue());
+        assertEquals(Suit.HEART,level.getTile(pos).getCard().getSuit());
+        assertEquals(Material.RUBBER,level.getTile(pos).getCard().getMaterial());
+    }
+
+    @Test
+    void testAbsorberWithCorruptedCard() {
+        Absorber absorber = new Absorber();
+        GridPos pos = new GridPos(1,1);
+        Card card = new Card(Suit.CLUB, 5, Material.CORRUPTED);
+        Card card2 = new Card(Suit.HEART, 2, Material.PLASTIC);
+        //add first card
+        level.addCard(card, pos);
+        level.getTile(pos).setCard(card);
+        absorber.modify(card);
+        //Card should not be consumed
+        assertNotNull(level.getTile(pos).getCard()); //ERROR
+        assertEquals(5,level.getTile(pos).getCard().getValue());
+        assertEquals(Suit.CLUB,level.getTile(pos).getCard().getSuit());
+        assertEquals(Material.PLASTIC,level.getTile(pos).getCard().getMaterial());
+        //add second card
+        level.addCard(card2,pos);
+        level.getTile(pos).setCard(card2);
+        absorber.modify(card2);
+        //Suit and Material Should be the same as the second card
+        assertEquals(2,level.getTile(pos).getCard().getValue());
+        assertEquals(Suit.HEART,level.getTile(pos).getCard().getSuit());
+        assertEquals(Material.PLASTIC,level.getTile(pos).getCard().getMaterial());
+    }
+
+    @Test
+    void testAbsorberWithStoneCard() {
+        Absorber absorber = new Absorber();
+        GridPos pos = new GridPos(1,1);
+        Card card = new Card(Suit.SPADE, 5, Material.STONE);
+        Card card2 = new Card(Suit.HEART, 2, Material.PLASTIC);
+        Card card3 = new Card(Suit.CLUB, 5, Material.STONE);
+        //add first card
+        level.addCard(card, pos);
+        level.getTile(pos).setCard(card);
+        absorber.modify(card);
+        //Card should not be consumed
+        assertNotNull(level.getTile(pos).getCard());
+        assertEquals(5,level.getTile(pos).getCard().getValue());
+        assertEquals(Suit.SPADE,level.getTile(pos).getCard().getSuit());
+        assertEquals(Material.STONE,level.getTile(pos).getCard().getMaterial());
+        //add second card
+        level.getTile(pos).setCard(null); //delete card
+
+        level.addCard(card2, pos);
+        level.getTile(pos).setCard(card);
+        absorber.modify(card2); //card should be consumed
+        assertNull(level.getTile(pos).getCard());
+        //add third card
+        level.addCard(card3, pos);
+        level.getTile(pos).setCard(card3);
+        absorber.modify(card3);
+        //should not be doing anything
+        assertEquals(5,level.getTile(pos).getCard().getValue());
+        assertEquals(Suit.CLUB,level.getTile(pos).getCard().getSuit());
+        assertEquals(Material.STONE,level.getTile(pos).getCard().getMaterial());
+    }
 }
