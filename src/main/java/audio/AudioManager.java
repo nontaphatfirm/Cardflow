@@ -38,7 +38,8 @@ public class AudioManager {
                 "game-error",
                 "game-win",
                 "mover-place",
-                "mover-rotate"
+                "mover-rotate",
+                "mover-pickup"
         };
 
         private static final Map<String, AudioClip> audios = new HashMap<>();
@@ -79,6 +80,7 @@ public class AudioManager {
                 seen.add("card-destroy");
         }
         for (String name: seen) playSoundEffect(name);
+        modSet.clear();
    }
 
     public static void playSoundEffect(String name) {

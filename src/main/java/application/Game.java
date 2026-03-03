@@ -68,8 +68,10 @@ public final class Game {
                 if (PlayerInventory.getInstance().placeToGrid(tile.getGridPos())) AudioManager.playSoundEffect("mover-place");
                 else AudioManager.playSoundEffect("game-error");
             }
-            else
+            else {
                 PlayerInventory.getInstance().removeFromGrid(tile.getGridPos());
+                AudioManager.playSoundEffect("mover-pickup");
+            }
         }
         if (button == MouseButton.SECONDARY) {
             if (tile.getMover() != null) tile.getMover().rotate();
