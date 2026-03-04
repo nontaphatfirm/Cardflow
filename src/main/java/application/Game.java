@@ -8,6 +8,8 @@ import application.view.LevelSelectorView;
 import application.view.MainMenuView;
 import audio.AudioManager;
 import component.GameTile;
+import engine.GameState;
+import engine.TickEngine;
 import event.Event;
 import javafx.application.Platform;
 import javafx.scene.input.MouseButton;
@@ -69,12 +71,12 @@ public final class Game {
                 else AudioManager.playSoundEffect("game-error");
             }
             else {
-                PlayerInventory.getInstance().removeFromGrid(tile.getGridPos());
-                AudioManager.playSoundEffect("mover-pickup");
+                if (PlayerInventory.getInstance().removeFromGrid(tile.getGridPos())) AudioManager.playSoundEffect("mover-pickup");
+                else AudioManager.playSoundEffect("game-error");
             }
         }
         if (button == MouseButton.SECONDARY) {
-            if (tile.getMover() != null) tile.getMover().rotate();
+            if (TickEngine.getGameState() == GameState.PLACING && tile.getMover() != null) tile.getMover().rotate();
             else PlayerInventory.getInstance().cycleRotation();
             AudioManager.playSoundEffect("mover-rotate");
         }

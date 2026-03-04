@@ -6,11 +6,21 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
+import javafx.scene.CacheHint;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.Glow;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ui.shader.GlowOverlay;
 
 import java.util.Stack;
 
@@ -21,6 +31,8 @@ public class ViewManager { // Switching views instead of switching scenes to all
     public final Stage stage;
     public final Scene scene;
     public final StackPane sceneRoot;
+    public final StackPane viewRoot;
+    public final StackPane shaderRoot; // on top of view root
     private final Stack<View> viewStack; // Used to automatically track where we have come from and also prevent regen of scenes
     private final ViewTransition viewTransition;
 
@@ -54,8 +66,8 @@ public class ViewManager { // Switching views instead of switching scenes to all
 
         private void transitionNoneView(View prevView, View newView) { // not my best naming skills :/
             // Switches view without transitions or anything
-            sceneRoot.getChildren().remove(prevView.getRoot());
-            sceneRoot.getChildren().add(newView.getRoot());
+            viewRoot.getChildren().remove(prevView.getRoot());
+            viewRoot.getChildren().add(newView.getRoot());
             resizeToCurrentView();
         }
 
@@ -64,8 +76,8 @@ public class ViewManager { // Switching views instead of switching scenes to all
             fadeOut.setToValue(0);
 
             fadeOut.setOnFinished(e -> {
-                sceneRoot.getChildren().remove(prevView.getRoot());
-                sceneRoot.getChildren().add(newView.getRoot());
+                viewRoot.getChildren().remove(prevView.getRoot());
+                viewRoot.getChildren().add(newView.getRoot());
 
                 FadeTransition fadeIn = new FadeTransition(Duration.millis(300), newView.getRoot());
                 fadeIn.setFromValue(0);
@@ -92,8 +104,8 @@ public class ViewManager { // Switching views instead of switching scenes to all
 
             pt.play();
             pt.setOnFinished(event -> {
-                sceneRoot.getChildren().remove(prevView.getRoot());
-                sceneRoot.getChildren().add(newView.getRoot());
+                viewRoot.getChildren().remove(prevView.getRoot());
+                viewRoot.getChildren().add(newView.getRoot());
 
                 ScaleTransition scaleDown = new ScaleTransition(Duration.millis(300), newView.getRoot());
                 scaleUp.setFromX(40);
@@ -125,7 +137,16 @@ public class ViewManager { // Switching views instead of switching scenes to all
         stage.setMaximized(true);
         stage.setTitle("Cardflow");
 
+
+        this.viewRoot = new StackPane();
+
+        this.shaderRoot = new StackPane();
+        shaderRoot.getChildren().add(new GlowOverlay());
+        shaderRoot.setMouseTransparent(true);
+
         this.sceneRoot = new StackPane();
+
+        sceneRoot.getChildren().addAll(viewRoot, shaderRoot);
 
         this.scene = new Scene(sceneRoot);
 
@@ -136,7 +157,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
         this.viewStack = new Stack<>();
         this.viewTransition = new ViewTransition();
         initialView.startup();
-        sceneRoot.getChildren().add(initialView.getRoot());
+        viewRoot.getChildren().add(initialView.getRoot());
         viewStack.push(initialView);
 
         stage.setScene(scene);

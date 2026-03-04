@@ -34,6 +34,7 @@ public class MainMenuView extends View {
         });
 
         Button exitButton =  new Button("Exit");
+        exitButton.getStyleClass().add("button-info");
         exitButton.setOnAction(event -> {
             AudioManager.playSoundEffect("button-click");
             Platform.exit();

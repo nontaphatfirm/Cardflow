@@ -214,17 +214,21 @@ public class LevelInfoPane extends VBox { // thx chatgpt
 
             // ---- style cleanup ----
             button.getStyleClass().removeAll(
-                    "text-strong",
+                    "button-primary",
+                    "button-error",
                     "text-muted"
             );
-            countText.getStyleClass().remove("text-muted");
+            countText.getStyleClass().removeAll(
+                    "text-error",
+                    "text-muted"
+            );
 
             // ---- state styling ----
             if (name.equals(selected)) {
-                button.getStyleClass().add("text-strong");
+                button.getStyleClass().add("button-primary");
             } else if (!available) {
-                button.getStyleClass().add("text-muted");
-                countText.getStyleClass().add("text-muted");
+                button.getStyleClass().addAll("text-muted", "button-error");
+                countText.getStyleClass().addAll("text-muted", "text-error");
             }
         }
     }

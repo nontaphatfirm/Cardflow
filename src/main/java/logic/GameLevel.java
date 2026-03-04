@@ -1,6 +1,8 @@
 package logic;
 
 import audio.AudioManager;
+import javafx.scene.effect.Effect;
+import ui.effect.EffectManager;
 import util.CardCount;
 import util.GridIndexable;
 import component.GameTile;
@@ -162,6 +164,8 @@ public class GameLevel {
             modifier.modify(getTile(modifier.getGridPos()).getCard()); // on success each call should add their class to the hashset
         }
         AudioManager.playSFXWithModifierSet(successfullyModified);
+        EffectManager.createEffectsWithModifierSet(successfullyModified);
+        successfullyModified.clear();
     }
 
     public void resetLevel() {

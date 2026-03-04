@@ -80,7 +80,6 @@ public class AudioManager {
                 seen.add("card-destroy");
         }
         for (String name: seen) playSoundEffect(name);
-        modSet.clear();
    }
 
     public static void playSoundEffect(String name) {

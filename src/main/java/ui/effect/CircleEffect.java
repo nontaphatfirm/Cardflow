@@ -1,17 +1,12 @@
 package ui.effect;
 
-import component.modifier.pathway.event.CardExitEvent;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import registry.render.FloatingLayerRegistry;
-import registry.render.RenderLayer;
-import ui.modifier.pathway.ExitEffect;
 import util.Config;
 import util.GridPos;
 

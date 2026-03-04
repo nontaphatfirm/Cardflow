@@ -1,6 +1,9 @@
 package logic;
 
 import component.mover.*;
+import engine.EngineState;
+import engine.GameState;
+import engine.TickEngine;
 import util.*;
 
 import java.util.HashMap;
@@ -44,27 +47,30 @@ public class PlayerInventory {
     }
 
     public void setCurrentSelection(String name) {
-        name = name.toUpperCase();
-        if (!currentAvailableMovers.containsKey(name)) name = null;
-        if (currentAvailableMovers.get(name) == 0) name = null;
+        if (name != null) {
+            name = name.toUpperCase();
+            if (!currentAvailableMovers.containsKey(name)) name = null;
+            if (currentAvailableMovers.get(name) == 0) name = null;
+        }
         this.currentSelection = name;
     }
 
     public boolean placeToGrid(GridPos position) { // returns success
-        // TODO: Maybe also do a check with the current game state?
+        if (TickEngine.getGameState() == GameState.SIMULATING) return false;
         if (position == null) return false;
         if (Objects.isNull(currentSelection)) return false;
         if (currentAvailableMovers.get(currentSelection) == 0) return false;
         if (gameLevel.addMover(getMoverObjectByName(currentSelection, currentRotation), position)) {
             // Successfully added so we decrement the selection
             modifyAvailableMovers(currentSelection, -1);
+            if (currentAvailableMovers.get(currentSelection) == 0) setCurrentSelection(null);
             return true;
         }
         return false;
     }
 
     public boolean removeFromGrid(GridPos position) {
-        // TODO: Maybe also do a check with the current game state?
+        if (TickEngine.getGameState() == GameState.SIMULATING) return false;
         if (position == null) return false;
         GameLevel game = GameLevel.getInstance();
         Mover toRemove = game.getTile(position).getMover();

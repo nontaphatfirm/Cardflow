@@ -1,14 +1,22 @@
 package ui.effect;
 
 import component.modifier.Modifier;
+import component.modifier.changer.Arithmetic;
+import component.modifier.changer.Changer;
+import component.modifier.combinator.Combinator;
+import component.modifier.pathway.Entrance;
+import component.modifier.pathway.Exit;
 import javafx.animation.Transition;
 import javafx.scene.Node;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import registry.render.FloatingLayerRegistry;
 import registry.render.RenderLayer;
 import util.Config;
 import util.GridPos;
+
+import java.util.Set;
 
 public class EffectManager {
 
@@ -23,12 +31,17 @@ public class EffectManager {
         transition.play();
     }
 
-    public static void createEffectsOnModifiers(Iterable<Modifier> modifiers) {
+    public static void createEffectsWithModifierSet(Set<Modifier> modifiers) {
         for (Modifier modifier : modifiers) {
-            if (modifier)
+            Color selectedColor = switch (modifier) {
+                case Entrance entrance -> Color.YELLOWGREEN;
+                case Exit exit -> Color.RED;
+                case Changer<?> changer -> Color.CYAN;
+                case Combinator combinator -> Color.VIOLET;
+                case null, default -> Color.YELLOW; // idk
+            };
 
-
-
+            createEffect(selectedColor, modifier.getGridPos());
         }
     }
 
