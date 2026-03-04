@@ -55,14 +55,6 @@
     -fx-faint-focus-color: transparent;
 }
 
-.level-title {
-    -fx-font-size: 48px;
-    -fx-padding: 16;
-    -fx-font-weight: bold;
-    -fx-text-fill: BLACK;
-}
-
-
 .game-grid {
     -fx-hgap: 0;
     -fx-vgap: 0;

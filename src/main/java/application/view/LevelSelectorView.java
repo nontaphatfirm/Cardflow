@@ -24,7 +24,7 @@ public class LevelSelectorView extends View {
         setInstance(this);
 
         Label title = new Label("Select a level");
-        title.getStyleClass().add("level-title");
+        title.getStyleClass().add("text-title");
 
 
         GridPane levelSelectGrid = new GridPane();
@@ -53,7 +53,7 @@ public class LevelSelectorView extends View {
             levelSelectGrid.add(levelSelectButton, i % 5, i / 5);
         }
 
-        VBox layout = new VBox(10);
+        VBox layout = new VBox(25);
         layout.getChildren().add(title);
         layout.getChildren().add(levelSelectGrid);
         layout.setAlignment(Pos.TOP_CENTER);
