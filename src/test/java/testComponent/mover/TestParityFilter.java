@@ -41,21 +41,21 @@ public class TestParityFilter {
     }
 
     @Test
-    void testGetDirectionStatelessEvenCard() {
+    void testGetDirectionEvenCard() {
         Card card = new Card(Suit.HEART, 4, Material.PLASTIC);
         level.addCard(card, pos);
         assertEquals(Direction.UP, filter.getDirectionStateless());
     }
 
     @Test
-    void testGetDirectionStatelessOddCard() {
+    void testGetDirectionOddCard() {
         Card card = new Card(Suit.HEART, 3, Material.PLASTIC);
         level.addCard(card, pos);
         assertEquals(Direction.LEFT, filter.getDirectionStateless());
     }
 
     @Test
-    void testGetDirectionStatelessNoCard() {
+    void testGetDirectionNoCard() {
         assertEquals(Direction.STAY, filter.getDirectionStateless());
     }
 }

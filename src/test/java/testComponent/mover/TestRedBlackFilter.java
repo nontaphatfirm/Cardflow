@@ -41,7 +41,7 @@ public class TestRedBlackFilter {
     }
 
     @Test
-    void testGetDirectionStatelessRedCard() {
+    void testGetDirectionRedCard() {
         Card card1 = new Card(Suit.HEART, 5, Material.PLASTIC);
         level.addCard(card1, gridPos);
         assertEquals(Direction.RIGHT, filter.getDirectionStateless());
@@ -52,7 +52,7 @@ public class TestRedBlackFilter {
     }
 
     @Test
-    void testGetDirectionStatelessBlackCard() {
+    void testGetDirectionBlackCard() {
         Card card1 = new Card(Suit.SPADE, 5, Material.PLASTIC);
         level.addCard(card1, gridPos);
         assertEquals(Direction.UP, filter.getDirectionStateless());
@@ -63,7 +63,7 @@ public class TestRedBlackFilter {
     }
 
     @Test
-    void testGetDirectionStatelessNoCard() {
+    void testGetDirectionNoCard() {
         assertEquals(Direction.STAY, filter.getDirectionStateless());
     }
 }
