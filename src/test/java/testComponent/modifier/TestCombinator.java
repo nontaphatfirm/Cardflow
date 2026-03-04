@@ -1,4 +1,4 @@
-package testCombinator;
+package testComponent.modifier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class CombinatorTest {
+public class TestCombinator {
 
     private GameLevel level;
     private List<CardCount> inputCards;
@@ -53,6 +53,8 @@ public class CombinatorTest {
     void testVaporizerRemovesCardFromTile() {
         Vaporizer vaporizer = new Vaporizer();
         GridPos pos = new GridPos(0, 0);
+        vaporizer.setGridPos(pos);
+
         Card card = new Card(Suit.DIAMOND, 5, Material.PLASTIC);
         level.addCard(card,pos);
         level.getTile(pos).setCard(card);
@@ -65,6 +67,8 @@ public class CombinatorTest {
     void testDisabledVaporizerWithCorruptedCard() {
         Vaporizer vaporizer = new Vaporizer();
         GridPos pos = new GridPos(2, 2);
+        vaporizer.setGridPos(pos);
+
         Card card = new Card(Suit.DIAMOND, 5, Material.CORRUPTED);
         level.addCard(card,pos);
         level.getTile(pos).setCard(card);
@@ -80,6 +84,8 @@ public class CombinatorTest {
     void testVaporizerWithStoneCard() {
         Vaporizer vaporizer = new Vaporizer();
         GridPos pos = new GridPos(2, 2);
+        vaporizer.setGridPos(pos);
+
         Card card = new Card(Suit.DIAMOND, 5, Material.STONE);
         level.addCard(card,pos);
         level.getTile(pos).setCard(card);
@@ -93,6 +99,8 @@ public class CombinatorTest {
     void testSplitterSplittingCard_Odd() {
         Splitter splitter = new Splitter();
         GridPos pos = new GridPos(1,1);
+        splitter.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 7, Material.PLASTIC);
         level.addCard(card, pos);
         level.getTile(pos).setCard(card);
@@ -100,16 +108,21 @@ public class CombinatorTest {
         splitter.modify(card);
         assertEquals(Material.PLASTIC, level.getTile(pos).getCard().getMaterial());
         assertEquals(3,level.getTile(pos).getCard().getValue());
+
+        level.getTile(pos).setCard(null);
+
         //Check second card
         splitter.modify(card);
         assertEquals(Material.PLASTIC, level.getTile(pos).getCard().getMaterial());
-        assertEquals(4,level.getTile(new GridPos(0,0)).getCard().getValue());
+        assertEquals(4,level.getTile(pos).getCard().getValue());
     }
 
     @Test
     void testSplitterSplittingCard_Even() {
         Splitter splitter = new Splitter();
         GridPos pos = new GridPos(1,1);
+        splitter.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 4, Material.PLASTIC);
         level.addCard(card, pos);
         level.getTile(pos).setCard(card);
@@ -117,16 +130,21 @@ public class CombinatorTest {
         splitter.modify(card);
         assertEquals(Material.PLASTIC, level.getTile(pos).getCard().getMaterial());
         assertEquals(2,level.getTile(pos).getCard().getValue());
+
+        level.getTile(pos).setCard(null);
+
         //Check second card
         splitter.modify(card);
-        assertEquals(Material.PLASTIC, level.getTile(new GridPos(0,0)).getCard().getMaterial());
-        assertEquals(2,level.getTile(new GridPos(0,0)).getCard().getValue());
+        assertEquals(Material.PLASTIC, level.getTile(pos).getCard().getMaterial());
+        assertEquals(2,level.getTile(pos).getCard().getValue());
     }
 
     @Test
     void testDisabledSplitterWithCorruptedCard() {
         Splitter splitter = new Splitter();
         GridPos pos = new GridPos(1,1);
+        splitter.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 7, Material.CORRUPTED);
         level.addCard(card, pos);
         level.getTile(pos).setCard(card);
@@ -134,15 +152,20 @@ public class CombinatorTest {
         splitter.modify(card);
         assertEquals(Material.PLASTIC, level.getTile(pos).getCard().getMaterial());
         assertEquals(7,level.getTile(pos).getCard().getValue());
+
+        level.getTile(pos).setCard(null);
+
         //Check second card (Shouldn't Exist)
         splitter.modify(card);
-        assertNull(level.getTile(new GridPos(0,0)).getCard());
+        assertNull(level.getTile(pos).getCard());
     }
 
     @Test
     void testSplitterWithStoneCard() {
         Splitter splitter = new Splitter();
         GridPos pos = new GridPos(1,1);
+        splitter.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 7, Material.STONE);
         level.addCard(card, pos);
         level.getTile(pos).setCard(card);
@@ -150,15 +173,20 @@ public class CombinatorTest {
         splitter.modify(card);
         assertEquals(Material.STONE, level.getTile(pos).getCard().getMaterial());
         assertEquals(7,level.getTile(pos).getCard().getValue());
+
+        level.getTile(pos).setCard(null);
+
         //Check second card (Shouldn't Exist)
         splitter.modify(card);
-        assertNull(level.getTile(new GridPos(0,0)).getCard());
+        assertNull(level.getTile(pos).getCard());
     }
 
     @Test
     void testMerger() {
         Merger merger = new Merger();
         GridPos pos = new GridPos(1,1);
+        merger.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 5, Material.PLASTIC);
         Card card2 = new Card(Suit.HEART, 5, Material.RUBBER);
         //add first card
@@ -181,6 +209,8 @@ public class CombinatorTest {
     void testMergerWithCorruptedCard() {
         Merger merger = new Merger();
         GridPos pos = new GridPos(1,1);
+        merger.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 5, Material.CORRUPTED);
         Card card2 = new Card(Suit.HEART, 2, Material.PLASTIC);
         //add first card
@@ -206,6 +236,8 @@ public class CombinatorTest {
     void testMergerWithStoneCard() {
         Merger merger = new Merger();
         GridPos pos = new GridPos(1,1);
+        merger.setGridPos(pos);
+
         Card card = new Card(Suit.SPADE, 5, Material.STONE);
         Card card2 = new Card(Suit.HEART, 2, Material.PLASTIC);
         Card card3 = new Card(Suit.CLUB, 5, Material.STONE);
@@ -222,7 +254,7 @@ public class CombinatorTest {
         level.getTile(pos).setCard(null); //delete card
 
         level.addCard(card2, pos);
-        level.getTile(pos).setCard(card);
+        level.getTile(pos).setCard(card2);
         merger.modify(card2);
         assertNull(level.getTile(pos).getCard());
         //add third card
@@ -239,53 +271,71 @@ public class CombinatorTest {
     void testDuplicator() {
         Duplicator duplicator = new Duplicator();
         GridPos pos = new GridPos(1,1);
+        duplicator.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 5, Material.PLASTIC);
         //add first card
         level.addCard(card, pos);
         level.getTile(pos).setCard(card);
-        duplicator.modify(card);
-        assertNull(level.getTile(new GridPos(0,0)).getCard());
+
         duplicator.modify(card);
 
-        assertEquals(card.getMaterial() ,level.getTile(new GridPos(0,0)).getCard().getMaterial());
-        assertEquals(card.getValue() ,level.getTile(new GridPos(0,0)).getCard().getValue());
-        assertEquals(card.getSuit() ,level.getTile(new GridPos(0,0)).getCard().getSuit());
+        level.getTile(pos).setCard(null);
+
+        duplicator.modify(card);
+
+        assertEquals(card.getMaterial() ,level.getTile(pos).getCard().getMaterial());
+        assertEquals(card.getValue() ,level.getTile(pos).getCard().getValue());
+        assertEquals(card.getSuit() ,level.getTile(pos).getCard().getSuit());
     }
 
     @Test
     void testDuplicatorWithCorruptedCard() {
         Duplicator duplicator = new Duplicator();
         GridPos pos = new GridPos(1,1);
+        duplicator.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 5, Material.CORRUPTED);
         //add first card
         level.addCard(card, pos);
         level.getTile(pos).setCard(card);
+
         duplicator.modify(card);
-        assertNull(level.getTile(new GridPos(0,0)).getCard());
+
+        assertEquals(Material.PLASTIC ,level.getTile(pos).getCard().getMaterial());
+        level.getTile(pos).setCard(null);
+
         duplicator.modify(card);
-        assertNull(level.getTile(new GridPos(0,0)).getCard()); //card should not be created
-        assertEquals(Material.PLASTIC ,level.getTile(new GridPos(1,1)).getCard().getMaterial()); //change to plastic card
+        assertNull(level.getTile(pos).getCard());
     }
 
     @Test
     void testDuplicatorWithStoneCard() {
         Duplicator duplicator = new Duplicator();
         GridPos pos = new GridPos(1,1);
+        duplicator.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 5, Material.STONE);
         //add first card
         level.addCard(card, pos);
         level.getTile(pos).setCard(card);
+
         duplicator.modify(card);
-        assertNull(level.getTile(new GridPos(0,0)).getCard());
+
+        assertEquals(Material.STONE ,level.getTile(pos).getCard().getMaterial());
+        level.getTile(pos).setCard(null);
+
         duplicator.modify(card);
-        assertNull(level.getTile(new GridPos(0,0)).getCard()); //card should not be created
-        assertEquals(Material.STONE ,level.getTile(new GridPos(1,1)).getCard().getMaterial());
+        // ใบที่สองต้องไม่ถูกสร้าง
+        assertNull(level.getTile(pos).getCard());
     }
 
     @Test
     void testAbsorber() {
         Absorber absorber = new Absorber();
         GridPos pos = new GridPos(1,1);
+        absorber.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 5, Material.PLASTIC);
         Card card2 = new Card(Suit.HEART, 5, Material.RUBBER);
         //add first card
@@ -308,6 +358,8 @@ public class CombinatorTest {
     void testAbsorberWithCorruptedCard() {
         Absorber absorber = new Absorber();
         GridPos pos = new GridPos(1,1);
+        absorber.setGridPos(pos);
+
         Card card = new Card(Suit.CLUB, 5, Material.CORRUPTED);
         Card card2 = new Card(Suit.HEART, 2, Material.PLASTIC);
         //add first card
@@ -333,6 +385,8 @@ public class CombinatorTest {
     void testAbsorberWithStoneCard() {
         Absorber absorber = new Absorber();
         GridPos pos = new GridPos(1,1);
+        absorber.setGridPos(pos);
+
         Card card = new Card(Suit.SPADE, 5, Material.STONE);
         Card card2 = new Card(Suit.HEART, 2, Material.PLASTIC);
         Card card3 = new Card(Suit.CLUB, 5, Material.STONE);
@@ -349,7 +403,7 @@ public class CombinatorTest {
         level.getTile(pos).setCard(null); //delete card
 
         level.addCard(card2, pos);
-        level.getTile(pos).setCard(card);
+        level.getTile(pos).setCard(card2);
         absorber.modify(card2); //card should be consumed
         assertNull(level.getTile(pos).getCard());
         //add third card

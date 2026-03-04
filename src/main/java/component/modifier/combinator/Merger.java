@@ -13,7 +13,7 @@ public class Merger extends Combinator {
 
     @Override
     public void modify(Card toModify) {
-        if (checkSetDisable(toModify));
+        if (checkSetDisable(toModify)) return;
         if (checkDestroyGlass(toModify)) return;
         if (checkStone(toModify)) return;
 
