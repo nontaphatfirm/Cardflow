@@ -101,7 +101,7 @@ public class PlayerInventory {
         currentAvailableMovers = new HashMap<>(gameLevel.AVAILABLE_MOVERS); // Copy total over
         if (currentAvailableMovers.isEmpty()) throw new IllegalStateException("No available movers");
         currentRotation = Direction.UP;
-        currentSelection = currentAvailableMovers.keySet().iterator().next(); // Just get the "first one" and put it as selection
+        setCurrentSelection(currentAvailableMovers.keySet().iterator().next()); // Just get the "first one" and put it as selection
     }
 
 }

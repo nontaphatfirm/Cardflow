@@ -80,6 +80,7 @@ public class PlacementController {
 
     public void handleRightClick() {
         rotation = rotation.next();
+        updatePlacementList();
     }
 
     public void handleMouseDragged(MouseEvent event, GridPos gridPos) {
@@ -134,14 +135,14 @@ public class PlacementController {
         // ✅ Detect delete mode
         boolean deleteMode = level.getTile(dragStartPos).getMover() != null;
 
-        record Node(GridPos pos, int cost) {
+        record Node(GridPos pos, Direction incomingDir, int cost) {
         }
 
         PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(n -> n.cost));
         Map<GridPos, Integer> dist = new HashMap<>();
         Map<GridPos, GridPos> prev = new HashMap<>();
 
-        pq.add(new Node(dragStartPos, 0));
+        pq.add(new Node(dragStartPos, null, 0));
         dist.put(dragStartPos, 0);
 
         while (!pq.isEmpty()) {
@@ -160,6 +161,17 @@ public class PlacementController {
 
                 int weight = 1;
 
+                // 🔥 Turning penalty
+                if (cur.incomingDir != null && dir != cur.incomingDir) {
+                    weight += 2; // penalize turning
+                }
+
+                if (cur.incomingDir != null) {
+                    if (dir == cur.incomingDir.opposite()) {
+                        weight += 1000; // forbid 180° turn
+                    }
+                }
+
                 boolean occupied = level.getTile(next).getMover() != null;
 
                 // Heavy weight if occupied
@@ -176,22 +188,60 @@ public class PlacementController {
                 // 🔥 Perpendicular bias
                 if (!deleteMode) {
 
-                    if (dir == rotation) {
-                        weight += 3; // discourage early forward growth
-                    } else if (dir == rotation.opposite()) {
-                        weight += 6; // strongly discourage going backwards
-                    } else {
-                        // perpendicular directions → cheapest
+                    int dxToTarget = currentMousePos.getX() - cur.pos.getX();
+                    int dyToTarget = currentMousePos.getY() - cur.pos.getY();
+
+                    boolean movingToward = (dir.dx() != 0 && Integer.signum(dir.dx()) == Integer.signum(dxToTarget)) ||
+                            (dir.dy() != 0 && Integer.signum(dir.dy()) == Integer.signum(dyToTarget));
+
+                    boolean movingAway = (dir.dx() != 0 && Integer.signum(dir.dx()) == -Integer.signum(dxToTarget)) ||
+                            (dir.dy() != 0 && Integer.signum(dir.dy()) == -Integer.signum(dyToTarget));
+
+                    if (movingAway) {
+                        weight += 6;
+                    } else if (!movingToward) {
+                        // perpendicular
                         weight += 0;
+                    } else {
+                        // toward target
+                        weight += 2;
+                    }
+
+                    int absDx = Math.abs(dxToTarget);
+                    int absDy = Math.abs(dyToTarget);
+
+                    boolean isHorizontalMove = dir.dx() != 0;
+                    boolean isVerticalMove = dir.dy() != 0;
+
+                    // Prefer moving along the axis with SMALLER remaining distance
+                    if (!deleteMode) {
+
+                        if (absDx < absDy) {
+                            // X distance smaller → prefer horizontal first
+                            if (isHorizontalMove) {
+                                weight -= 1; // small reward
+                            } else {
+                                weight += 1; // slight penalty
+                            }
+                        } else if (absDy < absDx) {
+                            // Y distance smaller → prefer vertical first
+                            if (isVerticalMove) {
+                                weight -= 1;
+                            } else {
+                                weight += 1;
+                            }
+                        }
                     }
                 }
+
+                // directionality bias
 
                 int newCost = cur.cost + weight;
 
                 if (!dist.containsKey(next) || newCost < dist.get(next)) {
                     dist.put(next, newCost);
                     prev.put(next, cur.pos);
-                    pq.add(new Node(next, newCost));
+                    pq.add(new Node(next, dir, newCost));
                 }
             }
         }

@@ -1,6 +1,7 @@
 package ui.overlay;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.function.BiFunction;
 
 import application.controller.PlacementController;
@@ -60,25 +61,41 @@ public class SelectedTileOverlayRenderer {
         if (previousPlacementList == null)
             previousPlacementList = new ArrayList<>();
 
-        // Convert to position sets
-        var oldSet = previousPlacementList.stream()
-                .map(n -> n.pos)
-                .collect(java.util.stream.Collectors.toSet());
+        // Build state maps keyed by position
+        Map<GridPos, PlacementNode> oldMap = previousPlacementList.stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        n -> n.pos,
+                        n -> n));
 
-        var newSet = placementListArrayList.stream()
-                .map(n -> n.pos)
-                .collect(java.util.stream.Collectors.toSet());
+        Map<GridPos, PlacementNode> newMap = placementListArrayList.stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        n -> n.pos,
+                        n -> n));
 
-        // Tiles that disappeared
-        for (GridPos pos : oldSet) {
-            if (!newSet.contains(pos)) {
-                GameView.getInstance().updateTileAndAdjacent(pos);
+        // Union of all affected positions
+        java.util.Set<GridPos> allPositions = new java.util.HashSet<>();
+        allPositions.addAll(oldMap.keySet());
+        allPositions.addAll(newMap.keySet());
+
+        for (GridPos pos : allPositions) {
+
+            PlacementNode oldNode = oldMap.get(pos);
+            PlacementNode newNode = newMap.get(pos);
+
+            boolean changed = false;
+
+            if (oldNode == null || newNode == null) {
+                // Appeared or disappeared
+                changed = true;
+            } else {
+                // Same position — check rotation or delete mode
+                if (oldNode.dir != newNode.dir ||
+                        oldNode.delete != newNode.delete) {
+                    changed = true;
+                }
             }
-        }
 
-        // Tiles that appeared
-        for (GridPos pos : newSet) {
-            if (!oldSet.contains(pos)) {
+            if (changed) {
                 GameView.getInstance().updateTileAndAdjacent(pos);
             }
         }

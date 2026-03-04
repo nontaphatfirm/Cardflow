@@ -65,6 +65,27 @@ public class GridPos implements Cloneable {
         return null; // Not adjacent
     }
 
+    public boolean isPosInDirection(GridPos other, Direction dir) {
+        if (other == null || dir == null)
+            return false;
+
+        int dx = other.x - this.x;
+        int dy = other.y - this.y;
+
+        switch (dir) {
+            case Direction.RIGHT:
+                return dx > 0;
+            case Direction.LEFT:
+                return dx < 0;
+            case Direction.DOWN:
+                return dy > 0;
+            case Direction.UP:
+                return dy < 0;
+            default:
+                return false;
+        }
+    }
+
     public GridPos add(int x, int y) {
         return new GridPos(this.x + x, this.y + y);
     }
