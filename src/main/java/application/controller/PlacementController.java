@@ -47,7 +47,6 @@ public class PlacementController {
         this.selectedTileName = event.getMovements();
         this.moverFactory = event.getFactory();
         this.rotation = event.getRotation();
-        System.out.println(selectedTileName + moverFactory + rotation);
         SelectedTileOverlayRenderer.INSTANCE.setMoverDetails(moverFactory, selectedTileName);
     }
 

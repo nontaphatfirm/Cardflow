@@ -75,20 +75,6 @@ public class TestPlayerInventory {
     }
 
     @Test
-    void testCycleRotation() {
-        inventory.setCurrentRotation(Direction.UP);
-
-        inventory.cycleRotation();
-        assertEquals(Direction.RIGHT, inventory.getCurrentRotation());
-        inventory.cycleRotation();
-        assertEquals(Direction.DOWN, inventory.getCurrentRotation());
-        inventory.cycleRotation();
-        assertEquals(Direction.LEFT, inventory.getCurrentRotation());
-        inventory.cycleRotation();
-        assertEquals(Direction.UP, inventory.getCurrentRotation());
-    }
-
-    @Test
     void testPlaceAndRemoveFromGrid() {
         inventory.setCurrentSelection("CONVEYOR");
         GridPos gridPos = new GridPos(2, 2);

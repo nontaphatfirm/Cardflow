@@ -20,7 +20,7 @@ public class PlayerInventory {
     private final GameLevel gameLevel;
     private final HashMap<String, Integer> currentAvailableMovers; // This should be capital letters for everything.
 
-    private Direction currentRotation;
+    private Direction currentRotation; // not the same as the one in the overlay. hell its not the one you should even read from
     private String currentSelection;
 
     public HashMap<String, Integer> getCurrentAvailableMovers() { return currentAvailableMovers; }
