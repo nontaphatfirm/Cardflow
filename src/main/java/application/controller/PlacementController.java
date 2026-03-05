@@ -1,6 +1,6 @@
 package application.controller;
 
-import application.controller.PlacementController.PlacementNode;
+import application.controller.PlacementPathBuilder.PlacementNode;
 import application.path.PlacementPathfinder;
 import application.view.GameView;
 import component.mover.Mover;
@@ -35,13 +35,7 @@ public class PlacementController {
     private GridPos dragStartPos;
     private GridPos currentMousePos;
 
-    public static class PlacementNode {
-        public GridPos pos;
-        public Direction dir;
-        public boolean delete;
-    }
-
-    private ArrayList<PlacementNode> placementList = new ArrayList<>();
+    private List<PlacementNode> placementList = new ArrayList<>();
 
     public void handleTileSelectChange(TileSelectChangeEvent event) {
         this.selectedTileName = event.getMovements();
@@ -90,12 +84,12 @@ public class PlacementController {
 
         for (PlacementNode node : placementList) {
             PlayerInventory.getInstance().setCurrentSelection(selectedTileName);
-            PlayerInventory.getInstance().setCurrentRotation(node.dir);
+            PlayerInventory.getInstance().setCurrentRotation(node.getDir());
 
-            if (node.delete) {
-                PlayerInventory.getInstance().removeFromGrid(node.pos);
+            if (node.getDel()) {
+                PlayerInventory.getInstance().removeFromGrid(node.getPos());
             } else {
-                PlayerInventory.getInstance().placeToGrid(node.pos);
+                PlayerInventory.getInstance().placeToGrid(node.getPos());
             }
 
         }
@@ -106,102 +100,11 @@ public class PlacementController {
     }
 
     private void updatePlacementList() {
-        rebuildPlacementPath();
-        SelectedTileOverlayRenderer.INSTANCE.updatePlacementList(placementList);
-    }
-
-    private void rebuildPlacementPath() {
-
-        placementList.clear();
-
-        if (dragStartPos == null || currentMousePos == null)
-            return;
-
-        GameLevel level = GameLevel.getInstance();
-
-        boolean deleteMode = level.getTile(dragStartPos).getMover() != null;
-
-        // --- COST FUNCTION ---
-        PlacementPathfinder.CostFunction costFunction = (from, to, incomingDir, moveDir) -> {
-
-            if (!level.isInBounds(to))
-                return -1; // illegal
-
-            boolean occupied = level.getTile(to).getMover() != null;
-
-            // Delete mode: only allow deleting occupied tiles
-            if (deleteMode) {
-                if (!occupied)
-                    return -1;
-            } else {
-                if (occupied)
-                    return -1;
-            }
-
-            int cost = 1; // base movement
-
-            // 180° block
-            if (incomingDir != null &&
-                    moveDir == incomingDir.opposite())
-                return -1;
-
-            // Turn penalty
-            if (incomingDir != null &&
-                    moveDir != incomingDir)
-                cost += 2;
-
-            return cost;
-        };
-
-        // --- HEURISTIC FUNCTION ---
-        PlacementPathfinder.HeuristicFunction heuristic =
-        (from, target, incomingDir, lastDir) -> {
-
-            int dx = target.getX() - from.getX();
-            int dy = target.getY() - from.getY();
-
-            int manhattan = Math.abs(dx) + Math.abs(dy);
-
-            // If still null (no facing info), fallback
-            if (incomingDir == null) {
-                return manhattan;
-            }
-
-            // --- Tactical bias ---
-            boolean inFront = target.isPosInDirection(from, rotation);
-            boolean behind  = target.isPosInDirection(from, rotation.opposite());
-
-            int bias = 0;
-
-            if (inFront) {
-                // Prefer sideways first
-                if (!rotation.isOpposite(incomingDir)) {
-                    bias += manhattan;
-                }
-            } else if (behind) {
-                // Prefer aligning
-                if (!rotation.isPerpendicularOf(incomingDir)) {
-                    bias += manhattan;
-                }
-            }
-
-            return manhattan + bias;
-        };
-
-        var path = PlacementPathfinder.findPath(
+        placementList = PlacementPathBuilder.buildPath(
                 dragStartPos,
                 currentMousePos,
-                rotation,
-                costFunction,
-                heuristic);
+                rotation);
 
-        for (var p : path) {
-            PlacementNode node = new PlacementNode();
-            node.pos = p.pos;
-            node.dir = p.dir;
-            node.delete = deleteMode;
-            placementList.add(node);
-        }
+        SelectedTileOverlayRenderer.INSTANCE.updatePlacementList(placementList);
     }
-
 }
