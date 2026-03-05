@@ -51,8 +51,6 @@ public class PlacementController {
     }
 
     public void handleOnMouseMove(GridPos pos) {
-        //if (selectedTileName == null || moverFactory == null)
-            //return; // No tile selected
         currentMousePos = pos;
         dragStartPos = pos;
         updatePlacementList();
@@ -67,8 +65,6 @@ public class PlacementController {
     public void handleMousePressed(MouseEvent event, GridPos gridPos) {
         if (event.getButton() != MouseButton.PRIMARY)
             return;
-        //if (selectedTileName == null || moverFactory == null)
-            //return; // No tile selected
 
         dragStartPos = gridPos;
         currentMousePos = gridPos;
@@ -83,8 +79,6 @@ public class PlacementController {
     public void handleMouseDragged(MouseEvent event, GridPos gridPos) {
         if (event.getButton() != MouseButton.PRIMARY)
             return;
-        //if (selectedTileName == null || moverFactory == null)
-            //return; // No tile selected
 
         currentMousePos = gridPos;
         updatePlacementList();
@@ -93,8 +87,6 @@ public class PlacementController {
     public void handleMouseReleased(MouseEvent event, GridPos gridPos) {
         if (event.getButton() != MouseButton.PRIMARY)
             return;
-        //if (selectedTileName == null || moverFactory == null)
-            //return; // No tile selected
 
         for (PlacementNode node : placementList) {
             PlayerInventory.getInstance().setCurrentSelection(selectedTileName);

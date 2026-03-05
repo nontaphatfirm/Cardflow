@@ -23,7 +23,6 @@ import util.Config;
 import util.GridPos;
 
 public class GameGrid extends GridPane {
-    // gameGrid.getStyleClass().setAll("level-select-grid");
     public final GameTilePane[][] gameGridTilePanes;
 
     public void updateIfValid(GridPos pos) {
