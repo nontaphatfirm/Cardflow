@@ -43,15 +43,11 @@ public class PlacementController {
 
     private ArrayList<PlacementNode> placementList = new ArrayList<>();
 
-    private PlacementController() {
-        // Subscribe to card selection changes
-        EventBus.register(TileSelectChangeEvent.class, this::handleTileSelectChange);
-    }
-
-    private void handleTileSelectChange(TileSelectChangeEvent event) {
+    public void handleTileSelectChange(TileSelectChangeEvent event) {
         this.selectedTileName = event.getMovements();
         this.moverFactory = event.getFactory();
         this.rotation = event.getRotation();
+        System.out.println(selectedTileName + moverFactory + rotation);
         SelectedTileOverlayRenderer.INSTANCE.setMoverDetails(moverFactory, selectedTileName);
     }
 

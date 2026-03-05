@@ -118,7 +118,7 @@ public class SelectedTileOverlayRenderer {
                 break;
             }
 
-            if (moverFactory == null || moverName == null) {
+            if (moverFactory == null || moverName == null || node.dir == null) {
                 continue; // nothing selected
             }
 

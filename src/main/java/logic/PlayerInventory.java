@@ -97,11 +97,13 @@ public class PlayerInventory {
     public static void setInstance(PlayerInventory instance) { PlayerInventory.instance = instance; }
 
     public PlayerInventory(GameLevel gameLevel) {
+        System.out.println("PI Init");
         this.gameLevel = gameLevel;
         currentAvailableMovers = new HashMap<>(gameLevel.AVAILABLE_MOVERS); // Copy total over
         if (currentAvailableMovers.isEmpty()) throw new IllegalStateException("No available movers");
         currentRotation = Direction.UP;
-        setCurrentSelection(currentAvailableMovers.keySet().iterator().next()); // Just get the "first one" and put it as selection
+        currentSelection = currentAvailableMovers.keySet().iterator().next(); // Just get the "first one" and put it as selection
+        raiseSetEvent();
     }
 
 }

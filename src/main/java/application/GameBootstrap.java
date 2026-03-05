@@ -1,5 +1,6 @@
 package application;
 
+import application.controller.PlacementController;
 import component.GameTile;
 import component.card.Card;
 import component.modifier.changer.Arithmetic;
@@ -59,6 +60,8 @@ public class GameBootstrap {
     public static void registerEvents() {
         EventBus.register(AfterMovementEvent.class, CardRenderer.INSTANCE.movementListener);
         EventBus.register(CardExitEvent.class, GameEndCondition.INSTANCE::checkWinCondition);
+
+        EventBus.register(TileSelectChangeEvent.class, PlacementController.INSTANCE::handleTileSelectChange);
     }
 
     public static void registerLayers() {
