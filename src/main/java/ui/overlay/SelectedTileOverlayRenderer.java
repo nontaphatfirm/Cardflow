@@ -109,10 +109,6 @@ public class SelectedTileOverlayRenderer {
 
     public void render(Pane overlayPane, GridPos pos) {
 
-        if (moverFactory == null || moverName == null) {
-            return; // nothing selected
-        }
-
         for (PlacementNode node : placementListArrayList) {
             if (!node.pos.equals(pos))
                 continue;
@@ -120,6 +116,10 @@ public class SelectedTileOverlayRenderer {
             if (node.delete) {
                 DeleteOverlay.INSTANCE.render(overlayPane);
                 break;
+            }
+
+            if (moverFactory == null || moverName == null) {
+                continue; // nothing selected
             }
 
             Mover mover = moverFactory.apply(moverName, node.dir);

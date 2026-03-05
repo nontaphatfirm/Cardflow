@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import logic.GameLevel;
 import logic.PlayerInventory;
 import logic.event.card.TileSelectChangeEvent;
+import ui.levelinfo.LevelInfoPane;
 import ui.overlay.SelectedTileOverlayRenderer;
 import util.Direction;
 import util.GridPos;
@@ -55,8 +56,8 @@ public class PlacementController {
     }
 
     public void handleOnMouseMove(GridPos pos) {
-        if (selectedTileName == null || moverFactory == null)
-            return; // No tile selected
+        //if (selectedTileName == null || moverFactory == null)
+            //return; // No tile selected
         System.out.println("Mouse Move");
         currentMousePos = pos;
         dragStartPos = pos;
@@ -72,8 +73,8 @@ public class PlacementController {
     public void handleMousePressed(MouseEvent event, GridPos gridPos) {
         if (event.getButton() != MouseButton.PRIMARY)
             return;
-        if (selectedTileName == null || moverFactory == null)
-            return; // No tile selected
+        //if (selectedTileName == null || moverFactory == null)
+            //return; // No tile selected
 
         dragStartPos = gridPos;
         currentMousePos = gridPos;
@@ -88,8 +89,8 @@ public class PlacementController {
     public void handleMouseDragged(MouseEvent event, GridPos gridPos) {
         if (event.getButton() != MouseButton.PRIMARY)
             return;
-        if (selectedTileName == null || moverFactory == null)
-            return; // No tile selected
+        //if (selectedTileName == null || moverFactory == null)
+            //return; // No tile selected
 
         System.out.println("DRAG ");
         currentMousePos = gridPos;
@@ -99,8 +100,8 @@ public class PlacementController {
     public void handleMouseReleased(MouseEvent event, GridPos gridPos) {
         if (event.getButton() != MouseButton.PRIMARY)
             return;
-        if (selectedTileName == null || moverFactory == null)
-            return; // No tile selected
+        //if (selectedTileName == null || moverFactory == null)
+            //return; // No tile selected
 
         for (PlacementNode node : placementList) {
             PlayerInventory.getInstance().setCurrentSelection(selectedTileName);
@@ -116,6 +117,7 @@ public class PlacementController {
 
         dragStartPos = currentMousePos;
         updatePlacementList();
+        GameView.getInstance().getLevelInfoPane().updateInventoryUI();
     }
 
     private void updatePlacementList() {
