@@ -49,6 +49,7 @@ public final class FlipFlopRenderResolver extends MoverRenderResolver {
                 0,
                 rotation,
                 sprite.mirrorX(),
+                false,
                 alpha
         );
     }
@@ -76,6 +77,7 @@ public final class FlipFlopRenderResolver extends MoverRenderResolver {
                 0,
                 rotation,
                 sprite.mirrorX(),
+                false,
                 alpha
         );
     }

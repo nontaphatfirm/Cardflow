@@ -2,6 +2,7 @@ package ui.render;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -49,6 +50,13 @@ public abstract class Renderer<T> {
 
         if (state.mirrorX()) {
             gc.scale(-1, 1);
+        }
+
+        if (state.grayscale()) {
+            ColorAdjust grayscale = new ColorAdjust();
+            grayscale.setSaturation(-1.0);
+
+            gc.setEffect(grayscale);
         }
 
         gc.drawImage(

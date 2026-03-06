@@ -24,7 +24,7 @@ import java.util.List;
 
 public class LevelLoader {
 
-    public static final int TOTAL_LEVELS = 20;
+    public static final int TOTAL_LEVELS = 16;
 
     private static Suit parseSuit(String suitString) {
         return switch (suitString.toUpperCase()) {

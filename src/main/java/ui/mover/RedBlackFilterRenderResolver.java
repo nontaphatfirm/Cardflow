@@ -42,6 +42,7 @@ public final class RedBlackFilterRenderResolver extends MoverRenderResolver {
                 0,
                 rotation,
                 sprite.mirrorX(),
+                false,
                 alpha
         );
     }

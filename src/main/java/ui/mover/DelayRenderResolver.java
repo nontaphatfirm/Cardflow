@@ -43,6 +43,7 @@ public final class DelayRenderResolver extends MoverRenderResolver {
                 0,
                 rotation,
                 sprite.mirrorX(),
+                false,
                 alpha
         );
     }

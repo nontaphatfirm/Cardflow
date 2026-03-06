@@ -44,6 +44,7 @@ public class PathwayRenderResolver extends RenderResolver {
                 0,
                 0,
                 false,
+                false,
                 alpha
         );
     }

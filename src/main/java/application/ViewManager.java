@@ -35,6 +35,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
     public final StackPane shaderRoot; // on top of view root
     private final Stack<View> viewStack; // Used to automatically track where we have come from and also prevent regen of scenes
     private final ViewTransition viewTransition;
+    private boolean isTransitioning;
 
     public class ViewTransition {
 
@@ -66,12 +67,14 @@ public class ViewManager { // Switching views instead of switching scenes to all
 
         private void transitionNoneView(View prevView, View newView) { // not my best naming skills :/
             // Switches view without transitions or anything
+            // No need to set isTransitioning
             viewRoot.getChildren().remove(prevView.getRoot());
             viewRoot.getChildren().add(newView.getRoot());
             resizeToCurrentView();
         }
 
         private void transitionFadeView(View prevView, View newView) {
+            isTransitioning = true;
             FadeTransition fadeOut = new FadeTransition(Duration.millis(300), prevView.getRoot());
             fadeOut.setToValue(0);
 
@@ -84,6 +87,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
                 fadeIn.setToValue(1);
                 fadeIn.play();
                 resizeToCurrentView();
+                isTransitioning = false;
             });
 
             fadeOut.play();
@@ -91,6 +95,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
         }
 
         private void transitionZoomView(View prevView, View newView) {
+            isTransitioning = true;
             ScaleTransition scaleUp = new ScaleTransition(Duration.millis(300), prevView.getRoot());
             scaleUp.setFromX(1);
             scaleUp.setFromY(1);
@@ -118,6 +123,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
                 fadeIn.setToValue(1);
 
                 ParallelTransition pt2 = new ParallelTransition(scaleDown, fadeIn);
+                pt2.setOnFinished(_ -> isTransitioning = false);
                 pt2.play();
             });
         }
@@ -162,9 +168,11 @@ public class ViewManager { // Switching views instead of switching scenes to all
 
         stage.setScene(scene);
         Platform.runLater(() -> scene.getRoot().requestFocus());
+        isTransitioning = false;
     }
 
     public void switchView(View newView, TransitionType transitionType) {
+        if (isTransitioning) return; // debounce
         getCurrentView().cleanup();
         newView.startup();
         viewTransition.transitionView(getCurrentView(), newView, transitionType);
@@ -173,6 +181,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
 
     public void switchViewReplace(View newView, TransitionType transitionType) {
         // Replace the top most view with this view. (Example: Next level button)
+        if (isTransitioning) return;
         getCurrentView().cleanup();
         newView.startup();
         viewTransition.transitionView(getCurrentView(), newView, transitionType);
@@ -181,6 +190,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
     }
 
     public boolean switchToPreviousView(TransitionType transitionType) {
+        if (isTransitioning) return true;
         if (viewStack.size() <= 1) return false; // Can't really go back if theres nothing to go back to
 
         View oldView = viewStack.pop();

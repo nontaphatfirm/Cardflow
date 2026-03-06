@@ -52,6 +52,7 @@ public final class SetterRenderResolver extends RenderResolver {
                 0,
                 0,
                 false,
+                setter.isDisabled(),
                 alpha
         );
     }

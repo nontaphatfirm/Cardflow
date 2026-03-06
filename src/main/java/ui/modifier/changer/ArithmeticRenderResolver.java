@@ -43,6 +43,7 @@ public final class ArithmeticRenderResolver extends RenderResolver {
                 0,
                 0,
                 false,
+                arithmetic.isDisabled(),
                 alpha
         );
     }

@@ -50,7 +50,7 @@ public class LevelSelectorView extends View {
                 }
             }); // Always use setOnAction instead of setOnMouseClicked
 
-            levelSelectGrid.add(levelSelectButton, i % 5, i / 5);
+            levelSelectGrid.add(levelSelectButton, i % 4, i / 4);
         }
 
         VBox layout = new VBox(25);

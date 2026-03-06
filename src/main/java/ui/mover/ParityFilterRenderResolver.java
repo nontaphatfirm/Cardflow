@@ -43,6 +43,7 @@ public final class ParityFilterRenderResolver extends MoverRenderResolver {
                 0,
                 rotation,
                 sprite.mirrorX(),
+                false,
                 alpha
         );
     }

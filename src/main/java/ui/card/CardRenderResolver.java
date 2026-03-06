@@ -60,7 +60,7 @@ public final class CardRenderResolver extends RenderResolver {
             MaterialImage.images.get("plastic")
         );
 
-        return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, 0, 0, false, card.getMaterial() == Material.GLASS ? 0.5: 1.0);
+        return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, 0, 0, false, false, card.getMaterial() == Material.GLASS ? 0.5: 1.0);
     }
 
     public static RenderState resolveSuit(Card card) {
@@ -70,7 +70,7 @@ public final class CardRenderResolver extends RenderResolver {
                 MaterialImage.images.get("spade")
         );
 
-        return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, 0, 0, false, 1.0);
+        return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, 0, 0, false, false, 1.0);
     }
 
     public static RenderState resolveValue(Card card) {
@@ -80,7 +80,7 @@ public final class CardRenderResolver extends RenderResolver {
             ValueImage.images.get("1")
         );
 
-        return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, 0, 0, false, 1.0);
+        return new RenderState(toRender, CARD_WIDTH, CARD_HEIGHT, 0, 0, 0, false, false, 1.0);
     }
 
 }

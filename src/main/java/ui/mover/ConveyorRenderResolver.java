@@ -45,6 +45,7 @@ public final class ConveyorRenderResolver extends MoverRenderResolver {
                 0,
                 rotation,
                 sprite.mirrorX(),
+                false,
                 alpha
         );
     }

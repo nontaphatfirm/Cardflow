@@ -44,6 +44,7 @@ public class CombinatorRenderResolver extends RenderResolver {
                 0,
                 0,
                 false,
+                combinator.isDisabled(),
                 alpha
         );
     }

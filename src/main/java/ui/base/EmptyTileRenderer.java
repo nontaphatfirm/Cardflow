@@ -22,7 +22,7 @@ public class EmptyTileRenderer extends Renderer<GameTile> {
     public EmptyTileRenderer() {}
 
     public void render(GameTile tile, Pane node, GridPos pos, boolean animating) {
-        draw(node, new RenderState(EMPTY_TILE_IMAGE, Config.TILE_SIZE, Config.TILE_SIZE, 0, 0, 0, false, 1.0));
+        draw(node, new RenderState(EMPTY_TILE_IMAGE, Config.TILE_SIZE, Config.TILE_SIZE, 0, 0, 0, false, false, 1.0));
     }
 
     @Override

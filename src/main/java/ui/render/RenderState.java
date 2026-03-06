@@ -10,5 +10,6 @@ public record RenderState(
         double offsetY,
         double rotationDeg,
         boolean mirrorX,
+        boolean grayscale,
         double alpha
 ) {}
