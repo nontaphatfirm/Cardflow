@@ -1,15 +1,17 @@
 {
-  "name": "The Micro Shifter",
-  "width": 5,
-  "height": 5,
+  "name": "Trace Back Your Steps",
+  "width": 4,
+  "height": 9,
   "inputCards": [
-    { "suit": "SPADE", "value": 1, "material": "GLASS" }
+    { "suit": "DIAMOND", "value": 10, "material": "METAL" }
   ],
   "outputCards": [
-    { "suit": "SPADE", "value": 3, "material": "stone" }
+    { "suit": "SPADE", "value": 9 }
   ],
   "availableMovers": [
-    { "name": "FLIPFLOP", "count": 2 },
+    { "name": "FLIPFLOP", "count": -1 },
+    { "name": "REDBLACKFILTER", "count": -1 },
+    { "name": "PARITYFILTER", "count": -1 },
     { "name": "CONVEYOR", "count": -1 }
   ]
 }
