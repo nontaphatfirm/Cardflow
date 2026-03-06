@@ -13,18 +13,27 @@ import ui.render.Renderer;
 import util.Config;
 import util.GridPos;
 
+/**
+ * Renderer for {@link Combinator} modifiers.
+ */
 public class CombinatorRenderer extends Renderer<Combinator> {
 
+    /** Singleton instance of CombinatorRenderer. */
     public static final CombinatorRenderer INSTANCE =
             new CombinatorRenderer();
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private CombinatorRenderer() {}
 
     /** 
-     * @param combinator
-     * @param node
-     * @param pos
-     * @param animated
+     * Renders the combinator onto the specified pane.
+     * 
+     * @param combinator The combinator to render.
+     * @param node The target Pane.
+     * @param pos The grid position.
+     * @param animated Whether the render is animated.
      */
     public void render(Combinator combinator, Pane node, GridPos pos, boolean animated) {
         RenderState state = CombinatorRenderResolver.resolve(combinator, pos, Config.MODIFIER_ALPHA);
@@ -32,7 +41,9 @@ public class CombinatorRenderer extends Renderer<Combinator> {
     }
 
     /** 
-     * @return RenderLayer
+     * Returns the modifier render layer.
+     * 
+     * @return {@link RenderLayer#MODIFIER}.
      */
     @Override
     public RenderLayer layer() {

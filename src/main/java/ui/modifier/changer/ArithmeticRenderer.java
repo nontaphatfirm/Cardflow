@@ -13,18 +13,28 @@ import ui.render.Renderer;
 import util.Config;
 import util.GridPos;
 
+/**
+ * Renderer for {@link Arithmetic} modifiers.
+ * Draws the arithmetic symbol and overlays the numeric change value as text.
+ */
 public class ArithmeticRenderer extends Renderer<Arithmetic> {
 
+    /** Singleton instance of ArithmeticRenderer. */
     public static final ArithmeticRenderer INSTANCE =
             new ArithmeticRenderer();
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private ArithmeticRenderer() {}
 
     /** 
-     * @param arithmetic
-     * @param node
-     * @param pos
-     * @param animated
+     * Renders the arithmetic modifier.
+     * 
+     * @param arithmetic The arithmetic instance.
+     * @param node The target Pane.
+     * @param pos The grid position.
+     * @param animated Whether the render is animated.
      */
     public void render(Arithmetic arithmetic, Pane node, GridPos pos, boolean animated) {
         RenderState state = ArithmeticRenderResolver.resolve(arithmetic, pos, Config.MODIFIER_ALPHA);
@@ -34,7 +44,9 @@ public class ArithmeticRenderer extends Renderer<Arithmetic> {
     }
 
     /** 
-     * @return RenderLayer
+     * Returns the modifier render layer.
+     * 
+     * @return {@link RenderLayer#MODIFIER}.
      */
     @Override
     public RenderLayer layer() {

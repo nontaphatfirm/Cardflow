@@ -9,23 +9,37 @@ import registry.render.RenderLayer;
 import ui.render.Renderer;
 import util.GridPos;
 
+/**
+ * Handles the visual animation of cards moving between grid positions.
+ * Utilizes a floating layer to perform smooth transitions across tiles.
+ */
 public class CardMovementAnimation {
 
+    /** Singleton instance of CardMovementAnimation. */
     public static final CardMovementAnimation INSTANCE = new CardMovementAnimation();
 
+    /** Size of a single tile in pixels. */
     private static final double TILE_SIZE = 85;
+    /** Duration of the movement animation. */
     private static final Duration MOVE_DURATION = Duration.millis(200);
 
+    /** The pane used as a floating layer for animations. */
     private Pane floatingLayer;
 
+    /** The render layer used for card animations. */
     private RenderLayer layer = RenderLayer.CARDANIM;
 
+    /**
+     * Constructs a new CardMovementAnimation.
+     */
     public CardMovementAnimation() {}
 
     /** 
-     * @param card
-     * @param from
-     * @param to
+     * Performs a translation animation for a card from one grid position to another.
+     * 
+     * @param card The {@link Card} being moved.
+     * @param from The starting {@link GridPos}.
+     * @param to The destination {@link GridPos}.
      */
     public void animate(Card card, GridPos from, GridPos to) {
         floatingLayer = FloatingLayerRegistry.INSTANCE.getPane(layer);

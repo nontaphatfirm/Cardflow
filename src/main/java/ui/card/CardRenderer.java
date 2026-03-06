@@ -24,26 +24,38 @@ import ui.render.RenderState;
 import util.Config;
 import util.GridPos;
 
+/**
+ * Renderer for {@link Card} components.
+ * Handles composite rendering of card material, suit, and value, as well as shadows.
+ */
 public class CardRenderer extends Renderer<Card> {
 
+    /** Singleton instance of CardRenderer. */
     public static final CardRenderer INSTANCE = new CardRenderer();
 
 //    private static final Font CARD_FONT =
 //            Font.font("Mozart NBP", 16);
 
+    /** Listener for movement events to trigger animations. */
     public EventListener<AfterMovementEvent> movementListener = this::onMovementEvent;
 
+    /** Set of cards currently undergoing animation. */
     private Set<Card> animatingCards = new HashSet<>();
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private CardRenderer() {
         
     }
 
     /** 
-     * @param card
-     * @param node
-     * @param pos
-     * @param animating
+     * Renders a card with standard centering and shadows.
+     * 
+     * @param card The card to render.
+     * @param node The Pane to render into.
+     * @param pos The grid position.
+     * @param animating True if currently animating.
      */
     @Override
     public void render(Card card, Pane node, GridPos pos, boolean animating) {
@@ -51,12 +63,14 @@ public class CardRenderer extends Renderer<Card> {
     }
 
     /** 
-     * @param card
-     * @param node
-     * @param pos
-     * @param animating
-     * @param centerToTile
-     * @param showShadow
+     * Renders a card with configurable options for centering and shadows.
+     * 
+     * @param card The card to render.
+     * @param node The Pane to render into.
+     * @param pos The grid position.
+     * @param animating True if currently animating.
+     * @param centerToTile Whether to center the card within the tile.
+     * @param showShadow Whether to draw a drop shadow under the card.
      */
     public void render(Card card, Pane node, GridPos pos, boolean animating, boolean centerToTile, boolean showShadow) {
         // Center to Tile = false will give you the pane at the proper size.
@@ -97,9 +111,11 @@ public class CardRenderer extends Renderer<Card> {
     }
 
     /** 
-     * @param card
-     * @param from
-     * @param to
+     * Callback invoked when a card movement animation is complete.
+     * 
+     * @param card The card that moved.
+     * @param from The origin position.
+     * @param to The target position.
      */
     public void onAnimationComplete(Card card, GridPos from, GridPos to) {
         animatingCards.remove(card);
@@ -108,7 +124,9 @@ public class CardRenderer extends Renderer<Card> {
     }
 
     /** 
-     * @param event
+     * Responds to an {@link AfterMovementEvent} by starting animations for all moving cards.
+     * 
+     * @param event The event data.
      */
     public void onMovementEvent(AfterMovementEvent event) {
         for (CardMovement movement : event.getMovements()) {
@@ -120,7 +138,9 @@ public class CardRenderer extends Renderer<Card> {
     }
 
     /** 
-     * @return RenderLayer
+     * Returns the render layer for cards.
+     * 
+     * @return {@link RenderLayer#CARD}.
      */
     @Override
     public RenderLayer layer() {

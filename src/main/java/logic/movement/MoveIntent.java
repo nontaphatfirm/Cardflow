@@ -12,22 +12,45 @@ import logic.GameLevel;
 import util.Direction;
 import util.GridPos;
 
+/**
+ * Represents a single card's intended movement during a tick.
+ * This class includes static logic for resolving conflicts between multiple move intents.
+ */
 class MoveIntent {
-    // TODO: DEBUG THIS FULLY AND MAKE IT BE COMPLIANT WITH GETTERS AND SETTERS
-
+    /**
+     * Maps a current grid position to the move intent originating from it.
+     */
     static final HashMap<GridPos, MoveIntent> byCurrent = new HashMap<>();
+    /**
+     * Maps a target grid position to a list of all move intents attempting to move there.
+     */
     static final HashMap<GridPos, ArrayList<MoveIntent>> byResult = new HashMap<>();
 
+    /**
+     * Possible states of a move intent during resolution.
+     */
     enum IntentStatus {
+        /** Intent has not yet been processed. */
         UNRESOLVED,
+        /** Intent has been approved and the card will move. */
         MOVED,
+        /** Intent was blocked by a collision or boundary. */
         BLOCKED
     }
 
+    /** The card that wants to move. */
     Card card;
+    /** The direction the card wants to move. */
     Direction direction;
+    /** The current status of this intent. */
     IntentStatus status;
 
+    /**
+     * Constructs a new MoveIntent.
+     * 
+     * @param c The card.
+     * @param d The intended direction.
+     */
     public MoveIntent(Card c, Direction d) {
         card = c;
         direction = d;
@@ -35,8 +58,9 @@ class MoveIntent {
     }
 
     /** 
-     * @param toString(
-     * @return GridPos
+     * Calculates the target position of this move intent.
+     * 
+     * @return The resulting {@link GridPos}.
      */
     public GridPos getResultPos() { // Returns new point
         GridPos t = Mover.getTranslationFromDirection(direction);
@@ -45,7 +69,9 @@ class MoveIntent {
     }
 
     /** 
-     * @return String
+     * Returns a string representation of the intent.
+     * 
+     * @return A descriptive string.
      */
     @Override
     public String toString() {
@@ -57,16 +83,19 @@ class MoveIntent {
     }
 
     /** 
-     * @param resultPos
-     * @return GridPos
+     * Gets the starting position of this move intent.
+     * 
+     * @return The current {@link GridPos} of the card.
      */
     public GridPos getCurrentPos() { // Returns new point
         return new GridPos(card.getGridPos());
     }
 
     /** 
-     * @param resultPos
-     * @return ArrayList<GridPos>
+     * Helper to get positions surrounding a target point (Top, Left, Right, Bottom).
+     * 
+     * @param resultPos The center position.
+     * @return A list of adjacent {@link GridPos}.
      */
     private static ArrayList<GridPos> getSurroundingPoints(GridPos resultPos) {
         // If somebody has a better way of doing this please fix thx
@@ -85,8 +114,11 @@ class MoveIntent {
     }
 
     /** 
-     * @param intentList
-     * @param surroundPos
+     * Recursively resolves a list of move intents competing for the same target position.
+     * Implements priority logic (Top > Left > Right > Bottom) and handles chaining movements.
+     * 
+     * @param intentList The list of intents targeting the same position.
+     * @param seen A set of positions already visited during this resolution pass (to detect cycles).
      */
     public static void resolveIntent(List<MoveIntent> intentList, HashSet<GridPos> seen) { // linear recursive function
                                                                                            // (we hate recursion)

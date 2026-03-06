@@ -11,18 +11,28 @@ import ui.render.Renderer;
 import util.Config;
 import util.GridPos;
 
+/**
+ * Renderer for the {@link FlipFlop} mover.
+ * Composites multiple layers (floor and overlay) to represent the flip-flop's state.
+ */
 public class FlipFlopRenderer extends Renderer<FlipFlop> {
 
+    /** Singleton instance of FlipFlopRenderer. */
     public static final FlipFlopRenderer INSTANCE =
             new FlipFlopRenderer();
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private FlipFlopRenderer() {}
 
     /** 
-     * @param flipFlop
-     * @param node
-     * @param pos
-     * @param animating
+     * Renders the FlipFlop mover.
+     * 
+     * @param flipFlop The flip-flop instance.
+     * @param node The target Pane.
+     * @param pos The grid position.
+     * @param animating Whether the rendering is part of an animation.
      */
     public void render(FlipFlop flipFlop, Pane node, GridPos pos, boolean animating) {
         RenderState floorState = FlipFlopRenderResolver.resolveFloor(flipFlop, flipFlop.getGridPos(), 1);
@@ -38,7 +48,9 @@ public class FlipFlopRenderer extends Renderer<FlipFlop> {
     }
 
     /** 
-     * @return RenderLayer
+     * Returns the mover render layer.
+     * 
+     * @return {@link RenderLayer#MOVER}.
      */
     @Override
     public RenderLayer layer() {
