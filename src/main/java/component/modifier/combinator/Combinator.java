@@ -21,7 +21,9 @@ public abstract class Combinator extends Modifier {
         return new Tooltip(
                 "Combinator",
                 Color.DARKORCHID,
-                "A type of modifier that changes the total amount of cards in play."
+                "A type of ",
+                Tooltip.ref(Modifier.getModifierTooltip()),
+                " that changes the total amount of cards in play."
         );
     }
 
