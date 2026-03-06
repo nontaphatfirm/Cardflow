@@ -1,0 +1,203 @@
+@startuml
+class application.Main {
++ void start(Stage)
++ {static} void main(String[])
+}
+
+class application.controller.PlacementController {
++ {static} PlacementController INSTANCE
+- String selectedTileName
+- BiFunction<String,Direction,Mover> moverFactory
+- Direction rotation
+- GridPos dragStartPos
+- GridPos currentMousePos
+- List<PlacementNode> placementList
++ void rotateCurrentRotation()
++ void handleTileSelectChange(TileSelectChangeEvent)
++ void handleOnMouseMove(GridPos)
++ void handleOnMouseExit(GridPos)
++ void handleMousePressed(MouseEvent,GridPos)
++ void handleMouseDragged(MouseEvent,GridPos)
++ void handleMouseReleased(MouseEvent,GridPos)
+- void updatePlacementList()
++ Direction getRotation()
+}
+
+
+class application.GameBootstrap {
++ {static} void init()
++ {static} void registerRenderer()
++ {static} void registerEvents()
++ {static} void registerLayers()
+}
+
+class application.ViewManager {
+- {static} String[] CSS_FILES
+- {static} ViewManager instance
++ Stage stage
++ Scene scene
++ StackPane sceneRoot
++ StackPane viewRoot
++ StackPane shaderRoot
+- Stack<View> viewStack
+- ViewTransition viewTransition
+- boolean isTransitioning
+- <<Create>> ViewManager(Stage,View)
++ {static} ViewManager getInstance()
++ {static} void init(Stage,View)
++ void switchView(View,TransitionType)
++ void switchViewReplace(View,TransitionType)
++ boolean switchToPreviousView(TransitionType)
++ View getCurrentView()
++ boolean currentViewIs(Class<? extends View>)
+- void resizeToCurrentView()
+}
+
+
+class application.ViewManager$ViewTransition {
++ void transitionView(View,View,TransitionType)
+- void normalizeView(View)
+- void transitionNoneView(View,View)
+- void transitionFadeView(View,View)
+- void transitionZoomView(View,View)
+}
+
+class application.view.MainMenuView {
+- {static} MainMenuView instance
++ <<Create>> MainMenuView()
++ void startup()
++ void cleanup()
++ {static} MainMenuView getInstance()
++ {static} void setInstance(MainMenuView)
+}
+
+
+class application.Game {
++ {static} void init(Stage)
+}
+
+class application.view.LevelSelectorView {
+- {static} LevelSelectorView instance
++ <<Create>> LevelSelectorView()
++ void startup()
++ void cleanup()
++ {static} LevelSelectorView getInstance()
++ {static} void setInstance(LevelSelectorView)
+}
+
+
+class application.view.GameView {
+- {static} GameView instance
+- LevelInfoPane levelInfoPane
+- GameWinOverlay gameWinOverlay
+- GameRenderStack gameGrid
+- TooltipLayer tooltipLayer
+- Runnable unregisterUpdatePoints
+- Runnable unregisterShowWinOverlay
++ <<Create>> GameView(GameLevel)
++ void updateTileAndAdjacent(GridPos)
+- void updateIfValid(GridPos)
++ void startup()
++ void cleanup()
++ void updatePoints(RenderEvent)
++ void showGameWinOverlay(GameWinEvent)
++ LevelInfoPane getLevelInfoPane()
++ TooltipLayer getTooltipLayer()
++ {static} GameView getInstance()
++ {static} void setInstance(GameView)
+}
+
+
+enum application.TransitionType {
++  NONE
++  FADE
++  ZOOM
+}
+
+abstract class application.view.View {
+# StackPane root
++ <<Create>> View()
++ StackPane getRoot()
++ void setRoot(StackPane)
++ {abstract}void startup()
++ {abstract}void cleanup()
+}
+
+
+class application.controller.PlacementPathBuilder {
++ {static} List<PlacementNode> buildPath(GridPos,GridPos,Direction)
+}
+
+class application.controller.PlacementPathBuilder$PlacementNode {
+- GridPos pos
+- Direction dir
+- boolean delete
++ void setPos(GridPos)
++ void setDir(Direction)
++ void setDel(boolean)
++ GridPos getPos()
++ Direction getDir()
++ boolean getDel()
+}
+
+
+class application.path.PlacementPathfinder {
++ {static} List<PathNode> findPath(GridPos,GridPos,Direction,CostFunction,HeuristicFunction)
+- {static} List<PathNode> reconstructPath(Map<State,State>,State,Direction)
+}
+
+interface application.path.PlacementPathfinder$CostFunction {
+~ int movementCost(GridPos,GridPos,Direction,Direction)
+}
+
+interface application.path.PlacementPathfinder$HeuristicFunction {
+~ int estimate(GridPos,GridPos,Direction,Direction)
+}
+
+class application.path.PlacementPathfinder$PathNode {
++ GridPos pos
++ Direction dir
++ <<Create>> PathNode(GridPos,Direction)
+}
+
+
+class application.path.PlacementPathfinder$Node {
+- GridPos pos
+- Direction incomingDir
+- Direction lastDir
+- int gCost
+- int fCost
+- <<Create>> Node(GridPos,Direction,Direction,int,int)
++ GridPos pos()
++ Direction incomingDir()
++ int fCost()
++ Direction lastDir()
++ int gCost()
+}
+
+
+class application.path.PlacementPathfinder$State {
+- GridPos pos
+- Direction incomingDir
+- Direction lastDir
+- <<Create>> State(GridPos,Direction,Direction)
++ GridPos pos()
++ Direction incomingDir()
++ Direction lastDir()
+}
+
+
+
+
+javafx.application.Application <|-- application.Main
+application.ViewManager +.. application.ViewManager$ViewTransition
+application.view.View <|-- application.view.MainMenuView
+application.view.View <|-- application.view.LevelSelectorView
+application.view.View <|-- application.view.GameView
+application.controller.PlacementPathBuilder +.. application.controller.PlacementPathBuilder$PlacementNode
+application.path.PlacementPathfinder +.. application.path.PlacementPathfinder$CostFunction
+application.path.PlacementPathfinder +.. application.path.PlacementPathfinder$HeuristicFunction
+application.path.PlacementPathfinder +.. application.path.PlacementPathfinder$PathNode
+application.path.PlacementPathfinder +.. application.path.PlacementPathfinder$Node
+application.path.PlacementPathfinder +.. application.path.PlacementPathfinder$State
+@enduml

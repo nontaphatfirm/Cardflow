@@ -1,0 +1,56 @@
+@startuml
+class component.card.Card {
+# Suit suit
+# int value
+# Material material
+# int health
+# GridPos gridPos
++ <<Create>> Card()
++ <<Create>> Card(Card)
++ <<Create>> Card(Suit,int,Material)
++ <<Create>> Card(Suit,int,Material,GridPos)
++ Suit getSuit()
++ void setSuit(Suit)
++ int getValue()
++ void setValue(int)
++ Material getMaterial()
++ void setMaterial(Material)
++ int getHealth()
++ void setHealth(int)
++ GridPos getGridPos()
++ void setGridPos(GridPos)
++ boolean isBlocking()
++ String toString()
++ boolean isEquivalent(Card,boolean)
++ boolean isEquivalent(Card)
++ Tooltip getTooltip()
+}
+
+
+enum component.card.Material {
++  PLASTIC
++  GLASS
++  METAL
++  STONE
++  RUBBER
++  CORRUPTED
++ String toString()
++ Tooltip getTooltip()
+}
+
+
+enum component.card.Suit {
++  SPADE
++  HEART
++  DIAMOND
++  CLUB
++ String toString()
++ Tooltip getTooltip()
+}
+
+
+
+
+util.GridIndexable <|.. component.card.Card
+ui.tooltip.Tippable <|.. component.card.Card
+@enduml

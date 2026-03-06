@@ -1,0 +1,29 @@
+@startuml
+class audio.AudioManager {
+- {static} MediaPlayer currentMusicPlayer
+- {static} String currentMusic
++ {static} void playSFXWithModifierSet(HashSet<Modifier>)
++ {static} void playSoundEffect(String)
++ {static} void playMusic(String)
+- {static} void musicFadeIn(MediaPlayer,double,double)
+- {static} void musicFadeOut(MediaPlayer,double)
+}
+
+
+class audio.AudioManager$SoundEffectFiles {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
+- {static} Map<String,AudioClip> audios
+}
+
+class audio.AudioManager$MusicFiles {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
+- {static} Map<String,Media> medias
+}
+
+
+
+audio.AudioManager +.. audio.AudioManager$SoundEffectFiles
+audio.AudioManager +.. audio.AudioManager$MusicFiles
+@enduml

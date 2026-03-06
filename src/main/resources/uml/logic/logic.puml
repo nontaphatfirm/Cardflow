@@ -1,0 +1,133 @@
+@startuml
+class logic.movement.MovementTickResolver {
++ {static} HashSet<CardMovement> doMovementTick(GameLevel,HashSet<Card>,HashSet<GridPos>)
+}
+
+class logic.movement.MoveIntent {
+~ {static} HashMap<GridPos,MoveIntent> byCurrent
+~ {static} HashMap<GridPos,ArrayList<MoveIntent>> byResult
+~ Card card
+~ Direction direction
+~ IntentStatus status
++ <<Create>> MoveIntent(Card,Direction)
++ GridPos getResultPos()
++ String toString()
++ GridPos getCurrentPos()
+- {static} ArrayList<GridPos> getSurroundingPoints(GridPos)
++ {static} void resolveIntent(List<MoveIntent>,HashSet<GridPos>)
+}
+
+
+enum logic.movement.IntentStatus {
++  UNRESOLVED
++  MOVED
++  BLOCKED
+}
+
+class logic.event.LogicEvent {
+}
+class logic.event.end.GameWinEvent {
+}
+class logic.PlayerInventory {
+- {static} PlayerInventory instance
+- GameLevel gameLevel
+- HashMap<String,Integer> currentAvailableMovers
+- Direction currentRotation
+- String currentSelection
++ <<Create>> PlayerInventory(GameLevel)
++ HashMap<String,Integer> getCurrentAvailableMovers()
++ Direction getCurrentRotation()
++ void setCurrentRotation(Direction)
++ {static} Mover getMoverObjectByName(String,Direction)
++ void modifyAvailableMovers(String,int)
++ void setCurrentSelection(String)
+- void raiseSetEvent()
++ boolean placeToGrid(GridPos)
++ boolean removeFromGrid(GridPos)
++ String getCurrentSelection()
++ {static} PlayerInventory getInstance()
++ {static} void setInstance(PlayerInventory)
+}
+
+
+class logic.movement.CardMovement {
+- Card card
+- GridPos from
+- GridPos to
++ <<Create>> CardMovement(Card,GridPos,GridPos)
++ GridPos to()
++ GridPos from()
++ Card card()
+}
+
+
+class logic.GameEndCondition {
++ {static} GameEndCondition INSTANCE
++ void checkWinCondition(CardExitEvent)
+}
+
+
+class logic.event.AfterMovementEvent {
+- HashSet<CardMovement> movements
++ <<Create>> AfterMovementEvent(HashSet<CardMovement>)
++ HashSet<CardMovement> getMovements()
+}
+
+
+class logic.event.card.TileSelectChangeEvent {
+- String tile
+- Direction rotation
+- BiFunction<String,Direction,Mover> factory
++ <<Create>> TileSelectChangeEvent(String,Direction,BiFunction<String,Direction,Mover>)
++ String getMovements()
++ Direction getRotation()
++ BiFunction<String,Direction,Mover> getFactory()
+}
+
+
+class logic.GameLevel {
+- {static} GameLevel instance
++ {static} int MAX_WIDTH
++ {static} int MAX_HEIGHT
++ int WIDTH
++ int HEIGHT
++ String LEVELNAME
++ String LEVELID
++ List<CardCount> INPUT_CARDS
++ List<CardCount> OUTPUT_CARDS
++ HashMap<String,Integer> AVAILABLE_MOVERS
+- GameTile[][] grid
++ ArrayList<Card> exitedCardsList
++ HashSet<Card> cardSet
++ HashSet<Modifier> modifierSet
++ HashSet<Mover> moverSet
++ HashSet<GridPos> changedPoints
++ HashSet<Modifier> successfullyModified
++ <<Create>> GameLevel(String,String,int,int,List<CardCount>,List<CardCount>,HashMap<String,Integer>,GameTile[][],HashSet<Modifier>)
++ GameTile getTile(GridPos)
++ boolean isInBounds(GridPos)
++ GameTile[] getAdjacentTiles(GridPos)
++ boolean setPositionOnGrid(GridIndexable,GridPos)
++ boolean setPositionOnGrid(GridIndexable,GridPos,boolean)
++ boolean addMover(Mover,GridPos)
++ boolean removeMover(Mover)
++ boolean addCard(Card,GridPos)
++ boolean removeCard(Card)
++ void doMovementTick()
++ void doModifyTick()
++ void resetLevel()
++ {static} GameLevel getInstance()
++ {static} void setInstance(GameLevel)
++ GameTile[][] getGrid()
++ void setGrid(GameTile[][])
++ String toString()
+}
+
+
+
+
+event.Event <|.. logic.event.LogicEvent
+logic.event.LogicEvent <|-- logic.event.end.GameWinEvent
+logic.event.LogicEvent <|-- logic.event.AfterMovementEvent
+logic.event.LogicEvent <|-- logic.event.card.TileSelectChangeEvent
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+enum registry.render.RenderLayer {
++  BASE
++  MOVER
++  MODIFIER
++  CARD
++  CARDANIM
++  OVERLAY
++  EFFECTS
++  MOUSE_OVERLAY
++  MOUSE_EVENTS
+}
+
+class registry.render.RendererRegistry {
+- Map<Class<?>,Renderer<?>> renderers
++ {static} RendererRegistry INSTANCE
++ void register(Class<T>,Renderer<? super T>)
++ Renderer<T> getRenderer(T)
+}
+
+
+class registry.render.FloatingLayerRegistry {
+- Map<RenderLayer,Pane> panes
+- Set<RenderLayer> floatingLayers
++ {static} FloatingLayerRegistry INSTANCE
++ void markFloating(RenderLayer)
++ boolean isFloating(RenderLayer)
++ void registerEntry(RenderLayer,Pane)
++ Pane getPane(RenderLayer)
+}
+
+
+@enduml

@@ -1,0 +1,224 @@
+@startuml
+class component.modifier.pathway.Exit {
+- int countCorrectExits
+- int countTotalExits
++ <<Create>> Exit()
++ void modify(Card)
++ boolean isBlocking()
++ void reset()
++ Tooltip getTooltip()
+}
+
+
+class component.modifier.changer.MaterialSetter {
++ <<Create>> MaterialSetter(Material)
++ void change(Card)
++ Tooltip getTooltip()
+}
+
+class component.modifier.pathway.event.CardEnterEvent {
++ <<Create>> CardEnterEvent(GridPos,Card)
+}
+
+abstract class component.modifier.combinator.Combinator {
++ void reset()
++ Tooltip getTooltip()
++ {static} Tooltip getCombinatorTooltip()
++ {static} boolean checkStone(Card)
+}
+
+class component.modifier.combinator.Vaporizer {
++ <<Create>> Vaporizer()
++ void modify(Card)
++ boolean isBlocking()
++ Tooltip getTooltip()
+}
+
+class component.modifier.combinator.Duplicator {
+- Card cardToSpawn
++ void modify(Card)
++ boolean isBlocking()
++ void reset()
++ Tooltip getTooltip()
+}
+
+
+abstract class component.modifier.changer.Changer {
+# T changeValue
+# ChangeType changeType
++ <<Create>> Changer()
++ T getChange()
++ void setChange(T)
++ ChangeType getChangeType()
++ {abstract}void change(Card)
++ boolean isBlocking()
++ void modify(Card)
++ void reset()
++ Tooltip getTooltip()
++ {static} Tooltip getChangerTooltip()
+}
+
+
+enum component.modifier.changer.ChangeType {
++  NUMBER
++  SUIT
++  MATERIAL
+}
+
+class component.modifier.pathway.Entrance {
++ <<Create>> Entrance()
++ void modify(Card)
++ boolean isBlocking()
++ Tooltip getTooltip()
+}
+
+abstract class component.modifier.pathway.Pathway {
+# int currentIndex
++ <<Create>> Pathway()
++ Card getCurrentCard(List<CardCount>)
++ boolean isBlocking()
++ void reset()
+}
+
+
+abstract class component.modifier.Modifier {
+- boolean isDisabled
+# GridPos gridPos
++ <<Create>> Modifier()
++ <<Create>> Modifier(GridPos)
++ boolean isDisabled()
++ void setDisabled(boolean)
++ boolean checkSetDisable(Card)
++ boolean checkDestroyGlass(Card)
++ GridPos getGridPos()
++ void setGridPos(GridPos)
++ String toString()
++ void onSuccess()
++ {abstract}void modify(Card)
++ {abstract}void reset()
++ Tooltip getTooltip()
++ {static} Tooltip getModifierTooltip()
++ Tooltip getDisabledTooltip()
+}
+
+
+abstract class component.modifier.changer.Setter {
+}
+class component.modifier.combinator.Absorber {
+- Card previousCard
++ void modify(Card)
++ boolean isBlocking()
++ void reset()
++ Tooltip getTooltip()
+}
+
+
+class component.modifier.changer.Adder {
++ <<Create>> Adder(int)
++ void setChange(Integer)
++ void change(Card)
++ Tooltip getTooltip()
+}
+
+class component.modifier.combinator.Merger {
+- Card previousCard
++ void modify(Card)
++ boolean isBlocking()
++ void reset()
++ Tooltip getTooltip()
+}
+
+
+class component.modifier.changer.Multiplier {
++ <<Create>> Multiplier(int)
++ void setChange(Integer)
++ void change(Card)
++ Tooltip getTooltip()
+}
+
+class component.modifier.changer.ValueSetter {
++ <<Create>> ValueSetter(int)
++ void change(Card)
++ void setChange(Integer)
++ Tooltip getTooltip()
+}
+
+class component.modifier.changer.SuitSetter {
++ <<Create>> SuitSetter(Suit)
++ void change(Card)
++ Tooltip getTooltip()
+}
+
+class component.modifier.changer.Subtractor {
++ <<Create>> Subtractor(int)
++ void setChange(Integer)
++ void change(Card)
++ Tooltip getTooltip()
+}
+
+class component.modifier.combinator.Splitter {
+- Card cardToSpawn
++ void modify(Card)
++ boolean isBlocking()
++ void reset()
++ Tooltip getTooltip()
+}
+
+
+abstract class component.modifier.changer.Arithmetic {
++ void modify(Card)
+}
+
+class component.modifier.pathway.event.CardExitEvent {
+- ArrayList<Card> exitedCards
+- int countCorrectExits
+- int countTotalExits
++ <<Create>> CardExitEvent(GridPos,Card,int,int)
++ int getCountCorrectExits()
++ int getCountTotalExits()
+}
+
+
+class component.modifier.pathway.event.PathwayEvent {
+- GridPos pos
+- Card card
++ <<Create>> PathwayEvent(GridPos,Card)
++ GridPos getPos()
++ Card getCard()
+}
+
+
+class component.modifier.changer.Divider {
++ <<Create>> Divider(int)
++ void setChange(Integer)
++ void change(Card)
++ Tooltip getTooltip()
+}
+
+
+
+component.modifier.pathway.Pathway <|-- component.modifier.pathway.Exit
+component.modifier.changer.Setter <|-- component.modifier.changer.MaterialSetter
+component.modifier.pathway.event.PathwayEvent <|-- component.modifier.pathway.event.CardEnterEvent
+component.modifier.Modifier <|-- component.modifier.combinator.Combinator
+component.modifier.combinator.Combinator <|-- component.modifier.combinator.Vaporizer
+component.modifier.combinator.Combinator <|-- component.modifier.combinator.Duplicator
+component.modifier.Modifier <|-- component.modifier.changer.Changer
+component.modifier.pathway.Pathway <|-- component.modifier.pathway.Entrance
+component.modifier.Modifier <|-- component.modifier.pathway.Pathway
+util.GridIndexable <|.. component.modifier.Modifier
+ui.tooltip.Tippable <|.. component.modifier.Modifier
+component.modifier.changer.Changer <|-- component.modifier.changer.Setter
+component.modifier.combinator.Combinator <|-- component.modifier.combinator.Absorber
+component.modifier.changer.Arithmetic <|-- component.modifier.changer.Adder
+component.modifier.combinator.Combinator <|-- component.modifier.combinator.Merger
+component.modifier.changer.Arithmetic <|-- component.modifier.changer.Multiplier
+component.modifier.changer.Setter <|-- component.modifier.changer.ValueSetter
+component.modifier.changer.Setter <|-- component.modifier.changer.SuitSetter
+component.modifier.changer.Arithmetic <|-- component.modifier.changer.Subtractor
+component.modifier.combinator.Combinator <|-- component.modifier.combinator.Splitter
+component.modifier.changer.Changer <|-- component.modifier.changer.Arithmetic
+component.modifier.pathway.event.PathwayEvent <|-- component.modifier.pathway.event.CardExitEvent
+event.Event <|.. component.modifier.pathway.event.PathwayEvent
+component.modifier.changer.Arithmetic <|-- component.modifier.changer.Divider
+@enduml

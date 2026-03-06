@@ -1,0 +1,92 @@
+@startuml
+class ui.modifier.changer.ArithmeticRenderer {
++ {static} ArithmeticRenderer INSTANCE
+- <<Create>> ArithmeticRenderer()
++ void render(Arithmetic,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+class ui.modifier.combinator.CombinatorRenderer {
++ {static} CombinatorRenderer INSTANCE
+- <<Create>> CombinatorRenderer()
++ void render(Combinator,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+class ui.modifier.combinator.CombinatorRenderResolver {
+- <<Create>> CombinatorRenderResolver()
++ {static} RenderState resolve(Combinator,GridPos,double)
+}
+
+class ui.modifier.combinator.CombinatorRenderResolver$CombinatorImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
++ {static} Map<String,Image> images
+}
+
+class ui.modifier.pathway.PathwayRenderer {
++ {static} PathwayRenderer INSTANCE
+- <<Create>> PathwayRenderer()
++ void render(Pathway,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+class ui.modifier.changer.ArithmeticRenderResolver {
+- <<Create>> ArithmeticRenderResolver()
++ {static} RenderState resolve(Arithmetic,GridPos,double)
+}
+
+class ui.modifier.changer.ArithmeticRenderResolver$ArithmeticImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
++ {static} Map<String,Image> images
+}
+
+class ui.modifier.changer.SetterRenderer {
++ {static} SetterRenderer INSTANCE
+- <<Create>> SetterRenderer()
++ void render(Setter<?>,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+class ui.modifier.pathway.PathwayRenderResolver {
+- <<Create>> PathwayRenderResolver()
++ {static} RenderState resolve(Pathway,GridPos,double)
+}
+
+class ui.modifier.pathway.PathwayRenderResolver$PathwayImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
++ {static} Map<String,Image> images
+}
+
+class ui.modifier.changer.SetterRenderResolver {
+- <<Create>> SetterRenderResolver()
++ {static} RenderState resolve(Setter<?>,GridPos,double)
+}
+
+class ui.modifier.changer.SetterRenderResolver$SetterImage {
+- {static} String[] SUIT_FILENAMES
+- {static} String[] MATERIAL_FILENAMES
++ {static} Map<String,Image> images
+}
+
+
+
+ui.render.Renderer <|-- ui.modifier.changer.ArithmeticRenderer
+ui.render.Renderer <|-- ui.modifier.combinator.CombinatorRenderer
+ui.render.RenderResolver <|-- ui.modifier.combinator.CombinatorRenderResolver
+ui.modifier.combinator.CombinatorRenderResolver +.. ui.modifier.combinator.CombinatorRenderResolver$CombinatorImage
+ui.render.Renderer <|-- ui.modifier.pathway.PathwayRenderer
+ui.render.RenderResolver <|-- ui.modifier.changer.ArithmeticRenderResolver
+ui.modifier.changer.ArithmeticRenderResolver +.. ui.modifier.changer.ArithmeticRenderResolver$ArithmeticImage
+ui.render.Renderer <|-- ui.modifier.changer.SetterRenderer
+ui.render.RenderResolver <|-- ui.modifier.pathway.PathwayRenderResolver
+ui.modifier.pathway.PathwayRenderResolver +.. ui.modifier.pathway.PathwayRenderResolver$PathwayImage
+ui.render.RenderResolver <|-- ui.modifier.changer.SetterRenderResolver
+ui.modifier.changer.SetterRenderResolver +.. ui.modifier.changer.SetterRenderResolver$SetterImage
+@enduml

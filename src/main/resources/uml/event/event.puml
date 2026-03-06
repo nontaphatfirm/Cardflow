@@ -1,0 +1,26 @@
+@startuml
+interface event.Event {
+}
+interface event.EventListener {
+~ void onEvent(T)
+}
+
+class event.RenderEvent {
+- Set<GridPos> changedPoints
++ <<Create>> RenderEvent(Set<GridPos>)
++ Set<GridPos> getChangedPoints()
+}
+
+
+class event.EventBus {
+- {static} Map<Class<? extends Event>,List<EventListener<? extends Event>>> listeners
++ {static} Runnable register(Class<T>,EventListener<T>)
++ {static} void emit(T)
+- {static} void unregister(Class<T>,EventListener<T>)
+}
+
+
+
+
+event.Event <|.. event.RenderEvent
+@enduml

@@ -34,13 +34,18 @@ public class EffectManager {
 
     public static void createEffectsWithModifierSet(Set<Modifier> modifiers) {
         for (Modifier modifier : modifiers) {
-            Color selectedColor = switch (modifier) {
-                case Entrance entrance -> Color.YELLOWGREEN;
-                case Exit exit -> Color.RED;
-                case Changer<?> changer -> Color.CYAN;
-                case Combinator combinator -> Color.VIOLET;
-                case null, default -> Color.YELLOW; // idk
-            };
+            Color selectedColor;
+
+            if (modifier instanceof Entrance)
+                selectedColor = Color.YELLOWGREEN;
+            else if (modifier instanceof Exit)
+                selectedColor = Color.RED;
+            else if (modifier instanceof Changer)
+                selectedColor = Color.CYAN;
+            else if (modifier instanceof Combinator)
+                selectedColor = Color.VIOLET;
+            else
+                selectedColor = Color.YELLOW;
 
             createEffect(selectedColor, modifier.getGridPos());
         }

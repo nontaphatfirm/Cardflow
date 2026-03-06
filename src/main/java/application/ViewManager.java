@@ -123,7 +123,7 @@ public class ViewManager { // Switching views instead of switching scenes to all
                 fadeIn.setToValue(1);
 
                 ParallelTransition pt2 = new ParallelTransition(scaleDown, fadeIn);
-                pt2.setOnFinished(_ -> isTransitioning = false);
+                pt2.setOnFinished(event2 -> isTransitioning = false);
                 pt2.play();
             });
         }

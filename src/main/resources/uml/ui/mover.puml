@@ -1,0 +1,146 @@
+@startuml
+class ui.mover.FlipFlopRenderResolver {
+- <<Create>> FlipFlopRenderResolver()
++ {static} RenderState resolveFloor(FlipFlop,GridPos,double)
++ {static} RenderState resolveOverlay(FlipFlop,GridPos,double)
+}
+
+class ui.mover.FlipFlopRenderResolver$FlipFlopImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
++ {static} Map<String,Image> floorImages
++ {static} Map<String,Image> overlayBlueImages
++ {static} Map<String,Image> overlayRedImages
+}
+
+class ui.mover.DelayRenderResolver {
+- <<Create>> DelayRenderResolver()
++ {static} RenderState resolve(Delay,GridPos,double)
+}
+
+class ui.mover.DelayRenderResolver$DelayImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
++ {static} Map<String,Image> images
+}
+
+class ui.mover.FlipFlopRenderer {
++ {static} FlipFlopRenderer INSTANCE
+- <<Create>> FlipFlopRenderer()
++ void render(FlipFlop,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+abstract class ui.mover.MoverRenderResolver {
++ {static} double rotationFor(Mover)
+}
+
+class ui.mover.MoverRenderResolver$SpriteData {
+- Image image
+- double rotationOffset
+- boolean mirrorX
++ <<Create>> SpriteData(Image,double,boolean)
++ Image image()
++ boolean mirrorX()
++ double rotationOffset()
+}
+
+
+class ui.mover.MoverRenderResolver$SpriteSelector {
++ {static} SpriteData regular(EnumSet<Direction>,Map<String,Image>)
++ {static} SpriteData flipFlop(EnumSet<Direction>,Map<String,Image>)
++ {static} SpriteData filter(EnumSet<Direction>,Map<String,Image>)
+}
+
+class ui.mover.MoverRenderResolver$MoverTopology {
++ {static} EnumSet<Direction> resolve(Mover,GridPos)
+}
+
+class ui.mover.RedBlackFilterRenderResolver {
+- <<Create>> RedBlackFilterRenderResolver()
++ {static} RenderState resolve(RedBlackFilter,GridPos,double)
+}
+
+class ui.mover.RedBlackFilterRenderResolver$RedBlackFilterImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
++ {static} Map<String,Image> images
+}
+
+class ui.mover.ParityFilterRenderResolver {
+- <<Create>> ParityFilterRenderResolver()
++ {static} RenderState resolve(ParityFilter,GridPos,double)
+}
+
+class ui.mover.ParityFilterRenderResolver$ParityFilterImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
++ {static} Map<String,Image> images
+}
+
+class ui.mover.ParityFilterRenderer {
++ {static} ParityFilterRenderer INSTANCE
+- <<Create>> ParityFilterRenderer()
++ void render(ParityFilter,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+class ui.mover.RedBlackFilterRenderer {
++ {static} RedBlackFilterRenderer INSTANCE
+- <<Create>> RedBlackFilterRenderer()
++ void render(RedBlackFilter,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+class ui.mover.ConveyorRenderer {
++ {static} ConveyorRenderer INSTANCE
+- <<Create>> ConveyorRenderer()
++ void render(Conveyor,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+class ui.mover.DelayRenderer {
++ {static} DelayRenderer INSTANCE
+- <<Create>> DelayRenderer()
++ void render(Delay,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+class ui.mover.ConveyorRenderResolver {
+- <<Create>> ConveyorRenderResolver()
++ {static} RenderState resolve(Conveyor,GridPos,double)
+}
+
+class ui.mover.ConveyorRenderResolver$ConveyorImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
++ {static} Map<String,Image> images
+}
+
+
+
+ui.mover.MoverRenderResolver <|-- ui.mover.FlipFlopRenderResolver
+ui.mover.FlipFlopRenderResolver +.. ui.mover.FlipFlopRenderResolver$FlipFlopImage
+ui.mover.MoverRenderResolver <|-- ui.mover.DelayRenderResolver
+ui.mover.DelayRenderResolver +.. ui.mover.DelayRenderResolver$DelayImage
+ui.render.Renderer <|-- ui.mover.FlipFlopRenderer
+ui.render.RenderResolver <|-- ui.mover.MoverRenderResolver
+ui.mover.MoverRenderResolver +.. ui.mover.MoverRenderResolver$SpriteData
+ui.mover.MoverRenderResolver +.. ui.mover.MoverRenderResolver$SpriteSelector
+ui.mover.MoverRenderResolver +.. ui.mover.MoverRenderResolver$MoverTopology
+ui.mover.MoverRenderResolver <|-- ui.mover.RedBlackFilterRenderResolver
+ui.mover.RedBlackFilterRenderResolver +.. ui.mover.RedBlackFilterRenderResolver$RedBlackFilterImage
+ui.mover.MoverRenderResolver <|-- ui.mover.ParityFilterRenderResolver
+ui.mover.ParityFilterRenderResolver +.. ui.mover.ParityFilterRenderResolver$ParityFilterImage
+ui.render.Renderer <|-- ui.mover.ParityFilterRenderer
+ui.render.Renderer <|-- ui.mover.RedBlackFilterRenderer
+ui.render.Renderer <|-- ui.mover.ConveyorRenderer
+ui.render.Renderer <|-- ui.mover.DelayRenderer
+ui.mover.MoverRenderResolver <|-- ui.mover.ConveyorRenderResolver
+ui.mover.ConveyorRenderResolver +.. ui.mover.ConveyorRenderResolver$ConveyorImage
+@enduml

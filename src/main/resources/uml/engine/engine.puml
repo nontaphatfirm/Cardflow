@@ -1,0 +1,69 @@
+@startuml
+class engine.event.PausedEvent {
++ <<Create>> PausedEvent()
+}
+
+class engine.event.MovementEndedEvent {
++ <<Create>> MovementEndedEvent()
+}
+
+class engine.EngineEvent {
+- TickPhase tickPhase
++ <<Create>> EngineEvent(TickPhase)
++ TickPhase getTickPhase()
+}
+
+
+enum engine.EngineState {
++  RUNNING
++  PAUSED
+}
+
+enum engine.GameState {
++  PLACING
++  SIMULATING
+}
+
+enum engine.TickPhase {
++  MOVEMENT
++  MODIFY
+- {static} TickPhase[] VALUES
++ TickPhase next()
+}
+
+
+class engine.TickEngine {
+- {static} EngineState engineState
+- {static} GameState gameState
+- {static} long lastTick
+- {static} long TICK_INTERVAL_NS
+- {static} AnimationTimer timer
+- {static} TickPhase currentPhase
++ {static} void play()
++ {static} void pause()
++ {static} void step()
++ {static} void reset()
+- {static} void startTimer()
+- {static} void stopTimer()
++ {static} void tick()
++ {static} EngineState getEngineState()
++ {static} GameState getGameState()
+}
+
+
+class engine.event.ModifyEndedEvent {
++ <<Create>> ModifyEndedEvent()
+}
+
+class engine.event.ResetEvent {
++ <<Create>> ResetEvent()
+}
+
+
+
+event.Event <|.. engine.event.PausedEvent
+engine.EngineEvent <|-- engine.event.MovementEndedEvent
+event.Event <|.. engine.EngineEvent
+engine.EngineEvent <|-- engine.event.ModifyEndedEvent
+event.Event <|.. engine.event.ResetEvent
+@enduml

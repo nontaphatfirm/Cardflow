@@ -1,0 +1,78 @@
+@startuml
+class component.mover.Conveyor {
++ <<Create>> Conveyor(Direction)
++ String toString()
++ Direction getDirectionStateless()
++ Direction[] getValidOutputDirections()
++ Tooltip getTooltip()
+}
+
+class component.mover.Delay {
+- Card cardToMove
++ <<Create>> Delay(Direction)
++ Direction getDirectionStateless()
++ Direction getDirection()
++ Direction[] getValidOutputDirections()
++ Tooltip getTooltip()
+}
+
+
+class component.mover.ParityFilter {
++ <<Create>> ParityFilter(Direction)
++ Direction getDirectionStateless()
++ Direction getDirection()
++ Direction[] getValidOutputDirections()
++ Tooltip getTooltip()
+}
+
+class component.mover.FlipFlop {
+- boolean isActive
++ <<Create>> FlipFlop(Direction)
++ boolean isActive()
++ void setActive(boolean)
++ Direction getDirectionStateless()
++ Direction getDirection()
++ Direction[] getValidOutputDirections()
++ void reset()
++ Tooltip getTooltip()
+}
+
+
+class component.mover.RedBlackFilter {
++ <<Create>> RedBlackFilter(Direction)
++ Direction getDirectionStateless()
++ Direction getDirection()
++ Direction[] getValidOutputDirections()
++ Tooltip getTooltip()
+}
+
+abstract class component.mover.Mover {
+# GridPos gridPos
+# Direction rotation
++ <<Create>> Mover(Direction)
++ {static} GridPos getTranslationFromDirection(Direction)
++ {abstract}Direction getDirectionStateless()
++ Direction getDirection()
++ Direction getRotation()
++ void setRotation(Direction)
++ {abstract}Direction[] getValidOutputDirections()
++ void rotate()
++ GridPos getGridPos()
++ void setGridPos(GridPos)
++ boolean isBlocking()
++ void reset()
++ Tooltip getTooltip()
++ {static} Tooltip getMoverTooltip()
+}
+
+
+
+
+component.mover.Mover <|-- component.mover.Conveyor
+component.mover.Mover <|-- component.mover.Delay
+component.mover.Mover <|-- component.mover.ParityFilter
+component.mover.Mover <|-- component.mover.FlipFlop
+component.mover.Mover <|-- component.mover.RedBlackFilter
+util.GridIndexable <|.. component.mover.Mover
+ui.tooltip.Tippable <|.. component.mover.Mover
+@enduml

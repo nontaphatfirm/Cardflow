@@ -1,0 +1,230 @@
+@startuml
+class ui.card.CardRenderer {
++ {static} CardRenderer INSTANCE
++ EventListener<AfterMovementEvent> movementListener
+- Set<Card> animatingCards
+- <<Create>> CardRenderer()
++ void render(Card,Pane,GridPos,boolean)
++ void render(Card,Pane,GridPos,boolean,boolean,boolean)
++ void onAnimationComplete(Card,GridPos,GridPos)
++ void onMovementEvent(AfterMovementEvent)
++ RenderLayer layer()
+}
+
+
+class ui.effect.EffectManager {
++ {static} void createEffect(Color,GridPos)
++ {static} void createEffectsWithModifierSet(Set<Modifier>)
+}
+
+class ui.button.BackButton {
++ <<Create>> BackButton()
+}
+
+class ui.game.GameWinOverlay {
+- Label gameWinText
+- HBox buttonControls
++ <<Create>> GameWinOverlay()
+- Label createTitle()
+- HBox createButtonControls()
+- Button createBackButton()
+- Button createNextButton()
+- void handleNextLevel()
+- String getNextLevelId()
+- void buildLayout()
+- void applyBackground()
+}
+
+
+class ui.game.GameGrid {
++ GameTilePane[][] gameGridTilePanes
++ <<Create>> GameGrid(GameLevel,RenderLayer,TooltipLayer)
++ void updateIfValid(GridPos)
+- void configureLayer(RenderLayer)
+- void buildGrid(GameLevel,RenderLayer,TooltipLayer)
+- void registerMouseHandlers(RenderLayer)
+- void buildConstraints(GameLevel)
+- GridPos getGridPosFromMouse(MouseEvent)
+}
+
+
+class ui.card.CardInputListPane {
+- Label title
+- HBox cardList
++ <<Create>> CardInputListPane(String,List<CardCount>,TooltipLayer)
+}
+
+
+class ui.card.CardPaneListItem {
+- Card cardInfo
+- Pane renderPane
++ <<Create>> CardPaneListItem(Card)
++ <<Create>> CardPaneListItem(Card,String)
++ void setBorderColorByComparison(Card)
++ void setBorderColor(String)
+}
+
+
+class ui.game.GameTilePane {
+- GameTile tile
+- GridPos pos
+- RenderLayer layer
++ <<Create>> GameTilePane(GameTile,GridPos,RenderLayer)
++ void updateUIAdjacent()
++ void updateUI()
+- void clearLayers()
+- void render(RenderLayer,Object)
++ GameTile getGameTileInfo()
++ void setGameTileInfo(GameTile)
+}
+
+
+class ui.game.GameRenderStack {
+- EnumMap<RenderLayer,Pane> layers
++ <<Create>> GameRenderStack(GameLevel,TooltipLayer)
++ void updateIfValid(GridPos)
+}
+
+
+class ui.card.CardOutputListPane {
+- Label title
+- HBox cardList
+- Runnable unregisterCardExit
+- Runnable unregisterReset
++ <<Create>> CardOutputListPane(String,List<CardCount>,TooltipLayer)
++ void cleanup()
++ void updateUI(Event)
+}
+
+
+class ui.card.CardRenderResolver {
+- {static} double CARD_WIDTH
+- {static} double CARD_HEIGHT
+- <<Create>> CardRenderResolver()
++ {static} RenderState resolveMaterial(Card)
++ {static} RenderState resolveSuit(Card)
++ {static} RenderState resolveValue(Card)
+}
+
+
+class ui.card.CardRenderResolver$MaterialImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
+- {static} Map<String,Image> images
+}
+
+class ui.card.CardRenderResolver$SuitImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
+- {static} Map<String,Image> images
+}
+
+class ui.card.CardRenderResolver$ValueImage {
+- {static} String RESOURCE_DIR
+- {static} String[] FILENAMES
+- {static} Map<String,Image> images
+}
+
+class ui.effect.CircleEffect {
++ <<Create>> CircleEffect(Color,GridPos)
++ Transition getTransition()
+}
+
+class ui.card.CardMovementAnimation {
++ {static} CardMovementAnimation INSTANCE
+- {static} double TILE_SIZE
+- {static} Duration MOVE_DURATION
+- Pane floatingLayer
+- RenderLayer layer
++ <<Create>> CardMovementAnimation()
++ void animate(Card,GridPos,GridPos)
+}
+
+
+class ui.levelinfo.LevelInfoPane {
+- PlayerInventory inventory
+- Text titleText
+- Label rotationLabel
+- VBox moversList
+- HBox controlPanel
+- Label phaseLabel
+- CardInputListPane cardInputListPane
+- CardOutputListPane cardOutputListPane
+- Map<String,MoverRowUI> moverRows
+- Runnable unregisterAfterMovement
+- Runnable unregisterAfterModify
+- Runnable unregisterAfterPause
++ <<Create>> LevelInfoPane(TooltipLayer)
+- void initializeStyle()
+- void initializeComponents(TooltipLayer)
+- Text createTitleText()
+- Label createRotationLabel()
+- Label createPhaseLabel()
+- void buildLayout(TooltipLayer)
+- void initializeContent(TooltipLayer)
+- HBox createStatusContainer()
+- void registerEventHandlers()
+- void updatePhase(GamePhase)
++ void cleanup()
+- void buildControlPanel()
+- Button createButton(String,String,Runnable)
+- void buildMoverRows(TooltipLayer)
+- MoverRowUI createMoverRow(String,TooltipLayer)
++ void updateInventoryUI()
+- void updateRotation()
+- void updateMovers()
+}
+
+
+enum ui.levelinfo.GamePhase {
++  MOVING
++  MODIFYING
++  PAUSED
+- String displayText
+~ <<Create>> GamePhase(String)
++ String getDisplayText()
+}
+
+
+class ui.levelinfo.LevelInfoPane$MoverRowUI {
+- Button button
+- Text countText
+- HBox container
+~ <<Create>> MoverRowUI(Button,Text,HBox)
+~ HBox getContainer()
+~ void updateCount(int)
+~ void updateAvailability(boolean)
+~ void updateSelection(boolean)
+- void clearStyles()
+}
+
+
+class ui.base.EmptyTileRenderer {
++ {static} EmptyTileRenderer INSTANCE
++ {static} Image EMPTY_TILE_IMAGE
++ <<Create>> EmptyTileRenderer()
++ void render(GameTile,Pane,GridPos,boolean)
++ RenderLayer layer()
+}
+
+
+
+
+ui.render.Renderer <|-- ui.card.CardRenderer
+javafx.scene.layout.VBox <|-- ui.button.BackButton
+ui.game.VBox <|-- ui.game.GameWinOverlay
+javafx.scene.layout.GridPane <|-- ui.game.GameGrid
+ui.card.VBox <|-- ui.card.CardInputListPane
+javafx.scene.layout.StackPane <|-- ui.card.CardPaneListItem
+javafx.scene.layout.Pane <|-- ui.game.GameTilePane
+javafx.scene.layout.StackPane <|-- ui.game.GameRenderStack
+ui.card.VBox <|-- ui.card.CardOutputListPane
+ui.render.RenderResolver <|-- ui.card.CardRenderResolver
+ui.card.CardRenderResolver +.. ui.card.CardRenderResolver$MaterialImage
+ui.card.CardRenderResolver +.. ui.card.CardRenderResolver$SuitImage
+ui.card.CardRenderResolver +.. ui.card.CardRenderResolver$ValueImage
+javafx.scene.shape.Circle <|-- ui.effect.CircleEffect
+javafx.scene.layout.VBox <|-- ui.levelinfo.LevelInfoPane
+ui.levelinfo.LevelInfoPane +.. ui.levelinfo.LevelInfoPane$MoverRowUI
+ui.render.Renderer <|-- ui.base.EmptyTileRenderer
+@enduml

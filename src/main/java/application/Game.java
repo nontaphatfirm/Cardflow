@@ -1,6 +1,7 @@
 package application;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import application.controller.PlacementController;
 import application.view.GameView;
@@ -8,6 +9,7 @@ import application.view.LevelSelectorView;
 import application.view.MainMenuView;
 import audio.AudioManager;
 import javafx.application.Platform;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import logic.GameLevel;
@@ -27,15 +29,13 @@ public final class Game {
         ViewManager managerInstance = ViewManager.getInstance();
 
         managerInstance.scene.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case BACK_SPACE: {
-                    if (!managerInstance.currentViewIs(LevelSelectorView.class)) return;
-                    try {
-                        GameLevel sandbox = LevelLoader.loadLevel("sandbox");
-                        managerInstance.switchView(new GameView(sandbox), TransitionType.FADE);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            if (Objects.requireNonNull(event.getCode()) == KeyCode.BACK_SPACE) {
+                if (!managerInstance.currentViewIs(LevelSelectorView.class)) return;
+                try {
+                    GameLevel sandbox = LevelLoader.loadLevel("sandbox");
+                    managerInstance.switchView(new GameView(sandbox), TransitionType.FADE);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });

@@ -1,0 +1,120 @@
+@startuml
+interface util.GridIndexable {
+~ GridPos getGridPos()
+~ void setGridPos(GridPos)
+~ boolean isBlocking()
+}
+
+class util.GridPos {
+- int x
+- int y
++ <<Create>> GridPos()
++ <<Create>> GridPos(GridPos)
++ <<Create>> GridPos(int,int)
++ int getX()
++ void setX(int)
++ int getY()
++ void setY(int)
++ GridPos add(GridPos)
++ Direction directionTo(GridPos)
++ boolean isPosInDirection(GridPos,Direction)
++ GridPos add(int,int)
++ GridPos addDirection(Direction)
++ boolean inRange(int,int,int,int)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+
+
+class util.Config {
++ {static} int TILE_SIZE
++ {static} double MODIFIER_ALPHA
++ {static} String REGULAR_FONT
++ {static} String MONOSPACE_FONT
++ {static} long TICK_DURATION_MS
+}
+
+class util.CardCount {
+- Card card
+- int count
++ <<Create>> CardCount(Card,int)
++ Card getCard()
++ void setCard(Card)
++ int getCount()
++ void setCount(int)
+}
+
+
+class util.Util {
++ {static} String getValueAsString(int)
++ {static} String getValueAsDetailedString(int)
++ {static} String capitalize(String)
+}
+
+enum util.Direction {
++  UP
++  RIGHT
++  DOWN
++  LEFT
++  STAY
+- {static} Direction[] CARDINALS
++ Direction next()
++ Direction prev()
++ Direction opposite()
++ boolean isOpposite(Direction)
++ boolean isLeftOf(Direction)
++ boolean isRightOf(Direction)
++ boolean isPerpendicularOf(Direction)
++ int dx()
++ int dy()
++ String toString()
++ Tooltip getTooltip()
+}
+
+
+class util.LevelLoader {
++ {static} int TOTAL_LEVELS
+- {static} Suit parseSuit(String)
+- {static} Material parseMaterial(String)
+- {static} CardCount parseCardInfo(JsonObject)
+- {static} Modifier parseModifierInfo(String)
+- {static} void parseMoverInfo(JsonObject,HashMap<String,Integer>)
++ {static} GameLevel loadLevel(String)
+- {static} LevelConfig parseConfig(JsonObject)
+- {static} LayoutData parseLayout(BufferedReader,int,int)
+}
+
+
+class util.LevelLoader$LevelConfig {
+- String name
+- int width
+- int height
+- List<CardCount> inputCards
+- List<CardCount> outputCards
+- HashMap<String,Integer> availableMovers
+- <<Create>> LevelConfig(String,int,int,List<CardCount>,List<CardCount>,HashMap<String,Integer>)
++ List<CardCount> inputCards()
++ List<CardCount> outputCards()
++ int width()
++ int height()
++ String name()
++ HashMap<String,Integer> availableMovers()
+}
+
+
+class util.LevelLoader$LayoutData {
+- GameTile[][] grid
+- HashSet<Modifier> modifiers
+- <<Create>> LayoutData(GameTile[][],HashSet<Modifier>)
++ HashSet<Modifier> modifiers()
++ GameTile[][] grid()
+}
+
+
+
+
+util.Cloneable <|.. util.GridPos
+util.LevelLoader +.. util.LevelLoader$LevelConfig
+util.LevelLoader +.. util.LevelLoader$LayoutData
+@enduml

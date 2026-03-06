@@ -2,7 +2,7 @@ package util;
 
 import java.util.Objects;
 
-public class GridPos implements Cloneable {
+public class GridPos {
     // Not using Point because awt is a different UI toolkit
     // Not using Point2D because it is a double pair that is immutable
 

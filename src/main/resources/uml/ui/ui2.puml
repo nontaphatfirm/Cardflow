@@ -1,0 +1,119 @@
+@startuml
+abstract class ui.render.Renderer {
++ void render(T,Pane,util.GridPos)
++ {abstract}void render(T,Pane,util.GridPos,boolean)
+# void draw(Pane,RenderState)
+# void drawWithCanvas(Pane,RenderState,Canvas,boolean)
+# void textWithCanvas(Pane,String,RenderState,Canvas)
++ {abstract}registry.render.RenderLayer layer()
+}
+
+class ui.overlay.SelectedTileOverlayRenderer {
++ {static} SelectedTileOverlayRenderer INSTANCE
+- BiFunction<String,Direction,Mover> moverFactory
+- String moverName
+- ArrayList<PlacementNode> placementListArrayList
+- ArrayList<PlacementNode> previousPlacementList
+- <<Create>> SelectedTileOverlayRenderer()
++ void setMoverDetails(BiFunction<String,Direction,Mover>,String)
++ void updatePlacementList(List<PlacementNode>)
+- void runDiffAndUpdate()
++ void render(Pane,GridPos)
+}
+
+
+class ui.tooltip.TooltipLayer {
+- TooltipHContainer tooltipHContainer
+- Tippable tooltipTarget
+- Runnable unregisterModifyEnd
+- Runnable unregisterMovementEnd
++ <<Create>> TooltipLayer()
++ void cleanup()
++ void bind(Node,Tippable)
+- void showTooltip(MouseEvent,Tippable)
+- void setTooltipPosition(MouseEvent)
++ void updateTooltipInfo(Event)
+- void hideTooltip(MouseEvent)
+}
+
+
+class ui.tooltip.TooltipHContainer {
++ <<Create>> TooltipHContainer()
+}
+
+class ui.tooltip.TooltipVContainer {
++ <<Create>> TooltipVContainer()
+}
+
+class ui.tooltip.TooltipPane {
++ <<Create>> TooltipPane(Tooltip)
+}
+
+class ui.tooltip.Tooltip {
+- String title
+- Color textColor
+- Object[] description
++ <<Create>> Tooltip(String,Color,Object)
++ String getTitle()
++ Color getTitleColor()
++ TextFlow getDescription()
++ List<Tooltip> getRefs()
++ {static} Tooltip ref(Object)
++ {static} Tippable getContainerFor(Tippable)
++ boolean equals(Object)
++ int hashCode()
+}
+
+
+interface ui.tooltip.Tippable {
+~ Tooltip getTooltip()
+}
+
+class ui.shader.GlowOverlay {
++ <<Create>> GlowOverlay()
+}
+
+class ui.overlay.DeleteOverlay {
++ {static} DeleteOverlay INSTANCE
+- {static} double BORDER_WIDTH
+- {static} double BORDER_OPACITY
+- {static} double FILL_OPACITY
++ void render(Pane)
+}
+
+
+class ui.render.RenderState {
+- Image image
+- double width
+- double height
+- double offsetX
+- double offsetY
+- double rotationDeg
+- boolean mirrorX
+- boolean grayscale
+- double alpha
++ <<Create>> RenderState(Image,double,double,double,double,double,boolean,boolean,double)
++ double offsetX()
++ Image image()
++ double rotationDeg()
++ double width()
++ double height()
++ double alpha()
++ boolean mirrorX()
++ boolean grayscale()
++ double offsetY()
+}
+
+
+abstract class ui.render.RenderResolver {
+# {static} void loadImageFiles(String,String[],Map<String,Image>,String)
+}
+
+
+
+javafx.scene.layout.Pane <|-- ui.tooltip.TooltipLayer
+javafx.scene.layout.HBox <|-- ui.tooltip.TooltipHContainer
+javafx.scene.layout.VBox <|-- ui.tooltip.TooltipVContainer
+javafx.scene.layout.VBox <|-- ui.tooltip.TooltipPane
+javafx.scene.shape.Rectangle <|-- ui.shader.GlowOverlay
+@enduml

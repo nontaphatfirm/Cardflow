@@ -98,21 +98,15 @@ public class Tooltip {
 
         // 4. Compare fields (Objects.equals safely handles nulls)
         return Objects.equals(title, tooltip.title) &&
-                Objects.equals(textColor, tooltip.textColor) &&
-                // Use deepEquals because description is an Object array that can hold other Tooltips
-                Arrays.deepEquals(description, tooltip.description);
+                Objects.equals(textColor, tooltip.textColor);
+
+        // Not checking description for performance and object reference reasons
     }
 
     @Override
     public int hashCode() {
         // Hash the standard fields first
-        int result = Objects.hash(title, textColor);
-
-        // Combine with the deep hash of the description array
-        // (Multiplied by 31 is the standard Java convention for mixing hashes)
-        result = 31 * result + Arrays.deepHashCode(description);
-
-        return result;
+        return Objects.hash(title, textColor);
     }
 
 
