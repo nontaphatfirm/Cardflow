@@ -13,7 +13,7 @@ The game focuses on planning, simulation, and emergent behavior through logical 
 * **Institution:** Chulalongkorn University (CEDT)
 * **Genre:** Puzzle / Factory Simulation
 * **Key Mechanics:** Tick-based simulation, Modulo 13 arithmetic, and Material-based interactions.
-
+ 
 ---
 
 ### [Link Report](https://docs.google.com/document/d/1gC24tA5RU6ZqhgHYP4bdYx1R-tJYspbVh3TwXkdrjw4/edit?usp=sharing)
