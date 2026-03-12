@@ -18,7 +18,16 @@ The game focuses on planning, simulation, and emergent behavior through logical 
 
 ### [Link Report](https://docs.google.com/document/d/1gC24tA5RU6ZqhgHYP4bdYx1R-tJYspbVh3TwXkdrjw4/edit?usp=sharing)
 
-[![watch video](https://img.youtube.com/vi/YgXQ6aTmz8A/maxresdefault.jpg)](https://www.youtube.com/watch?v=YgXQ6aTmz8A)
+
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=YgXQ6aTmz8A">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube Logo" width="120">
+  </a>
+  <br>
+  <a href="https://www.youtube.com/watch?v=YgXQ6aTmz8A">
+    <i>Click here to watch project presentation the video</i>
+  </a>
+</div>
 
 ---
 
