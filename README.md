@@ -79,11 +79,11 @@ Javadocs source is put at /javadoc you can view it there or host it as static pa
 
 Developed by **CEDT** First-Year Students:
 
-| Name | Student ID |
-| --- | --- |
-| Nontapat Auetrongjit | 6833130321 |
-| Sira Tongsima | 6833254521 |
-| Piyawat Jaikla | 6833168221 |
-| Chadmongkol Tangwadthana | 6833033121 |
+| Name                         | Student ID |
+|------------------------------| --- |
+| [Nontapat Auetrongjit](https://github.com/nontaphatfirm)     | 6833130321 |
+| [Sira Tongsima](https://github.com/theme222)            | 6833254521 |
+| [Piyawat Jaikla](https://github.com/fheempeem)           | 6833168221 |
+| [Chadmongkol Tangwadthana](https://github.com/cj05) | 6833033121 |
 
 
