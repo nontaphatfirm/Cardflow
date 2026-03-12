@@ -17,7 +17,9 @@ The game focuses on planning, simulation, and emergent behavior through logical 
 ---
 
 ### [Link Report](https://docs.google.com/document/d/1gC24tA5RU6ZqhgHYP4bdYx1R-tJYspbVh3TwXkdrjw4/edit?usp=sharing)
-### [Link Video Presentation](https://www.youtube.com/watch?v=YgXQ6aTmz8A)
+
+[![Video Title](https://img.youtube.com/vi/YgXQ6aTmz8A/3.jpg)](https://www.youtube.com/watch?v=YgXQ6aTmz8A)
+
 
 ---
 
