@@ -96,3 +96,12 @@ jpro {
     mainClassName = 'application.Launcher'
     port = 7860 // 👈 Hugging Face บังคับให้ใช้ Port นี้นะครับ ห้ามเปลี่ยน!
 }
+
+javadoc {
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+    options.author = true
+    options.version = true
+    options.addStringOption('Xdoclint:none', '-quiet')
+    classpath = sourceSets.main.compileClasspath
+}
