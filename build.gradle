@@ -94,7 +94,7 @@ jar {
 
 jpro {
     mainClassName = 'application.Launcher'
-    port = 7860 // 👈 Hugging Face บังคับให้ใช้ Port นี้นะครับ ห้ามเปลี่ยน!
+    port = 7860
 }
 
 javadoc {
