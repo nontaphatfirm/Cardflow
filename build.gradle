@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'java-library'
+    id 'com.sandec.jpro' version '2023.2.3'
 }
 
 group = 'MyEpicGroup'
@@ -89,4 +90,9 @@ jar {
 
     // Set archive name
     archiveFileName = "${project.name}-${project.version}-with-sources.jar"
+}
+
+jpro {
+    mainClassName = 'application.Launcher'
+    port = 7860 // 👈 Hugging Face บังคับให้ใช้ Port นี้นะครับ ห้ามเปลี่ยน!
 }
